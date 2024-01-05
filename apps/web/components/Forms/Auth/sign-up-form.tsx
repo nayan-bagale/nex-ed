@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 // import GoogleSignInButton from "../github-auth-button";
 // import { signIn } from "next-auth/react";
 
@@ -48,8 +49,8 @@ export default function UserAuthForm() {
     email: "",
     password: "",
     confirm_password: "",
-    firstname:"",
-    lastname:"",
+    firstname: "",
+    lastname: "",
     orgId: "",
   };
   const form = useForm<UserFormValue>({
@@ -63,7 +64,7 @@ export default function UserAuthForm() {
     //   callbackUrl: callbackUrl ?? "/dashboard",
     // });
 
-    
+    toast.success("Login Successful");
 
     console.log(data);
   };

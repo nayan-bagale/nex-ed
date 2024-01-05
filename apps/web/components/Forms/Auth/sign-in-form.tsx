@@ -14,7 +14,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-// import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { useRouter, useSearchParams } from "next/navigation";
 // import GoogleSignInButton from "../github-auth-button";
 // import { signIn } from "next-auth/react";
 
@@ -26,7 +27,7 @@ const formSchema = z.object({
 type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserAuthForm() {
-  // const router = useRouter();
+  const router = useRouter();
   // const searchParams = useSearchParams();
   // const callbackUrl = searchParams.get("callbackUrl");
   const [loading, setLoading] = useState(false);
@@ -45,6 +46,8 @@ export default function UserAuthForm() {
     //   callbackUrl: callbackUrl ?? "/dashboard",
     // });
     console.log(data)
+    toast.success("Login Successful");
+    router.push("/dashboard");
   };
 
   return (
@@ -77,7 +80,7 @@ export default function UserAuthForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
                     type="password"
@@ -91,13 +94,11 @@ export default function UserAuthForm() {
             )}
           />
         
-          <Button disabled={loading} className="ml-auto w-full" type="submit">
+          <Button disabled={loading} className=" w-full " type="submit">
             Sign In
           </Button>
         </form>
       </Form>
-      
-      {/* <GoogleSignInButton /> */}
     </>
   );
 }
