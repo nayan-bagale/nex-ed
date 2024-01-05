@@ -18,21 +18,31 @@ import { useRouter, useSearchParams } from "next/navigation";
 // import GoogleSignInButton from "../github-auth-button";
 // import { signIn } from "next-auth/react";
 
-const formSchema = z.object({
-  email: z.string().email({ message: "Enter a valid email address" }),
-  password: z.string().min(8, { message: "At least 8 letters" }),
-  confirm_password: z.string().min(8, { message: "At least 8 letters" }),
-  firstname: z.string().min(3, { message: "At least 3 letters" }),
-  lastname: z.string().min(3, { message: "At least 3 letters" }),
-  orgId: z.string().length(10, { message: "Enter a valid org id" }),
-});
+const formSchema = z
+  .object({
+    email: z.string().email({ message: "Enter a valid email address" }),
+    password: z.string().min(8, { message: "At least 8 letters" }),
+    confirm_password: z.string().min(8, { message: "At least 8 letters" }),
+    firstname: z.string().min(3, { message: "At least 3 letters" }),
+    lastname: z.string().min(3, { message: "At least 3 letters" }),
+    orgId: z.string().length(10, { message: "Enter a valid org id" }),
+  })
+  .refine(
+    (values) => {
+      return values.password === values.confirm_password;
+    },
+    {
+      message: "Passwords do not match",
+      path: ["confirm_password"],
+    }
+  );
 
 type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserAuthForm() {
-  const router = useRouter();
+  // const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl");
+  // const callbackUrl = searchParams.get("callbackUrl");
   const [loading, setLoading] = useState(false);
   const defaultValues = {
     email: "",
@@ -52,6 +62,9 @@ export default function UserAuthForm() {
     //   email: data.email,
     //   callbackUrl: callbackUrl ?? "/dashboard",
     // });
+
+    
+
     console.log(data);
   };
 
