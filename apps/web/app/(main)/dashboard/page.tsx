@@ -1,8 +1,13 @@
+import Link from "next/link"
 
 
 const page = () => {
   return (
-    <div>page</div>
+    <div>
+      <Link href={'/liveclass/4567525'}>
+      Class
+      </Link>
+    </div>
   )
 }
 
