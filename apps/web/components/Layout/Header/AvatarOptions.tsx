@@ -29,14 +29,17 @@ import {
   UserPlus,
   Users,
   Sun,
-  Moon
+  Moon,
+  
 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton"
 
-// import { useSession, signIn, signOut } from "next-auth/react";
+
+import { useSession, signIn, signOut } from "next-auth/react";
 export function UserNav() {
-//   const { data: session } = useSession();
-//   if (session) {
-    return (
+  const { data: session } = useSession();
+  console.log(session);
+  return (session) ? (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -46,8 +49,7 @@ export function UserNav() {
               // alt={session.user?.name ?? ""}
               />
               <AvatarFallback>
-                {/* {session.user?.name} */}
-                Nayan
+                <User />
               </AvatarFallback>
             </Avatar>
           </Button>
@@ -56,10 +58,10 @@ export function UserNav() {
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
               <p className="text-sm font-medium leading-none">
-                {/* {session.user?.name} */} Nayan
+                {session.user?.name} 
               </p>
               <p className="text-xs leading-none text-muted-foreground">
-                {/* {session.user?.email} */} nvbagale@gmail.com
+                {session.user?.email}
               </p>
             </div>
           </DropdownMenuLabel>
@@ -75,7 +77,7 @@ export function UserNav() {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => {}}>
+          <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/"})}>
             <LogOut className="mr-2 h-4 w-4" />
             Log out
           </DropdownMenuItem>
@@ -85,6 +87,8 @@ export function UserNav() {
           </DropdownMenuLabel>
         </DropdownMenuContent>
       </DropdownMenu>
-    );
-//   }
+    ) : (
+      <Skeleton className="h-8 w-8 rounded-full" />
+    )
+  
 }

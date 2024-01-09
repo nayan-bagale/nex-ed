@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,8 +15,6 @@ import {
 } from "@/components/ui/form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-// import GoogleSignInButton from "../github-auth-button";
-// import { signIn } from "next-auth/react";
 
 const formSchema = z
   .object({
@@ -26,7 +23,6 @@ const formSchema = z
     confirm_password: z.string().min(8, { message: "At least 8 letters" }),
     firstname: z.string().min(3, { message: "At least 3 letters" }),
     lastname: z.string().min(3, { message: "At least 3 letters" }),
-    orgId: z.string().length(10, { message: "Enter a valid org id" }),
   })
   .refine(
     (values) => {
@@ -41,9 +37,7 @@ const formSchema = z
 type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserAuthForm() {
-  // const router = useRouter();
-  const searchParams = useSearchParams();
-  // const callbackUrl = searchParams.get("callbackUrl");
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const defaultValues = {
     email: "",
@@ -51,7 +45,7 @@ export default function UserAuthForm() {
     confirm_password: "",
     firstname: "",
     lastname: "",
-    orgId: "",
+    // orgId: "",
   };
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
@@ -59,14 +53,37 @@ export default function UserAuthForm() {
   });
 
   const onSubmit = async (data: UserFormValue) => {
-    // signIn("credentials", {
-    //   email: data.email,
-    //   callbackUrl: callbackUrl ?? "/dashboard",
-    // });
 
-    toast.success("Login Successful");
-
-    console.log(data);
+    setLoading(true);
+    toast.promise(
+      fetch("/api/sign-up", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // cache: "no-store",
+      }),
+      {
+        loading: "Account creating...",
+        success: async(data) => {
+          const res:{message:string,ok:boolean} = await data.json();
+          if (res?.ok) {
+            console.log(res);
+            router.push("/sign-in");
+          } else {
+            console.log(res);
+            toast.error(res.message);
+          }
+          return "Account created";
+        },
+        error: (error) => {
+          console.log(error);
+          return "Something went wrong";
+        },
+      }
+    );
+    setLoading(false);
   };
 
   return (
@@ -132,7 +149,7 @@ export default function UserAuthForm() {
               </FormItem>
             )}
           />
-          <FormField
+          {/* <FormField
             control={form.control}
             name="orgId"
             render={({ field }) => (
@@ -149,7 +166,7 @@ export default function UserAuthForm() {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
           <FormField
             control={form.control}
             name="password"

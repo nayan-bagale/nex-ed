@@ -17,7 +17,7 @@ import {
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 // import GoogleSignInButton from "../github-auth-button";
-// import { signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Enter a valid email address" }),
@@ -28,8 +28,8 @@ type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserAuthForm() {
   const router = useRouter();
-  // const searchParams = useSearchParams();
-  // const callbackUrl = searchParams.get("callbackUrl");
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
   const [loading, setLoading] = useState(false);
   const defaultValues = {
     email: "",
@@ -41,13 +41,31 @@ export default function UserAuthForm() {
   });
 
   const onSubmit = async (data: UserFormValue) => {
-    // signIn("credentials", {
-    //   email: data.email,
-    //   callbackUrl: callbackUrl ?? "/dashboard",
-    // });
-    console.log(data)
-    toast.success("Login Successful");
-    router.push("/dashboard");
+    
+    setLoading(true);
+    toast.promise(
+      signIn("credentials", {
+      email: data.email,
+      password:data.password,
+      redirect:false,
+      callbackUrl: callbackUrl ?? "/dashboard",
+    }),{
+      loading: "Logging in...",
+      success: (data) => {
+        console.log(data);
+        if (!data?.error) {
+          router.push(callbackUrl ?? "/dashboard");
+        }else{
+          toast.error(data?.error);
+        }
+        return "Logged in";
+      },
+      error: (error) => {
+        console.log(error);
+        return "Something went wrong";
+      },
+    })
+    setLoading(false);
   };
 
   return (
