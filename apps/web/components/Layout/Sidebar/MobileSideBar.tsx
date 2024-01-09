@@ -6,6 +6,8 @@ import { MenuIcon } from "lucide-react";
 import { useState } from "react";
 
 import { ItemsSideBar } from "./ItemsSideBar";
+import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
 
 // import { Playlist } from "../data/playlists";
 
@@ -22,7 +24,13 @@ export function MobileSidebar({ className }: SidebarProps) {
           <MenuIcon />
         </SheetTrigger>
         <SheetContent side="left" className="!px-0">
-          <div className="space-y-4 py-4">
+          <div className="absolute top-3 left-4 ">
+            <Link href="/" className="font-semibold tracking-tight text-lg">
+              Nex-Ed
+            </Link>
+          </div>
+          <Separator className="mt-5"/>
+          <div className="space-y-4 py-5">
             <div className="px-3 py-2">
               <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
                 Overview

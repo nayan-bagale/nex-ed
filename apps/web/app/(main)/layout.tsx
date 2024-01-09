@@ -34,7 +34,7 @@ export default function RootLayout({
             </header>
             <div className="flex h-screen overflow-hidden">
               <Sidebar />
-              <main className="w-full pt-16">{children}</main>
+              <main className="w-full pt-16 p-4">{children}</main>
             </div>
             <Toaster />
           </ThemeProvider>

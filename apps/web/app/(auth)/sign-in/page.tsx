@@ -3,6 +3,7 @@ import Link from "next/link";
 import UserAuthForm from "@/components/Forms/Auth/sign-in-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import GoogleSignInButton from "@/components/GoogleAuthButton";
 
 
 export const metadata: Metadata = {
@@ -60,6 +61,7 @@ export default async function AuthenticationPage() {
                 <span className="w-full border-t" />
               </div>
             </div>
+            <GoogleSignInButton/>
             <div className="flex flex-col space-y-2 text-center">
               <p className="text-sm  text-muted-foreground">
                 Don't have an account?

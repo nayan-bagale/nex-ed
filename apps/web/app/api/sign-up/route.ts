@@ -2,6 +2,7 @@
 // import { hash } from "bcryptjs";
 import { error } from "console";
 import { NextResponse } from "next/server";
+import { USERS } from "@/data/constants";
 
 export async function POST(req: Request) {
   try {
@@ -15,6 +16,18 @@ export async function POST(req: Request) {
     console.log(firstname, lastname, email, password);
 
     // throw Error("Not implemented yet");
+    const user = USERS.find((user) => user.email === email);
+
+    if (user) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Email already exists",
+        },
+        { status: 203 }
+      );
+    }
+
     return NextResponse.json(
       {
         message: "Successfully Signed Up",
@@ -22,10 +35,6 @@ export async function POST(req: Request) {
       },
       { status: 200 }
     );
-    // return NextResponse.json(
-    //   { error: "Internal Server Error" },
-    //   { status: 400 }
-    // );
   } catch (error: any) {
     return new NextResponse(
       JSON.stringify({

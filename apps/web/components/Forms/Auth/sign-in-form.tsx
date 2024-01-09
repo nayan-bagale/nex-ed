@@ -15,9 +15,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
 import { useRouter, useSearchParams } from "next/navigation";
 // import GoogleSignInButton from "../github-auth-button";
 import { signIn } from "next-auth/react";
+import { AlertCircle } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Enter a valid email address" }),
@@ -31,40 +34,43 @@ export default function UserAuthForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
   const defaultValues = {
     email: "",
-    password:""
+    password: "",
   };
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
 
-  const onSubmit = async (data: UserFormValue) => {
-    
-    setLoading(true);
-    toast.promise(
-      signIn("credentials", {
+  const postData = async (data: UserFormValue) => {
+    return await signIn("credentials", {
       email: data.email,
-      password:data.password,
-      redirect:false,
+      password: data.password,
+      redirect: false,
       callbackUrl: callbackUrl ?? "/dashboard",
-    }),{
+    });
+  };
+
+  const onSubmit = async (data: UserFormValue) => {
+    setLoading(true);
+    toast.promise(postData(data), {
       loading: "Logging in...",
       success: (data) => {
-        console.log(data);
         if (!data?.error) {
           router.push(callbackUrl ?? "/dashboard");
-        }else{
+        } else {
           toast.error(data?.error);
         }
         return "Logged in";
       },
       error: (error) => {
-        console.log(error);
-        return "Something went wrong";
+        setError(true);
+        return "Credentials do not match!";
       },
-    })
+    });
     setLoading(false);
   };
 
@@ -75,6 +81,13 @@ export default function UserAuthForm() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-2 w-full"
         >
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Failed</AlertTitle>
+              <AlertDescription>Credentials do not match!</AlertDescription>
+            </Alert>
+          )}
           <FormField
             control={form.control}
             name="email"
@@ -111,7 +124,7 @@ export default function UserAuthForm() {
               </FormItem>
             )}
           />
-        
+
           <Button disabled={loading} className=" w-full " type="submit">
             Sign In
           </Button>

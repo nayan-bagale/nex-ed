@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+
 
 const formSchema = z
   .object({
@@ -39,50 +42,52 @@ type UserFormValue = z.infer<typeof formSchema>;
 export default function UserAuthForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const defaultValues = {
     email: "",
     password: "",
     confirm_password: "",
     firstname: "",
     lastname: "",
-    // orgId: "",
   };
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
 
-  const onSubmit = async (data: UserFormValue) => {
-
-    setLoading(true);
-    toast.promise(
-      fetch("/api/sign-up", {
+  const postData = async (data: UserFormValue) => {
+    return await fetch("/api/sign-up", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
         },
-        // cache: "no-store",
-      }),
-      {
-        loading: "Account creating...",
-        success: async(data) => {
-          const res:{message:string,ok:boolean} = await data.json();
-          if (res?.ok) {
-            console.log(res);
-            router.push("/sign-in");
-          } else {
-            console.log(res);
-            toast.error(res.message);
-          }
+        cache: "no-store",
+      })
+  }
+
+  const onSubmit = async (data: UserFormValue) => {
+
+    setLoading(true);
+    toast.promise(postData(data), {
+      loading: "Account creating...",
+      success: async (data) => {
+        const res: { message: string; ok: boolean } = await data.json();
+        if (res?.ok) {
+          setError(false);
+          router.push("/sign-in");
           return "Account created";
-        },
-        error: (error) => {
-          console.log(error);
-          return "Something went wrong";
-        },
-      }
-    );
+        } else {
+          setError(true);
+          toast.error(res.message);
+        }
+      },
+      error: (error) => {
+        console.log(error);
+        setError(true);
+        return "Something went wrong";
+      },
+    });
     setLoading(false);
   };
 
@@ -93,6 +98,13 @@ export default function UserAuthForm() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-2 w-full"
         >
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Failed</AlertTitle>
+              <AlertDescription>Email Already Exists!</AlertDescription>
+            </Alert>
+          )}
           <div className=" flex gap-2">
             <FormField
               control={form.control}
