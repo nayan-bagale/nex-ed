@@ -14,4 +14,4 @@ export default withAuth({
 });
 
 
-export const config = { matcher: ["/dashboard","/profile"] };
+export const config = { matcher: ["/dashboard","/profile","/liveclass/:path*"] };
