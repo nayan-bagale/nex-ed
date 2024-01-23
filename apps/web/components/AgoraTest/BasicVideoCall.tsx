@@ -6,6 +6,19 @@ import { AgoraRTCProvider, useRTCClient } from "agora-rtc-react";
 import AgoraRTC from "agora-rtc-sdk-ng";
 import { AgoraManager } from "./agora-manager/agoraManager";
 import config from "./agora-manager/config";
+// import dynamic from "next/dynamic";
+
+// const AgoraRTC = dynamic(() => import("agora-rtc-sdk-ng"), {
+//   ssr: false, // This will make the module load on client-side only.
+// })
+
+// const AgoraRTCReact = dynamic(() => import("agora-rtc-react"), {
+//   ssr: false, // This will make the module load on client-side only.
+// });
+
+// Use AgoraRTCReact to access the hooks and components
+// const { AgoraRTCProvider, useRTCClient } = AgoraRTCReact;
+
 
 export function GetStarted() {
   const agoraEngine = useRTCClient(

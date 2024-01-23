@@ -1,3 +1,4 @@
+//@ts-nocheck
 'use client'
 
 // Import necessary components and hooks from Agora SDK and React
@@ -17,6 +18,25 @@ import {
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { IMicrophoneAudioTrack, ICameraVideoTrack } from "agora-rtc-sdk-ng";
 import { configType } from "./config";
+// import dynamic from "next/dynamic";
+
+// const AgoraRTCReact = dynamic(() => import('agora-rtc-react'), {
+//   ssr: false, // This will make the module load on client-side only.
+// });
+
+// // Use AgoraRTCReact to access the hooks and components
+// const {
+//   LocalVideoTrack,
+//   RemoteUser,
+//   useJoin,
+//   useLocalCameraTrack,
+//   useLocalMicrophoneTrack,
+//   usePublish,
+//   useRTCClient,
+//   useRemoteUsers,
+//   useClientEvent,
+//   LocalUser,
+// } = AgoraRTCReact;
 
 // Define the shape of the Agora context
 interface AgoraContextType {
