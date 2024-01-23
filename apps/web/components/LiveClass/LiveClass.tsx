@@ -17,6 +17,7 @@ const LiveClass = () => {
 
   return (
     <div className="flex flex-col h-screen w-full">
+        {/* <div>asdasd</div> */}
       <div className="flex w-full h-full p-4 gap-2 ">
         <div className=" flex h-full flex-col gap-2 w-full lg:w-[70%] ">
           <div className=" rounded-md md:rounded-xl aspect-[9/16] sm:aspect-[2/3] xl:aspect-[10/8] border">
