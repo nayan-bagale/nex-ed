@@ -18,7 +18,7 @@ export function GetStarted() {
   };
 
   const handleLeaveClick = () => {
-    setJoined(false);
+    setJoined(false); 
   };
 
   const renderActionButton = () => {
