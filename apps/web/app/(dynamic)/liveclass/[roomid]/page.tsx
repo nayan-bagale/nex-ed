@@ -1,17 +1,26 @@
-'use client'
-
-// import BasicVideoCall from "@/components/AgoraTest/BasicVideoCall";
-import LiveClass from "@/components/LiveClass/LiveClass";
 import dynamic from "next/dynamic";
 
-const BasicVideoCall = dynamic(() => import('@/components/AgoraTest/BasicVideoCall'), {
+
+// const Room = dynamic(() => import('@/components/WebRTC/Room'), {
+//   ssr: false
+// })
+
+// const Peerjs = dynamic(() => import('@/components/PeerJs/PeerJsDemo'),{
+//     ssr: false
+// })
+
+const AgoraRTC = dynamic(() => import('@/components/AgoraTest/BasicVideoCall'), {
   ssr: false
 })
 
-const page = () => {
+const page = ({ params }: { params: { roomid: string } }) => {
+
   return (
-    // <LiveClass />
-    <BasicVideoCall />
+    <div>
+      {/* <Room roomid={params.roomid} /> */}
+      {/* <Peerjs/> */}
+      <AgoraRTC/>
+    </div>
   );
 }
 

@@ -3,9 +3,13 @@ import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { ThemeProvider } from "@/components/Layout/ThemeToggle/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import NavBar from "@/components/Layout/Header/NavBar";
-import Sidebar from "@/components/Layout/Sidebar/SideBar";
 import Session from "@/components/Providers/Session";
+import dynamic from "next/dynamic";
+// import { RoomProvider } from "@/components/WebRTC/ContextAPI/RoomContext";
+
+// const RoomProvider = dynamic(() => import('@/components/WebRTC/ContextAPI/RoomContext'), {
+//   ssr: false
+// })
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,7 +33,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            {/* <RoomProvider> */}
               {children}
+            {/* </RoomProvider> */}
             <Toaster />
           </ThemeProvider>
         </Session>

@@ -1,12 +1,16 @@
 import Link from "next/link"
 
 
-const page = () => {
+const page = async () => {
+
   return (
     <div>
-      <Link href={'/liveclass/4567525'}>
+      <Link href={'/liveclass'}>
       Class
       </Link>
+
+    {/* <h1>{token}</h1> */}
+      
     </div>
   )
 }
