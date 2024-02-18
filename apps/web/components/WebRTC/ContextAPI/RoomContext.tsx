@@ -45,22 +45,7 @@ const RoomProvider: React.FC<RoomProviderProps> = ({ children }) => {
   useEffect(() => {
     const meId = uuidv4();
 
-    const peer = new Peer(meId, {
-      // host: "localhost",
-      // port: 9000,
-      // path: "/",
-      // config: {
-      //   iceServers: [
-      //     { 'url': 'stun:stun.l.google.com:19302' },
-      //     // { url: "relay1.expressturn.com:3478",
-      //       // username:'efPU52K4SLOQ34W2QY',
-      //       // credential:'1TJPNFxHKXrZfelz'
-      //   // },
-      //   ],
-      //   // iceTransportPolicy: "relay",
-      // },
-      // debug: 3,
-    });
+    const peer = new Peer(meId);
     setMe(peer);
 
     try {
@@ -80,26 +65,24 @@ const RoomProvider: React.FC<RoomProviderProps> = ({ children }) => {
     ws.on("get-users", getUsers);
     ws.on("user-disconnected", removePeer);
 
-    // return () => {
-    //   ws.off("room-created", enterRoom);
-    //   ws.off("get-users", getUsers);
-    // };
+    return () => {
+      ws.off("room-created", enterRoom);
+      ws.off("get-users", getUsers);
+      ws.off("user-disconnected", removePeer);
+    };
   }, []);
+
 
   useEffect(() => {
     if (!me) return;
     if (!stream) return;
-
-    ws.on("user-joined", ({ peerId }) => {
+   
+    ws.on("user-joined", ({peerId}) => {
       const call = me.call(peerId, stream);
-      console.log(call);
       call.on("stream", (peerStream) => {
-        console.log(peerStream);
         dispatch(addPeerAction(peerId, peerStream));
       });
     });
-
-    // console.log(me);
 
     me.on("call", (call) => {
       call.answer(stream);
@@ -108,13 +91,23 @@ const RoomProvider: React.FC<RoomProviderProps> = ({ children }) => {
       });
     });
 
-    // return () => {
-    //   ws.off("user-joined");
-    // };
+    return () => {
+      ws.off("user-joined");
+    };
   }, [me, stream]);
 
+  const call = ({peerId}: {peerId: string}) => {
+    if (me && stream){
+      const call = me.call(peerId, stream);
+      call.on("stream", (peerStream) => {
+        dispatch(addPeerAction(peerId, peerStream));
+      });
+    } 
+  }
+
+
   return (
-    <RoomContext.Provider value={{ ws, me, stream, peers }}>
+    <RoomContext.Provider value={{ ws, me, stream, peers, call }}>
       {children}
     </RoomContext.Provider>
   );

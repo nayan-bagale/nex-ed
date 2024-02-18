@@ -1,0 +1,19 @@
+{
+  "name": "peerjs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node dist/index",
+    "build": "-tsc -p .",
+    "dev": "tsc-watch --onSuccess \"node dist/index.js\""
+  },
+  "dependencies": {
+    "peer": "^1.0.2"
+  },
+  "devDependencies": {
+    "tsc-watch": "^6.0.4",
+    "typescript": "^5.3.3"
+  }
+}

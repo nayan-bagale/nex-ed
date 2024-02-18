@@ -16,6 +16,8 @@ type PeerAction = {
 }
 
 export const peerReducer = (state: PeerState, action: PeerAction) => {
+    console.log(state)
+    console.log(action)
     switch (action.type) {
         case ADD_PEER:
             return {

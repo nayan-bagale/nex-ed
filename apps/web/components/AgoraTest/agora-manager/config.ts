@@ -5,7 +5,7 @@ const config: configType = {
   appId: "6539c8403c6544478f32c0828f58af4d",
   channelName: "testChannel",
   rtcToken:
-    "007eJxTYPj4ONQrsPapTervLa2ZV7JmvLe6vfus9zn34p5Nu54tbRBTYDAzNbZMtjAxME42MzUxMTG3SDM2SjawMLJIM7VITDNJ+fZof2pDICMD16ntTIwMEAjiczOUpBaXOGck5uWl5jAwAABMkSW8",
+    "006e2eb33e771844d06b57a95fe7f0b5a83IADEGdznWJ3tjYuta7DcfWmrPtrJ+tlAkPNVvVVlKZ2EC3ZXrgOj4OObIgCeELaINDfDZQQAAQDE88FlAgDE88FlAwDE88FlBADE88Fl",
   serverUrl: "http://localhost:3000/",
   proxyUrl: "http://localhost:8080/",
   tokenExpiryTime: 6000,

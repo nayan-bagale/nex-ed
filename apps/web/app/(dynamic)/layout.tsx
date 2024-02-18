@@ -5,11 +5,10 @@ import { ThemeProvider } from "@/components/Layout/ThemeToggle/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import Session from "@/components/Providers/Session";
 import dynamic from "next/dynamic";
-// import { RoomProvider } from "@/components/WebRTC/ContextAPI/RoomContext";
 
-// const RoomProvider = dynamic(() => import('@/components/WebRTC/ContextAPI/RoomContext'), {
-//   ssr: false
-// })
+const LiveClassContext = dynamic(() => import('@/components/Chat/ContextAPI/LiveClassContext'), {
+  ssr: false
+})
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,9 +32,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {/* <RoomProvider> */}
+            <LiveClassContext>
               {children}
-            {/* </RoomProvider> */}
+            </LiveClassContext>
             <Toaster />
           </ThemeProvider>
         </Session>
