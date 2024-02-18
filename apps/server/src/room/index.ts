@@ -20,13 +20,13 @@ export const roomHandler = (socket: Socket) => {
             console.log(`Joining room: ${roomId} ${peerId}`);
             rooms[roomId].push(peerId);
             socket.join(roomId);
-            socket.to(roomId).emit("user-joined", { peerId });
+            socket.emit("user-joined", { peerId });
+            console.log('user joined to roomId:' + roomId );
             socket.emit("get-users", {
                 roomId,
                 participants: rooms[roomId],
             });
         }
-        console.log(rooms);
 
         socket.on("disconnect", () => {
             console.log(`Connection closed: ${peerId}`);
@@ -35,7 +35,7 @@ export const roomHandler = (socket: Socket) => {
     };
 
     const leaveRoom = ({ roomId, peerId }: IRoomParams) => {
-        rooms[roomId] = rooms[roomId].filter((id) => id !== peerId);
+        // rooms[roomId] = rooms[roomId].filter((id) => id !== peerId);
         socket.to(roomId).emit("user-disconnected", peerId);
     };
 
