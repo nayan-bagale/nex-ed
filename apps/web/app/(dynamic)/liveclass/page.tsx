@@ -5,13 +5,12 @@ import { Button } from "@/components/ui/button";
 
 import dynamic from "next/dynamic";
 // import BasicVideoCall from "@/components/AgoraTest/BasicVideoCall";
-import LiveClass from "@/components/LiveClass/LiveClass";
 // import RTC from "@/components/WebRTC/RTC";
 // import dynamic from "next/dynamic";
 import Link from "next/link";
 
 
-const CreateRoom = dynamic(() => import('@/components/Chat/CreateRoom'), {
+const CreateRoom = dynamic(() => import('@/components/Liveclass/CreateRoom'), {
   ssr: false
 })
 

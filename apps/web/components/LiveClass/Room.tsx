@@ -1,13 +1,13 @@
 "use client";
 import { useChat } from "./ContextAPI/RoomContext/ChatContext";
-import VideoRoom from "./VideoRoom";
 import Joining from "./Joining";
+import LiveClass from "./LiveClass";
 
 const Chatting = ({ roomid }: { roomid: string }) => {
   const { roomId } = useChat();
 
   return roomId ? (
-    <VideoRoom roomid={roomId} />
+    <LiveClass roomid={roomId} />
   ): (
     <Joining roomid={roomid} />
   )

@@ -3,8 +3,8 @@
 import {
     addPeerAction,
     removePeerAction,
-} from "@/components/WebRTC/ContextAPI/peerActions";
-import { peerReducer } from "@/components/WebRTC/ContextAPI/peerReducer";
+} from "./peerActions";
+import { peerReducer } from "./peerReducer";
 import { useRouter } from "next/navigation";
 import Peer from "peerjs";
 import {
@@ -20,7 +20,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const ChatContext = createContext<null | any>(null);
 
-const WS = "http://localhost:8080";
+const WS = process.env.NEXT_PUBLIC_WS_URL!;
 const ws = socketIOClient(WS);
 
 const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -33,7 +33,8 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     const [rtc, setRtc] = useState<Peer>();
     const [peers, dispatch] = useReducer(peerReducer, {});
 
-    const norender = useRef(false);
+    const [screenStream, setScreenStream] = useState<MediaStream>();
+    const [screenSharingId, setScreenSharingId] = useState<string>('');
 
     const router = useRouter();
     const enterroom = (roomId: string) => {
@@ -41,16 +42,46 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         setRoomId(roomId);
     };
 
+    const switchStream = (stream: MediaStream) => {
+        setStream(stream);
+        setScreenSharingId(rtc?.id || "");
+        if(!rtc?.connections) return;
+        Object.values(rtc?.connections).forEach((connection: any) => {
+            const videoTrack: any = stream
+                ?.getTracks()
+                .find((track) => track.kind === "video");
+            connection[0].peerConnection
+                .getSenders()
+                .find((sender: any) => sender.track.kind === "video")
+                .replaceTrack(videoTrack)
+                .catch((err: any) => console.error(err));
+        });
+    }
+
+    const shareScreen = () => {
+        if (screenSharingId) {
+            navigator.mediaDevices
+                .getUserMedia({ video: true, audio: true })
+                .then(switchStream);
+        } else {
+            navigator.mediaDevices.getDisplayMedia({}).then((stream) => {
+                switchStream(stream);
+                setScreenStream(stream);
+            });
+        }
+    }
+
     const removePeer = (peerId: string) => {
         dispatch(removePeerAction(peerId));
     };
 
     useEffect(() => {
 
-        if (norender.current) return;
-        norender.current = true;
         const uid = uuidv4();
         const rtcpeer = new Peer(uid, {
+            path: "/myapp",
+            host: "/",
+            port: 9000,
             debug: 3,
         });
         setRtc(rtcpeer);
@@ -80,11 +111,13 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         ws.on("get-users", (data) => {
             console.log(data);
         });
+        ws.on("user-disconnected", removePeer);
 
         return () => {
             rtcpeer.disconnect();
             ws.off("room-created", enterroom);
             ws.off("message");
+            ws.off("user-disconnected");
             // ws.off("user-joined");
             ws.off("get-users");
         };
@@ -135,7 +168,7 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 
     return (
         <ChatContext.Provider
-            value={{ msgs, sendMsg, setRoomId,roomId, ws, stream, peers, me: rtc?.id }}
+            value={{ msgs, sendMsg, setRoomId, roomId, ws, stream, peers, me: rtc?.id, shareScreen }}
         >
             {children}
         </ChatContext.Provider>

@@ -8,28 +8,33 @@ import { Button } from "../ui/button";
 import { MessageCircleMore, Mic, Presentation, Video, X } from "lucide-react";
 import ChatPanel from "./Chat/ChatPanel";
 import { useState } from "react";
+import { useChat } from "./ContextAPI/RoomContext/ChatContext";
+import { PeerState } from "./ContextAPI/RoomContext/peerReducer";
+import VideoPlayer from "./VideoPlayer";
 
 
-const LiveClass = () => {
-    const arr = new Array(8).fill(0);
+const LiveClass = ({ roomid }: { roomid: string }) => {
+  const { msgs, sendMsg, me, stream, peers, shareScreen } = useChat();
+
 
     const [bool, setBool] = useState(false);
 
   return (
-    <div className="flex flex-col h-screen w-full">
-        {/* <div>asdasd</div> */}
+    <div className="flex flex-col h-lvh w-full">
+      <div>RoomId: {roomid}</div>
       <div className="flex w-full h-full p-4 gap-2 ">
         <div className=" flex h-full flex-col gap-2 w-full lg:w-[70%] ">
-          <div className=" rounded-md md:rounded-xl aspect-[9/16] sm:aspect-[2/3] xl:aspect-[10/8] border">
+          <div className=" rounded-md md:rounded-xl aspect-[9/16] sm:aspect-[2/3] xl:aspect-[10/8] border overflow-hidden">
             {/* Main Speacker */}
+            <VideoPlayer stream={stream} className={'object-cover object-center h-full w-full'} />
           </div>
           <ScrollArea className=" flex min-h-[15%] whitespace-nowrap md:rounded-xl rounded-md border">
             <div className=" flex h-fit flex-row space-x-4 px-4 py-2 md:p-4">
-              {arr.map((item, index) => (
-                <div
-                  key={index}
-                  className=" h-[5rem] w-[8rem] md:h-[95px] md:w-[200px] border rounded-md md:rounded-xl  "
-                ></div>
+              {Object.values(peers as PeerState).map((peer) => (
+                <div className="h-[5rem] w-[8rem] md:h-[95px] md:w-[200px] border rounded-md md:rounded-xl overflow-hidden">
+
+                <VideoPlayer stream={peer.stream} className=" " />
+                </div>
               ))}
             </div>
             <ScrollBar orientation="horizontal" />
@@ -49,7 +54,7 @@ const LiveClass = () => {
               <p className="text-xs md:text-sm">Mic</p>
             </div>
             <div className=" flex flex-col items-center">
-              <Button className=" rounded-full px-2" variant={"outline"}>
+              <Button className=" rounded-full px-2" variant={"outline"} onClick={shareScreen}>
                 <Presentation />
               </Button>
               <p className="text-xs md:text-sm">Screen</p>
@@ -71,7 +76,7 @@ const LiveClass = () => {
             </div>
           </div>
         </div>
-        <div className=" rounded-xl hidden lg:flex justify-center w-full h-full lg:w-full ">
+        <div className=" rounded-xl hidden lg:flex justify-center w-full h-full lg:w-[30%] ">
           <ChatPanel />
         </div>
         {bool && (

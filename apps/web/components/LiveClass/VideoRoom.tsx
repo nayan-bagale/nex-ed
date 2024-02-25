@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useChat } from "./ContextAPI/RoomContext/ChatContext";
-import VideoPlayer from "../WebRTC/VideoPlayer";
-import { PeerState } from "../WebRTC/ContextAPI/peerReducer";
+import VideoPlayer from "./VideoPlayer";
+import { PeerState } from "@/components/Liveclass/ContextAPI/RoomContext/peerReducer";
 
 const Chatting = ({ roomid }: { roomid: string }) => {
     const { msgs, sendMsg, me, stream, peers } = useChat();
@@ -30,11 +30,11 @@ const Chatting = ({ roomid }: { roomid: string }) => {
                     <li key={index}>{item}</li>
                 ))}
             </ul>
-            <VideoPlayer stream={stream} />
+            {/* <VideoPlayer stream={stream} /> */}
 
             <div className=" flex gap-2">
                 {Object.values(peers as PeerState).map((peer) => (
-                    <VideoPlayer stream={peer.stream} />
+                    // <VideoPlayer stream={peer.stream} />
                 ))}
             </div>
         </div>

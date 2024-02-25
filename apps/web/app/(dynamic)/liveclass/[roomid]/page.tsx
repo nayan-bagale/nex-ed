@@ -4,12 +4,16 @@ import dynamic from "next/dynamic";
 // const Room = dynamic(() => import('@/components/WebRTC/Room'), {
 //   ssr: false
 // })
-const Chatting = dynamic(
-  () => import("@/components/Chat/Room"),
+const Room = dynamic(
+  () => import("@/components/Liveclass/Room"),
   {
     ssr: false
   }
 )
+
+// const Liveclass = dynamic(() => import('@/components/Liveclass/LiveClass'), {
+//  ssr: false
+// });
 
 
 // const Peerjs = dynamic(() => import('@/components/PeerJs/PeerJsDemo'),{
@@ -24,10 +28,11 @@ const page = ({ params }: { params: { roomid: string } }) => {
 
   return (
     <div>
-      {/* <Room roomid={params.roomid} /> */}
+      <Room roomid={params.roomid} />
       {/* <Peerjs/> */}
       {/* <AgoraRTC/> */}
-      <Chatting roomid={params.roomid}/>
+      {/* <Chatting roomid={params.roomid}/> */}
+      {/* <Liveclass roomid={params.roomid}/> */}
     </div>
   );
 }
