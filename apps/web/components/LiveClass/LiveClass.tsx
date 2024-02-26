@@ -1,6 +1,6 @@
 'use client'
 
-import {UserNav} from "@/components/Layout/Header/AvatarOptions";
+import { UserNav } from "@/components/Layout/Header/AvatarOptions";
 import NavBar from "@/components/Layout/Header/NavBar";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { AspectRatio } from "../ui/aspect-ratio";
@@ -14,10 +14,14 @@ import VideoPlayer from "./VideoPlayer";
 
 
 const LiveClass = ({ roomid }: { roomid: string }) => {
-  const { msgs, sendMsg, me, stream, peers, shareScreen } = useChat();
+  const { msgs, sendMsg, me, stream, peers, shareScreen, screenSharingId } = useChat();
 
 
-    const [bool, setBool] = useState(false);
+  const [bool, setBool] = useState(false);
+
+  const screenSharingVideo = screenSharingId === me ? stream : peers[screenSharingId]?.stream;
+
+  const {[screenSharingId]: sharing, ...peersToShow} = peers;
 
   return (
     <div className="flex flex-col h-lvh w-full">
@@ -26,16 +30,26 @@ const LiveClass = ({ roomid }: { roomid: string }) => {
         <div className=" flex h-full flex-col gap-2 w-full lg:w-[70%] ">
           <div className=" rounded-md md:rounded-xl aspect-[9/16] sm:aspect-[2/3] xl:aspect-[10/8] border overflow-hidden">
             {/* Main Speacker */}
-            <VideoPlayer stream={stream} className={'object-cover object-center h-full w-full'} />
+            {screenSharingId ? (
+              <VideoPlayer stream={screenSharingVideo} className={'object-cover object-center h-full w-full'} />
+            ) : (
+               <VideoPlayer stream={stream} className={'object-cover object-center h-full w-full'} />
+            )}
           </div>
           <ScrollArea className=" flex min-h-[15%] whitespace-nowrap md:rounded-xl rounded-md border">
             <div className=" flex h-fit flex-row space-x-4 px-4 py-2 md:p-4">
-              {Object.values(peers as PeerState).map((peer) => (
+              {screenSharingId !== me && (
                 <div className="h-[5rem] w-[8rem] md:h-[95px] md:w-[200px] border rounded-md md:rounded-xl overflow-hidden">
-
-                <VideoPlayer stream={peer.stream} className=" " />
+                  <VideoPlayer stream={stream} className=" " />
+                </div>
+              
+              )}
+              {Object.values(peersToShow as PeerState).map((peer) => (
+                <div className="h-[5rem] w-[8rem] md:h-[95px] md:w-[200px] border rounded-md md:rounded-xl overflow-hidden">
+                  <VideoPlayer stream={peer.stream} className=" " />
                 </div>
               ))}
+
             </div>
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
