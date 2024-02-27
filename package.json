@@ -5,7 +5,8 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "heroku-prebuild": "cd app/server && yarn build && yarn start"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
