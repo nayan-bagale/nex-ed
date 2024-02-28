@@ -1,6 +1,6 @@
 'use client'
 
-import VideoPlayer from "../WebRTC/VideoPlayer";
+import VideoPlayer from "./VideoPlayer";
 import { Button } from "../ui/button"
 import { useChat } from "./ContextAPI/RoomContext/ChatContext";
 
@@ -10,7 +10,7 @@ const Joining = ({ roomid }: { roomid: string }) => {
 
   return (
     <div className='flex flex-col gap-10 items-center justify-center h-screen'>
-      <VideoPlayer stream={stream} />
+      <VideoPlayer className={''} stream={stream} />
       <div>Ready to join</div>
       <div className="flex gap-2 ">
         <Button>Mute</Button>
