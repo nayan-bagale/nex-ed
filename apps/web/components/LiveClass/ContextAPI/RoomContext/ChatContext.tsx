@@ -21,7 +21,7 @@ import { v4 as uuidv4 } from "uuid";
 const ChatContext = createContext<null | any>(null);
 
 const WS = process.env.NEXT_PUBLIC_WS_URL!;
-const ws = socketIOClient(WS);
+const ws = socketIOClient(WS + ':' + process.env.NEXT_PUBLIC_WS_PORT! as any);
 
 const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     children,
@@ -79,10 +79,12 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 
         const uid = uuidv4();
         const rtcpeer = new Peer(uid, {
-            path: "/myapp",
-            host: "/",
-            port: 9000,
+            path: "/peerjs",
+            host: WS,
+            port: 8080,
+            // secure: true,
             debug: 3,
+            
         });
         setRtc(rtcpeer);
 
