@@ -6,8 +6,9 @@ import { Toaster } from "@/components/ui/sonner";
 import Session from "@/components/Providers/Session";
 import dynamic from "next/dynamic";
 
-const LiveClassContext = dynamic(() => import('../../components/Liveclass/ContextAPI/LiveClassContext'), {
-  ssr: false
+const LiveClassContext = dynamic(() => import('@/components/Liveclass/ContextAPI/LiveClassContext'), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
 })
 
 const inter = Inter({ subsets: ["latin"] });

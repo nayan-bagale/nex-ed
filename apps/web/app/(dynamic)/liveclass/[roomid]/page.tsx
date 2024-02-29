@@ -1,9 +1,10 @@
 import dynamic from "next/dynamic";
 
 const Room = dynamic(
-  () => import("../../../..//components/Liveclass/Room"),
+  () => import("@/components/Liveclass/Room"),
   {
-    ssr: false
+    ssr: false,
+    loading: () => <p>Loading...</p>,
   }
 )
 
