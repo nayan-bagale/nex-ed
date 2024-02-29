@@ -1,6 +1,7 @@
 import defaultTheme from "tailwindcss/defaultTheme";
 
 import colors from "tailwindcss/colors";
+// @ts-ignore:next-line
 import { default as flattenColorPalette } from "tailwindcss/lib/util/flattenColorPalette";
 
 import type { Config } from "tailwindcss";

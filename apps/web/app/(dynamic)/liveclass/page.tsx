@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
 
-const CreateRoom = dynamic(() => import('@/components/Liveclass/CreateRoom'), {
+const CreateRoom = dynamic(() => import('../../../components/Liveclass/CreateRoom'), {
   ssr: false
 })
 

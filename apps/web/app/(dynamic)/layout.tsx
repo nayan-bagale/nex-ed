@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import Session from "@/components/Providers/Session";
 import dynamic from "next/dynamic";
 
-const LiveClassContext = dynamic(() => import('@/components/Liveclass/ContextAPI/LiveClassContext'), {
+const LiveClassContext = dynamic(() => import('../../components/Liveclass/ContextAPI/LiveClassContext'), {
   ssr: false
 })
 
