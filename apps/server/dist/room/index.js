@@ -10,12 +10,12 @@ const roomHandler = (socket) => {
         socket.emit("room-created", roomId);
         console.log(`Creating room`);
     };
-    const joinRoom = ({ roomId, peerId }) => {
+    const joinRoom = ({ roomId, peerId, username }) => {
         if (rooms[roomId]) {
-            console.log(`Joining room: ${roomId} ${peerId}`);
+            console.log(`Joining room: ${roomId} ${peerId} ${username}`);
             rooms[roomId].push(peerId);
             socket.join(roomId);
-            socket.emit("user-joined", { peerId });
+            socket.emit("user-joined", { peerId, username });
             console.log('user joined to roomId:' + roomId);
             socket.emit("get-users", {
                 roomId,

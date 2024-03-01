@@ -15,18 +15,16 @@ import {
     useReducer,
     useMemo
 } from "react";
-import socketIOClient from "socket.io-client";
+
 import { v4 as uuidv4 } from "uuid";
+import { ws, WS_URL } from "../WebSockets";
 
-const ChatContext = createContext<null | any>(null);
+const RoomContext = createContext<null | any>(null);
 
-const WS = process.env.NEXT_PUBLIC_WS_URL!;
-const ws = socketIOClient(WS + ':' + process.env.NEXT_PUBLIC_WS_PORT! as any);
-
-const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
+const RoomProvider: React.FC<{ children: React.ReactNode }> = ({
     children,
 }) => {
-    const [msgs, setMsgs] = useState<string[]>([]);
+    const [username, setUsername] = useState<string>("");
 
     const [roomId, setRoomId] = useState<string>("");
     const [stream, setStream] = useState<MediaStream>();
@@ -45,7 +43,7 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     const switchStream = (stream: MediaStream) => {
         setStream(stream);
         setScreenSharingId(rtc?.id || "");
-        if(!rtc?.connections) return;
+        if (!rtc?.connections) return;
         Object.values(rtc?.connections).forEach((connection: any) => {
             const videoTrack: any = stream
                 ?.getTracks()
@@ -80,11 +78,11 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         const uid = uuidv4();
         const rtcpeer = new Peer(uid, {
             path: "/peerjs",
-            host: WS,
+            host: WS_URL,
             port: 8080,
             // secure: true,
             debug: 3,
-            
+
         });
         setRtc(rtcpeer);
 
@@ -103,9 +101,6 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 
         ws.on("room-created", enterroom);
 
-        ws.on("message", ({ msg }) => {
-            setMsgs((prev) => [...prev, msg]);
-        });
         // ws.on('user-joined', (data: { roomId: string; id: string }) => {
         //     console.log(data)
         // })
@@ -114,13 +109,12 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
             console.log(data);
         });
         ws.on("user-disconnected", removePeer);
-        ws.on("user-started-sharing", (peerId:string) => setScreenSharingId(peerId));
+        ws.on("user-started-sharing", (peerId: string) => setScreenSharingId(peerId));
         ws.on("user-stopped-sharing", () => setScreenSharingId(''));
 
         return () => {
             rtcpeer.disconnect();
             ws.off("room-created", enterroom);
-            ws.off("message");
             ws.off("user-disconnected");
             ws.off("user-started-sharing");
             ws.off("user-stopped-sharing");
@@ -168,28 +162,23 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     }, [screenSharingId, roomId]);
 
     useEffect(() => {
-        ws.emit("join-room", { roomId, peerId: rtc?.id });
-    }, [rtc?.id, roomId]);
+        ws.emit("join-room", { roomId, peerId: rtc?.id, username});
+        console.log({ roomId, peerId: rtc?.id, username })
+    }, [rtc?.id, roomId, username]);
 
-    const sendMsg = (msg: string) => {
-        if (roomId) {
-            setMsgs((prev) => [...prev, msg]);
-            ws.emit("message", { roomId, msg });
-        }
-    };
 
     console.log(peers)
-    console.log({screenSharingId})
+    console.log({ screenSharingId })
 
     return (
-        <ChatContext.Provider
-            value={{ msgs, sendMsg, setRoomId, roomId, ws, stream, peers, me: rtc?.id, shareScreen, screenStream, screenSharingId}}
+        <RoomContext.Provider
+            value={{ setUsername, username, setRoomId, roomId, ws, stream, peers, me: rtc?.id, shareScreen, screenStream, screenSharingId }}
         >
             {children}
-        </ChatContext.Provider>
+        </RoomContext.Provider>
     );
 };
 
-export const useChat = () => useContext(ChatContext);
+export const useRoom = () => useContext(RoomContext);
 
-export default ChatProvider;
+export default RoomProvider;

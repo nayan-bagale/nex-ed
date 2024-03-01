@@ -1,3 +1,5 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/options";
+import { getServerSession } from "next-auth";
 import dynamic from "next/dynamic";
 
 
@@ -6,12 +8,13 @@ const CreateRoom = dynamic(() => import('@/components/Liveclass/CreateRoom'), {
   loading: () => <p>Loading...</p>,
 })
 
-const page = () => {
+const page = async() => {
 
+const session = await getServerSession(authOptions);
 
   return (
     <>
-      <CreateRoom />
+      <CreateRoom user={session?.user} />
     </>
   );
 };

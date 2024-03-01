@@ -1,5 +1,6 @@
 import React from 'react'
-import ChatProvider from './RoomContext/ChatContext'
+import RoomContext from './RoomContext/RoomContext'
+import ChatContext from './ChatContext/ChatContext';
 
 interface LiveClassContextProps {
     children: React.ReactNode;
@@ -8,9 +9,11 @@ interface LiveClassContextProps {
 
 const LiveClassContext: React.FC<LiveClassContextProps> = ({ children }) => {
     return (
-        <ChatProvider>
-            {children}
-        </ChatProvider>
+        <RoomContext>
+            <ChatContext>
+                {children}
+            </ChatContext>
+        </RoomContext>
     )
 }
 

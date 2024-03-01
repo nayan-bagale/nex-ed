@@ -7,6 +7,7 @@ const rooms: Record<string, string[]> = {};
 interface IRoomParams {
   roomId: string;
   peerId: string;
+  username?: string;
 }
 
 export const chatHandler = (socket: Socket) => {
@@ -17,10 +18,10 @@ export const chatHandler = (socket: Socket) => {
     console.log(`Creating room: ${roomId}`);
     socket.emit("room-created", roomId);
   };
-  const joinRoom = ({ roomId, peerId }: IRoomParams) => {
+  const joinRoom = ({ roomId, peerId, username }: IRoomParams) => {
     console.log(peerId)
     if (rooms[roomId]) {
-      console.log(`Joining room: ${roomId} ${peerId}`);
+      console.log(`Joining room: ${roomId} ${peerId} ${username}`);
       rooms[roomId].push(peerId);
 
       socket.join(roomId);
@@ -49,8 +50,16 @@ export const chatHandler = (socket: Socket) => {
     socket.to(roomId).emit("user-disconnected", peerId);
   };
 
-  const message = ({ roomId, msg }: { roomId: string; msg: string }) => {
-    socket.to(roomId).emit("message", {msg});
+  const message = ({
+    roomId,
+    message,
+    username,
+  }: {
+    roomId: string;
+    message: string;
+    username: string;
+  }) => {
+    socket.to(roomId).emit("message", { message, username });
   };
 
   const startSharing = ({ roomId, peerId }: IRoomParams) => {

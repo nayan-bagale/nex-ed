@@ -1,16 +1,19 @@
 "use client";
-import { useChat } from "./ContextAPI/RoomContext/ChatContext";
+import { useRoom } from "./ContextAPI/RoomContext/RoomContext";
 import Joining from "./Joining";
 import LiveClass from "./LiveClass";
 
-const Chatting = ({ roomid }: { roomid: string }) => {
-  const { roomId } = useChat();
+const Room = ({ roomid, user }: { roomid: string, user:any }) => {
+  const { roomId, setUsername } = useRoom();
+  if(!roomId) {
+    setUsername(user?.user?.name);
+  }
 
   return roomId ? (
     <LiveClass roomid={roomId} />
   ): (
-    <Joining roomid={roomid} />
+    <Joining roomid={roomid} user={user} />
   )
 };
 
-export default Chatting;
+export default Room;

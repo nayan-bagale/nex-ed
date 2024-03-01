@@ -8,13 +8,13 @@ import { Button } from "../ui/button";
 import { MessageCircleMore, Mic, Presentation, Video, X } from "lucide-react";
 import ChatPanel from "./Chat/ChatPanel";
 import { useState } from "react";
-import { useChat } from "./ContextAPI/RoomContext/ChatContext";
+import { useRoom } from "./ContextAPI/RoomContext/RoomContext";
 import { PeerState } from "./ContextAPI/RoomContext/peerReducer";
 import VideoPlayer from "./VideoPlayer";
 
 
 const LiveClass = ({ roomid }: { roomid: string }) => {
-  const { msgs, sendMsg, me, stream, peers, shareScreen, screenSharingId } = useChat();
+  const { me, stream, peers, shareScreen, screenSharingId, username } = useRoom();
 
 
   const [bool, setBool] = useState(false);
@@ -26,6 +26,7 @@ const LiveClass = ({ roomid }: { roomid: string }) => {
   return (
     <div className="flex flex-col h-lvh w-full">
       <div>RoomId: {roomid}</div>
+      <div>Name: {username}</div>
       <div className="flex w-full h-full p-4 gap-2 ">
         <div className=" flex h-full flex-col gap-2 w-full lg:w-[70%] ">
           <div className=" rounded-md md:rounded-xl aspect-[9/16] sm:aspect-[2/3] xl:aspect-[10/8] border overflow-hidden">
