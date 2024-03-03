@@ -7,7 +7,7 @@ import Session from "@/components/Providers/Session";
 import dynamic from "next/dynamic";
 import ClassLoading from "@/components/Loading/ClassLoading";
 
-const LiveClassContext = dynamic(() => import('@/components/Liveclass/ContextAPI/LiveClassContext'), {
+const LiveClassContext = dynamic(() => import('@/components/Liveclass/ContextAPI/_LiveClassContext'), {
   ssr: false,
   loading: () => <ClassLoading />,
 })
