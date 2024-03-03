@@ -3,21 +3,21 @@
 import { UserNav } from "@/components/Layout/Header/AvatarOptions";
 import NavBar from "@/components/Layout/Header/NavBar";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { AspectRatio } from "../ui/aspect-ratio";
-import { Button } from "../ui/button";
-import { MessageCircleMore, Mic, Presentation, Video, X } from "lucide-react";
-import ChatPanel from "./Chat/ChatPanel";
+import { AspectRatio } from "../../ui/aspect-ratio";
+import { Button } from "../../ui/button";
+import { X } from "lucide-react";
+import ChatPanel from "../Chat/ChatPanel";
 import { useState } from "react";
-import { useRoom } from "./ContextAPI/RoomContext/RoomContext";
-import { PeerState } from "./ContextAPI/RoomContext/peerReducer";
+import { useRoom } from "../ContextAPI/RoomContext/RoomContext";
+import { PeerState } from "../ContextAPI/RoomContext/peerReducer";
 import VideoPlayer from "./VideoPlayer";
+import ActionButtons from "./ActionButtons";
+import { useChat } from "../ContextAPI/ChatContext/ChatContext";
 
 
 const LiveClass = ({ roomid }: { roomid: string }) => {
-  const { me, stream, peers, shareScreen, screenSharingId, username } = useRoom();
-
-
-  const [bool, setBool] = useState(false);
+  const { me, stream, peers, screenSharingId, username } = useRoom();
+  const { isOpen, setIsOpen } = useChat();
 
   const screenSharingVideo = screenSharingId === me ? stream : peers[screenSharingId]?.stream;
 
@@ -26,7 +26,7 @@ const LiveClass = ({ roomid }: { roomid: string }) => {
   return (
     <div className="flex flex-col h-lvh w-full">
       <div>RoomId: {roomid}</div>
-      <div>Name: {username}</div>
+      <div>Name: {username.name}</div>
       <div className="flex w-full h-full p-4 gap-2 ">
         <div className=" flex h-full flex-col gap-2 w-full lg:w-[70%] ">
           <div className=" rounded-md md:rounded-xl aspect-[9/16] sm:aspect-[2/3] xl:aspect-[10/8] border overflow-hidden">
@@ -54,47 +54,12 @@ const LiveClass = ({ roomid }: { roomid: string }) => {
             </div>
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
-          <div className=" flex items-center justify-evenly mt-2 h-[3.5rem] md:h-[5rem] w-full">
-            <div className=" flex flex-col items-center">
-              <Button className=" rounded-full px-2" variant={"outline"}>
-                <Video />
-              </Button>
-              <p className="text-xs md:text-sm">Video</p>
-            </div>
-
-            <div className=" flex flex-col items-center">
-              <Button className=" rounded-full px-2" variant={"outline"}>
-                <Mic />
-              </Button>
-              <p className="text-xs md:text-sm">Mic</p>
-            </div>
-            <div className=" flex flex-col items-center">
-              <Button className=" rounded-full px-2" variant={"outline"} onClick={shareScreen}>
-                <Presentation />
-              </Button>
-              <p className="text-xs md:text-sm">Screen</p>
-            </div>
-            <div className=" flex flex-col items-center lg:hidden">
-              <Button
-                className=" rounded-full px-2 bg-blue-500 text-white hover:bg-blue-600"
-                onClick={() => setBool(true)}
-              >
-                <MessageCircleMore />
-              </Button>
-              <p className="text-xs md:text-sm">Chat</p>
-            </div>
-            <div className=" flex flex-col items-center">
-              <Button className=" rounded-full px-2" variant="destructive">
-                <X />
-              </Button>
-              <p className="text-xs md:text-sm">Leave</p>
-            </div>
-          </div>
+          <ActionButtons setIsOpen={setIsOpen} />
         </div>
         <div className=" rounded-xl hidden lg:flex justify-center w-full h-full lg:w-[30%] ">
           <ChatPanel />
         </div>
-        {bool && (
+        {isOpen && (
           <div className=" flex lg:hidden backdrop-blur fixed top-0 left-0 w-full h-full items-center justify-center">
             <div className=" relative w-[90%] h-[90%] ">
               <ChatPanel />
@@ -102,7 +67,7 @@ const LiveClass = ({ roomid }: { roomid: string }) => {
                 <Button
                   className=" px-2"
                   variant="secondary"
-                  onClick={() => setBool(false)}
+                  onClick={() => setIsOpen(false)}
                 >
                   <X />
                 </Button>

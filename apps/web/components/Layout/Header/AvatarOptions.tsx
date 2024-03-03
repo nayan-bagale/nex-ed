@@ -20,7 +20,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import Link from "next/link";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/options";
+import { authOptions } from "@/components/utils/options";
 import SignOutButton from "@/components/SignOutButton";
 
 export async function UserNav() {

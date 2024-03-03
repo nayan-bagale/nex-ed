@@ -14,13 +14,13 @@ const InputField = () => {
   const [message, setMessage] = useState<string>("");
 
   const handleclick = () => {
-    sendMessage(message, roomId, username);
+    sendMessage(message, roomId, username?.name);
     setMessage("");
   };
 
   return (
     <div className="flex flex-row items-center w-full mt-2 gap-2">
-      <Input className="w-full" placeholder="Message..." onChange={(e) => setMessage(e.target.value)} />
+      <Input className="w-full" placeholder="Message..." value={message} onChange={(e) => setMessage(e.target.value)} />
       <Button className=" px-2" variant='secondary' onClick={handleclick}>
         <Send  />
       </Button>

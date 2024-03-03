@@ -1,12 +1,13 @@
 "use client";
 import { useRoom } from "./ContextAPI/RoomContext/RoomContext";
+import { useSetUserData } from "./CustomHooks/useSetUserData";
 import Joining from "./Joining";
-import LiveClass from "./LiveClass";
+import LiveClass from "./Video/LiveClass";
 
 const Room = ({ roomid, user }: { roomid: string, user:any }) => {
-  const { roomId, setUsername } = useRoom();
+  const { roomId } = useRoom();
   if(!roomId) {
-    setUsername(user?.user?.name);
+    useSetUserData(user);
   }
 
   return roomId ? (

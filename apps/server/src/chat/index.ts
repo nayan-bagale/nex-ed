@@ -44,6 +44,12 @@ export const chatHandler = (socket: Socket) => {
   };
 
   const leaveRoom = ({ roomId, peerId }: IRoomParams) => {
+    Object.keys(rooms).forEach((room) => {
+      if(rooms[room].length === 0){
+        delete rooms[room];
+      }
+    });
+
     if (rooms[roomId]) {
       rooms[roomId] = rooms[roomId].filter((id) => id !== peerId);
     }

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
-import { authOptions } from "../api/auth/[...nextauth]/options";
+import { authOptions } from "../../components/utils/options";
 import Lamp from "@/components/Home/Lamp";
 import Sparkles from "@/components/Home/Sparkles";
 import { BackgroundBeams } from "@/components/ui/background-beam";

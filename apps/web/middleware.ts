@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { withAuth } from "next-auth/middleware";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./app/api/auth/[...nextauth]/options";
+import { authOptions } from "./components/utils/options";
 
 
 export default withAuth({

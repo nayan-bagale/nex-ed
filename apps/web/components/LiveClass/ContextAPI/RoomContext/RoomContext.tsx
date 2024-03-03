@@ -24,7 +24,7 @@ const RoomContext = createContext<null | any>(null);
 const RoomProvider: React.FC<{ children: React.ReactNode }> = ({
     children,
 }) => {
-    const [username, setUsername] = useState<string>("");
+    const [username, setUsername] = useState<any>({});
 
     const [roomId, setRoomId] = useState<string>("");
     const [stream, setStream] = useState<MediaStream>();
@@ -40,42 +40,12 @@ const RoomProvider: React.FC<{ children: React.ReactNode }> = ({
         setRoomId(roomId);
     };
 
-    const switchStream = (stream: MediaStream) => {
-        setStream(stream);
-        setScreenSharingId(rtc?.id || "");
-        if (!rtc?.connections) return;
-        Object.values(rtc?.connections).forEach((connection: any) => {
-            const videoTrack: any = stream
-                ?.getTracks()
-                .find((track) => track.kind === "video");
-            connection[0].peerConnection
-                .getSenders()
-                .find((sender: any) => sender.track.kind === "video")
-                .replaceTrack(videoTrack)
-                .catch((err: any) => console.error(err));
-        });
-    }
-
-    const shareScreen = () => {
-        if (screenSharingId) {
-            navigator.mediaDevices
-                .getUserMedia({ video: true, audio: true })
-                .then(switchStream);
-        } else {
-            navigator.mediaDevices.getDisplayMedia({}).then((stream) => {
-                switchStream(stream);
-                setScreenStream(stream);
-            });
-        }
-    }
-
     const removePeer = (peerId: string) => {
         dispatch(removePeerAction(peerId));
     };
 
     useEffect(() => {
-
-        const uid = uuidv4();
+        const uid = crypto.randomUUID();
         const rtcpeer = new Peer(uid, {
             path: "/peerjs",
             host: WS_URL,
@@ -162,9 +132,60 @@ const RoomProvider: React.FC<{ children: React.ReactNode }> = ({
     }, [screenSharingId, roomId]);
 
     useEffect(() => {
-        ws.emit("join-room", { roomId, peerId: rtc?.id, username});
-        console.log({ roomId, peerId: rtc?.id, username })
-    }, [rtc?.id, roomId, username]);
+        ws.emit("join-room", { roomId, peerId: rtc?.id, username: username.name });
+        console.log({ roomId, peerId: rtc?.id, username: username.name })
+    }, [rtc?.id, roomId, username.name]);
+
+    // Above functions are used to share screen, mute, pause, leave room, etc.
+    const mute = () => {
+        stream?.getAudioTracks().forEach((track) => {
+            track.enabled = !track.enabled;
+        });
+    };
+
+    const pause = () => {
+        stream?.getVideoTracks().forEach((track) => {
+            track.enabled = !track.enabled;
+        });
+    };
+
+    const shareScreen = () => {
+        const switchStream = (stream: MediaStream) => {
+            setStream(stream);
+            setScreenSharingId(rtc?.id || "");
+            if (!rtc?.connections) return;
+            Object.values(rtc?.connections).forEach((connection: any) => {
+                const videoTrack: any = stream
+                    ?.getTracks()
+                    .find((track) => track.kind === "video");
+                connection[0].peerConnection
+                    .getSenders()
+                    .find((sender: any) => sender.track.kind === "video")
+                    .replaceTrack(videoTrack)
+                    .catch((err: any) => console.error(err));
+            });
+        }
+        if (screenSharingId) {
+            navigator.mediaDevices
+                .getUserMedia({ video: true, audio: true })
+                .then(switchStream);
+        } else {
+            navigator.mediaDevices.getDisplayMedia({}).then((stream) => {
+                switchStream(stream);
+                setScreenStream(stream);
+            });
+        }
+    };
+
+    const leaveRoom = () => {
+        ws.disconnect();
+        setStream(undefined);
+        setRtc(undefined);
+        setScreenSharingId("");
+        setRoomId("");
+        setUsername({});
+        router.push("/");
+    };
 
 
     console.log(peers)
@@ -172,7 +193,21 @@ const RoomProvider: React.FC<{ children: React.ReactNode }> = ({
 
     return (
         <RoomContext.Provider
-            value={{ setUsername, username, setRoomId, roomId, ws, stream, peers, me: rtc?.id, shareScreen, screenStream, screenSharingId }}
+            value={{
+                setUsername,
+                username,
+                setRoomId,
+                roomId,
+                stream,
+                peers,
+                me: rtc?.id,
+                shareScreen,
+                screenStream,
+                screenSharingId,
+                leaveRoom,
+                mute,
+                pause
+            }}
         >
             {children}
         </RoomContext.Provider>

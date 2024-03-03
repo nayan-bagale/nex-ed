@@ -5,10 +5,11 @@ import { ThemeProvider } from "@/components/Layout/ThemeToggle/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import Session from "@/components/Providers/Session";
 import dynamic from "next/dynamic";
+import ClassLoading from "@/components/Loading/ClassLoading";
 
 const LiveClassContext = dynamic(() => import('@/components/Liveclass/ContextAPI/LiveClassContext'), {
   ssr: false,
-  loading: () => <p>Loading...</p>,
+  loading: () => <ClassLoading />,
 })
 
 const inter = Inter({ subsets: ["latin"] });
