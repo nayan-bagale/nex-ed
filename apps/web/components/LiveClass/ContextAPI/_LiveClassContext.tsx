@@ -1,4 +1,5 @@
-import React from 'react'
+'use client'
+
 import RoomContext from './RoomContext/RoomContext'
 import ChatContext from './ChatContext/ChatContext';
 

@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import Session from "@/components/Providers/Session";
 import dynamic from "next/dynamic";
 import ClassLoading from "@/components/Loading/ClassLoading";
+// import LiveClassContext from "@/components/Liveclass/ContextAPI/_LiveClassContext";
 
 const LiveClassContext = dynamic(() => import('../../components/Liveclass/ContextAPI/_LiveClassContext'), {
   ssr: false,
