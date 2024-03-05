@@ -6,7 +6,7 @@ import ClassLoading from "@/components/Loading/ClassLoading";
 
 
 const Room = dynamic(
-  () => import("../../../../components/Liveclass/_Room"),
+  () => import("@/components/Liveclass_V1/_Room"),
   {
     ssr: false,
     loading: () => <ClassLoading />,

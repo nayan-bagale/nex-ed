@@ -8,7 +8,7 @@ import NavBar from "@/components/Layout/Header/NavBar";
 
 
 
-const CreateRoom = dynamic(() => import('../../../components/Liveclass/_CreateRoom'), {
+const CreateRoom = dynamic(() => import('@/components/Liveclass_V1/_CreateRoom'), {
   ssr: false,
   loading: () => <ClassLoading />,
 })

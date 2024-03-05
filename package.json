@@ -3,10 +3,10 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
+    "start": "turbo start",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "heroku-prebuild": "cd apps/server && yarn start"
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
     "@repo/eslint-config": "*",

@@ -9,6 +9,7 @@ interface LiveClassContextProps {
 
 
 const LiveClassContext: React.FC<LiveClassContextProps> = ({ children }) => {
+    
     return (
         <RoomContext>
             <ChatContext>
