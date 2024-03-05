@@ -1,8 +1,25 @@
-import LiveClass from "@/components/LiveClass/LiveClass";
+import { authOptions } from "@/components/utils/options";
+import { getServerSession } from "next-auth";
+import dynamic from "next/dynamic";
+import ClassLoading from "@/components/Loading/ClassLoading";
+// import Room from "@/components/Liveclass/_Room";
 
-const page = () => {
+
+const Room = dynamic(
+  () => import("@/components/Liveclass_V1/_Room"),
+  {
+    ssr: false,
+    loading: () => <ClassLoading />,
+  }
+)
+
+
+const page = async({ params }: { params: { roomid: string } }) => {
+  const session = await getServerSession(authOptions);
   return (
-    <LiveClass />
+    <div>
+      <Room roomid={params.roomid} user={session?.user} />
+    </div>
   );
 }
 

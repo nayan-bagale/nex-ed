@@ -3,9 +3,15 @@ import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { ThemeProvider } from "@/components/Layout/ThemeToggle/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import NavBar from "@/components/Layout/Header/NavBar";
-import Sidebar from "@/components/Layout/Sidebar/SideBar";
 import Session from "@/components/Providers/Session";
+import dynamic from "next/dynamic";
+import ClassLoading from "@/components/Loading/ClassLoading";
+// import LiveClassContext from "@/components/Liveclass/ContextAPI/_LiveClassContext";
+
+const LiveClassContext = dynamic(() => import('@/components/Liveclass_V1/ContextAPI/_LiveClassContext'), {
+  ssr: false,
+  loading: () => <ClassLoading />,
+})
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,7 +35,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <LiveClassContext>
               {children}
+            </LiveClassContext>
             <Toaster />
           </ThemeProvider>
         </Session>

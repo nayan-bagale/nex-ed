@@ -7,9 +7,9 @@ interface UserI {
 
 export const USERS: UserI[] = [
   {
-    id: "101868618012206025930",
+    id: "1018686180122",
     name: "Nayan",
-    email: "nvbagale@gmail.com",
+    email: "nayan@gmail.com",
     image:
       "https://lh3.googleusercontent.com/a/ACg8ocLdwVXPrBdm21TO65GaBYcKZYT1YiGoEoILBxHi9CPM5fNS=s96-c",
   },

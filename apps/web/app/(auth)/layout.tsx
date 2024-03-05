@@ -4,7 +4,7 @@ import "../globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/options";
+import { authOptions } from "@/components/utils/options";
 import { redirect } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
