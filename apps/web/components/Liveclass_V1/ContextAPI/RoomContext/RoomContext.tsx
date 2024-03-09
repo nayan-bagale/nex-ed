@@ -16,8 +16,7 @@ import {
     useMemo
 } from "react";
 
-import { v4 as uuidv4 } from "uuid";
-import { ws, WS_URL } from "../WebSockets";
+import { rtcpeer, ws } from "../Connection_WS_Peerjs";
 
 const RoomContext = createContext<null | any>(null);
 
@@ -45,17 +44,8 @@ const RoomProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     useEffect(() => {
-        const uid = crypto.randomUUID();
-        const rtcpeer = new Peer(uid, {
-            path: "/peerjs",
-            host: WS_URL,
-            port: 8080,
-            // secure: true,
-            debug: 3,
-
-        });
-        setRtc(rtcpeer);
-
+        const rtc = rtcpeer();
+        setRtc(rtc);
         try {
             navigator.mediaDevices
                 .getUserMedia({
@@ -83,7 +73,7 @@ const RoomProvider: React.FC<{ children: React.ReactNode }> = ({
         ws.on("user-stopped-sharing", () => setScreenSharingId(''));
 
         return () => {
-            rtcpeer.disconnect();
+            rtc.disconnect();
             ws.off("room-created", enterroom);
             ws.off("user-disconnected");
             ws.off("user-started-sharing");

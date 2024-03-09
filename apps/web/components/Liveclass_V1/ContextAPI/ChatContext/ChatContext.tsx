@@ -1,6 +1,6 @@
 'use client'
 import { createContext, useContext, useEffect, useState } from "react";
-import { ws } from "../WebSockets";
+import { ws } from "../Connection_WS_Peerjs";
 import { set } from "react-hook-form";
 import { toast } from "sonner";
 

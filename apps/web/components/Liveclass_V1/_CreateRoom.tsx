@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import { v4 as uuidv4 } from "uuid";
 import { Input } from '../ui/input';
-import { ws } from './ContextAPI/WebSockets';
+import { ws } from './ContextAPI/Connection_WS_Peerjs';
 import { useRoom } from './ContextAPI/RoomContext/RoomContext';
 import { useSetUserData } from './CustomHooks/useSetUserData';
 
