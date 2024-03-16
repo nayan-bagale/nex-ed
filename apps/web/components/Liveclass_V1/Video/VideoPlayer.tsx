@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
-const VideoPlayer: React.FC<{ stream: MediaStream, className:any }> = ({ stream, className }) => {
+const VideoPlayer: React.FC<{ stream: MediaStream, className: any, muted: boolean }> = ({ stream, className, muted }) => {
     const videoRef = useRef<HTMLVideoElement>(null);  
     
     useEffect(() => {
@@ -8,7 +8,7 @@ const VideoPlayer: React.FC<{ stream: MediaStream, className:any }> = ({ stream,
     },[stream])
 
   return (
-    <video ref={videoRef} autoPlay playsInline muted className={className} />
+    <video ref={videoRef} autoPlay muted={muted} playsInline className={className} />
   )
 }
 

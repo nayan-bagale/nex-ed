@@ -13,18 +13,20 @@ const InputField = () => {
   const { roomId, username } = useRoom();
   const [message, setMessage] = useState<string>("");
 
-  const handleclick = () => {
+  const handlesubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if(!message) return;
     sendMessage(message, roomId, username?.name);
     setMessage("");
-  };
+  }
 
   return (
-    <div className="flex flex-row items-center w-full mt-2 gap-2">
+    <form onSubmit={handlesubmit} className="flex flex-row items-center w-full mt-2 gap-2">
       <Input className="w-full" placeholder="Message..." value={message} onChange={(e) => setMessage(e.target.value)} />
-      <Button className=" px-2" variant='secondary' onClick={handleclick}>
+      <Button className=" px-2" variant='secondary'>
         <Send  />
       </Button>
-    </div>
+    </form>
   );
 };
 

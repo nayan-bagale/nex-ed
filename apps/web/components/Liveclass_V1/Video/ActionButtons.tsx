@@ -1,28 +1,43 @@
-import React from 'react'
-import { MessageCircleMore, Mic, Presentation, Video, X } from "lucide-react";
+
+import { MessageCircleMore, Mic, Presentation, Video, X, VideoOff, MicOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRoom } from '../ContextAPI/RoomContext/RoomContext';
+import { useState } from "react";
 
 
 const ActionButtons = ({ setIsOpen }: { setIsOpen:any}) => {
     const { shareScreen, leaveRoom, mute, pause } = useRoom();
 
+    const [cameraOff, setCameraOff] = useState(false)
+    const [micOff, setMicOff] = useState(false)
+
+    const handleCamera = () => {
+        setCameraOff((prev) => !prev)
+        pause();
+    }
+
+    const handleMic = () => {
+        setMicOff((prev) => !prev)
+        mute();
+    }
+    
+
   return (
-      <div className=" flex items-center justify-evenly mt-2 h-[3.5rem] md:h-[5rem] w-full">
+      <div className=" flex items-center justify-evenly mt-2 h-[3.5rem] md:h-[5rem] w-full border rounded-2xl">
           <div className=" flex flex-col items-center">
               <Button className=" rounded-full px-2" variant={"outline"}
-                  onClick={pause}
+                  onClick={handleCamera}
               >
-                  <Video />
+                  {cameraOff ? <VideoOff/> : <Video />}
               </Button>
               <p className="text-xs md:text-sm">Video</p>
           </div>
 
           <div className=" flex flex-col items-center">
               <Button className=" rounded-full px-2" variant={"outline"}
-                  onClick={mute}
+                  onClick={handleMic}
               >
-                  <Mic />
+                  {micOff ? <MicOff/> : <Mic />}
               </Button>
               <p className="text-xs md:text-sm">Mic</p>
           </div>

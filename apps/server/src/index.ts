@@ -4,20 +4,12 @@ import { Server } from 'socket.io'
 import cors from 'cors'
 import { roomHandler } from './room'
 import { chatHandler } from './chat'
-import { ExpressPeerServer } from "peer";
 
 
 const port = process.env.PORT || 8080;
 const app = express()
 app.use(cors)
 const server = http.createServer(app)
-
-const peerServer = ExpressPeerServer(server, {
-    proxied: true,
-    path:'/peerjs'
-})
-
-app.use('/', peerServer)
 
 const io = new Server(server, {
     cors: {
