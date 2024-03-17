@@ -36,7 +36,7 @@ const LiveClass = ({ roomid }: { roomid: string }) => {
             <div className=" flex h-fit flex-wrap justify-center md:space-y-0 md:space-x-4 space-y-4 px-4 py-2 md:p-4">
               {(
                 <div className="h-[190px] w-[260px] md:h-[210px] md:w-[300px] border rounded-md md:rounded-xl overflow-hidden">
-                  <VideoPlayer muted={false} stream={stream} className=" object-cover object-center h-full w-full" />
+                  <VideoPlayer muted={true} stream={stream} className=" object-cover object-center h-full w-full" />
                 </div>
               
               )}
