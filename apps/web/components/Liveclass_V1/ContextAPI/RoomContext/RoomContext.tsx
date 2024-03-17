@@ -122,8 +122,8 @@ const RoomProvider: React.FC<{ children: React.ReactNode }> = ({
     }, [screenSharingId, roomId]);
 
     useEffect(() => {
-        ws.emit("join-room", { roomId, peerId: rtc?.id, username: username.name });
-        console.log({ roomId, peerId: rtc?.id, username: username.name })
+        ws.emit("join-room", { roomId, peerId: rtc?.id, profile: username });
+        console.log({ roomId, peerId: rtc?.id, profile: username })
     }, [rtc?.id, roomId, username.name]);
 
     // Above functions are used to share screen, mute, pause, leave room, etc.

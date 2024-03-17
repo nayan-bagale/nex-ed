@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import Session from "@/components/Providers/Session";
 import dynamic from "next/dynamic";
 import ClassLoading from "@/components/Loading/ClassLoading";
+import NavBarLiveClass from "@/components/Layout/Header/NavBarLiveClass";
 // import LiveClassContext from "@/components/Liveclass/ContextAPI/_LiveClassContext";
 
 const LiveClassContext = dynamic(() => import('@/components/Liveclass_V1/ContextAPI/_LiveClassContext'), {
@@ -36,6 +37,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <LiveClassContext>
+              <NavBarLiveClass />
               {children}
             </LiveClassContext>
             <Toaster />

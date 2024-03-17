@@ -1,8 +1,8 @@
 'use client'
 import { createContext, useContext, useEffect, useState } from "react";
 import { ws } from "../Connection_WS_Peerjs";
-import { set } from "react-hook-form";
 import { toast } from "sonner";
+import { IProfile } from "@/types/profile";
 
 
 const ChatContext = createContext<null | any>(null);
@@ -10,12 +10,12 @@ const ChatContext = createContext<null | any>(null);
 const ChatProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
     const [messages, setMessages] = useState<{
         message: string;
-        username: string;
+        username: IProfile;
     }[]>([]);
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
-    const newMessage = (message: string, username: string) => {
+    const newMessage = (message: string, username: IProfile) => {
         setMessages((prev) => [...prev, { message, username }]);
         if(!isOpen) {
             toast.success(message);
@@ -23,13 +23,13 @@ const ChatProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
     };
     
 
-    const sendMessage = (message: string, roomId: string, username: string) => {
-        ws.emit("message", { roomId, message, username });
+    const sendMessage = (message: string, roomId: string, username: IProfile) => {
+        ws.emit("message", { roomId, message, profile: username });
         setMessages((prev) => [...prev, { message, username }]);
     };
 
     useEffect(() => {
-       ws.on('message', ({ message, username }: { message: string, username: string }) => newMessage(message, username));
+        ws.on('message', ({ message, username }: { message: string, username: IProfile }) => newMessage(message, username));
     }, []);
 
     return (

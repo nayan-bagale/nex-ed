@@ -23,7 +23,7 @@ const ActionButtons = ({ setIsOpen }: { setIsOpen:any}) => {
     
 
   return (
-      <div className=" flex items-center justify-evenly mt-2 h-[3.5rem] md:h-[5rem] w-full border rounded-2xl">
+      <div className=" fixed bottom-1 border-t left-0 md:static flex items-center justify-evenly mt-2 h-[4.8rem] md:h-[5rem] w-full md:border rounded-2xl">
           <div className=" flex flex-col items-center">
               <Button className=" rounded-full px-2" variant={"outline"}
                   onClick={handleCamera}

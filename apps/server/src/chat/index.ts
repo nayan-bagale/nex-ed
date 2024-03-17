@@ -1,13 +1,12 @@
-import { start } from "repl";
 import { Socket } from "socket.io";
-import { v4 as uuidv4 } from "uuid";
+import { IProfile } from "../types/profile";
 
 const rooms: Record<string, string[]> = {};
 
 interface IRoomParams {
   roomId: string;
   peerId: string;
-  username?: string;
+  profile?: IProfile;
 }
 
 export const chatHandler = (socket: Socket) => {
@@ -18,10 +17,10 @@ export const chatHandler = (socket: Socket) => {
     console.log(`Creating room: ${roomId}`);
     socket.emit("room-created", roomId);
   };
-  const joinRoom = ({ roomId, peerId, username }: IRoomParams) => {
-    console.log(peerId)
+  const joinRoom = ({ roomId, peerId, profile }: IRoomParams) => {
+    console.log(profile);
     if (rooms[roomId]) {
-      console.log(`Joining room: ${roomId} ${peerId} ${username}`);
+      console.log(`Joining room: ${roomId} ${peerId} ${profile?.name}`);
       rooms[roomId].push(peerId);
 
       socket.join(roomId);
@@ -34,7 +33,7 @@ export const chatHandler = (socket: Socket) => {
       });
     } else {
       socket.emit("room-not-found", roomId);
-      console.log(`Room not found: ${roomId}`)
+      console.log(`Room not found: ${roomId}`);
     }
     console.log(rooms);
 
@@ -59,13 +58,13 @@ export const chatHandler = (socket: Socket) => {
   const message = ({
     roomId,
     message,
-    username,
+    profile,
   }: {
     roomId: string;
     message: string;
-    username: string;
+    profile: IProfile;
   }) => {
-    socket.to(roomId).emit("message", { message, username });
+    socket.to(roomId).emit("message", { message, username: profile });
   };
 
   const startSharing = ({ roomId, peerId }: IRoomParams) => {

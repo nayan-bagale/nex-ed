@@ -16,7 +16,7 @@ const InputField = () => {
   const handlesubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if(!message) return;
-    sendMessage(message, roomId, username?.name);
+    sendMessage(message, roomId, username);
     setMessage("");
   }
 

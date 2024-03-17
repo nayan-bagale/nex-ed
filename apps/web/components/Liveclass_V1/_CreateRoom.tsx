@@ -1,7 +1,6 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button } from '../ui/button'
-import { v4 as uuidv4 } from "uuid";
 import { Input } from '../ui/input';
 import { ws } from './ContextAPI/Connection_WS_Peerjs';
 import { useRoom } from './ContextAPI/RoomContext/RoomContext';
@@ -17,7 +16,7 @@ const CreateRoom = ({ user }: { user: any }) => {
 
     useSetUserData(user);
 
-    const uid = crypto.randomUUID();
+    const uid = crypto.randomUUID().slice(0, 8);
 
     return (
         <div className='flex flex-col gap-10 items-center justify-center h-screen'>
