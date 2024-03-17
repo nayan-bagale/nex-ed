@@ -17,6 +17,7 @@ import {
 } from "react";
 
 import { rtcpeer, ws } from "../Connection_WS_Peerjs";
+import { steps } from "framer-motion";
 
 const RoomContext = createContext<null | any>(null);
 
@@ -155,15 +156,32 @@ const RoomProvider: React.FC<{ children: React.ReactNode }> = ({
                     .catch((err: any) => console.error(err));
             });
         }
+
         if (screenSharingId) {
             navigator.mediaDevices
                 .getUserMedia({ video: true, audio: true })
-                .then(switchStream);
+                .then((stream) => {
+                    switchStream(stream);
+                    setScreenSharingId("");
+                    
+                });
+            return false;
+            
         } else {
             navigator.mediaDevices.getDisplayMedia({}).then((stream) => {
                 switchStream(stream);
                 setScreenStream(stream);
+                stream.getVideoTracks()[0].onended = () => {
+                    navigator.mediaDevices
+                        .getUserMedia({ video: true, audio: true })
+                        .then((stream) => {
+                            switchStream(stream);
+                            setScreenSharingId("");
+                        });
+                }
             });
+
+            return true;
         }
     };
 

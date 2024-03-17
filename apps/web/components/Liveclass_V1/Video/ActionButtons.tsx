@@ -11,6 +11,7 @@ const ActionButtons = ({ setIsOpen }: { setIsOpen:any}) => {
     const [cameraOff, setCameraOff] = useState(false)
     const [micOff, setMicOff] = useState(false)
 
+
     const handleCamera = () => {
         setCameraOff((prev) => !prev)
         pause();

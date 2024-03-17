@@ -28,21 +28,21 @@ const LiveClass = ({ roomid }: { roomid: string }) => {
     <div className="flex flex-col h-dvh w-full pt-12">
       <div className="flex w-full h-full p-4 gap-2 ">
         <div className=" relative flex h-[80%] md:h-full flex-col gap-2 w-full lg:w-[75%] ">
-          {screenSharingId && <div className=" rounded-md md:rounded-xl aspect-[9/16] sm:aspect-[2/3] xl:aspect-[10/8] border overflow-hidden">
+          {screenSharingId !== '' && <div className=" rounded-md md:rounded-xl aspect-[9/16] sm:aspect-[2/3] xl:aspect-[10/8] border overflow-hidden">
             {/* Main Speacker */}
               <VideoPlayer muted={false} stream={screenSharingVideo} className={'object-contain object-center h-full w-full'} />
           </div>}
           <ScrollArea className=" flex h-full" >
             <div className=" flex h-fit flex-wrap justify-center md:space-y-0 md:space-x-4 space-y-4 px-4 py-2 md:p-4">
-              {(
-                <div className="h-[190px] w-[260px] md:h-[210px] md:w-[300px] border rounded-md md:rounded-xl overflow-hidden">
-                  <VideoPlayer muted={true} stream={stream} className=" object-cover object-center h-full w-full" />
+              {(screenSharingId !== me) && (
+                <div className="h-[250px] w-[260px] md:h-[210px] md:w-[300px] border rounded-md md:rounded-xl overflow-hidden">
+                  <VideoPlayer muted={true} stream={stream} className=" transform scale-x-[-1] object-cover object-center h-full w-full" />
                 </div>
               
               )}
               {Object.values(peersToShow as PeerState).map((peer) => (
-                <div className="h-[190px] w-[260px] md:h-[210px] md:w-[300px] border rounded-md md:rounded-xl overflow-hidden">
-                  <VideoPlayer muted={false} stream={peer.stream} className="object-cover object-center h-full w-full" />
+                <div className="h-[250px] w-[260px] md:h-[210px] md:w-[300px] border rounded-md md:rounded-xl overflow-hidden">
+                  <VideoPlayer muted={false} stream={peer.stream} className="transform scale-x-[-1] object-cover object-center h-full w-full" />
                   {/* <p>{peer.stream.id}</p> */}
                 </div>
               ))}
