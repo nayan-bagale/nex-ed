@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/components/Layout/ThemeToggle/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import Session from "@/components/Providers/Session";
 import dynamic from "next/dynamic";
-import ClassLoading from "@/components/Loading/ClassLoading";
+import ClassLoading from "@/components/Templates/Loading/ClassLoading";
 import NavBarLiveClass from "@/components/Layout/Header/NavBarLiveClass";
 // import LiveClassContext from "@/components/Liveclass/ContextAPI/_LiveClassContext";
 

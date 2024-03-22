@@ -18,8 +18,8 @@ export const chatHandler = (socket: Socket) => {
     socket.emit("room-created", roomId);
   };
   const joinRoom = ({ roomId, peerId, profile }: IRoomParams) => {
-    console.log(profile);
-    if (rooms[roomId]) {
+    // console.log(profile);
+    if (Object.hasOwn(rooms, roomId)) {
       console.log(`Joining room: ${roomId} ${peerId} ${profile?.name}`);
       rooms[roomId].push(peerId);
 
@@ -34,8 +34,8 @@ export const chatHandler = (socket: Socket) => {
     } else {
       socket.emit("room-not-found", roomId);
       console.log(`Room not found: ${roomId}`);
+      console.log(rooms)
     }
-    console.log(rooms);
 
     socket.on("disconnect", () => {
       leaveRoom({ roomId, peerId });

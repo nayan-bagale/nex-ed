@@ -1,7 +1,7 @@
 import { authOptions } from "@/components/utils/options";
 import { getServerSession } from "next-auth";
 import dynamic from "next/dynamic";
-import ClassLoading from "@/components/Loading/ClassLoading";
+import ClassLoading from "@/components/Templates/Loading/ClassLoading";
 import Sidebar from "@/components/Layout/Sidebar/SideBar";
 import NavBar from "@/components/Layout/Header/NavBar";
 // import CreateRoom from "@/components/Liveclass/_CreateRoom";

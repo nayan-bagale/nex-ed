@@ -24,7 +24,7 @@ const ActionButtons = ({ setIsOpen }: { setIsOpen:any}) => {
     
 
   return (
-      <div className=" fixed bottom-1 border-t left-0 md:static flex items-center justify-evenly mt-2 h-[4.8rem] md:h-[5rem] w-full md:border rounded-2xl">
+      <div className=" fixed bottom-1 border-t left-0 md:static flex items-center justify-evenly mt-2 h-[4.8rem] md:h-[5rem] md:w-[50%] w-full md:self-center md:border rounded-2xl">
           <div className=" flex flex-col items-center">
               <Button className=" rounded-full px-2" variant={"outline"}
                   onClick={handleCamera}

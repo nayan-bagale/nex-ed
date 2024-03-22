@@ -37,7 +37,7 @@ const ChatPanel: React.FC = () => {
           <TabsTrigger value="attendance" className="w-full">Attendance</TabsTrigger>
         </TabsList>
         <TabsContent value="chat" className="w-full">
-          <ScrollArea className=" min-h-[26rem] max-h-[300px] md:max-h-[500px] lg:max-h-[680px] w-full border-b border-t">
+          <ScrollArea className=" min-h-[26rem] max-h-[300px] md:max-h-[500px] lg:max-h-[720px] w-full border-b border-t">
             <div className="flex-col flex p-2" ref={scrollRef}>
             {messages.map((message: any, index: number) =>
               username?.name !== message?.username?.name ? (

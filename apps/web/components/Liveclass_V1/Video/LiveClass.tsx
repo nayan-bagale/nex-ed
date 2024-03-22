@@ -27,7 +27,7 @@ const LiveClass = ({ roomid }: { roomid: string }) => {
   return (
     <div className="flex flex-col h-dvh w-full pt-12">
       <div className="flex w-full h-full p-4 gap-2 ">
-        <div className=" relative flex h-[80%] md:h-full flex-col gap-2 w-full lg:w-[75%] ">
+        <div className=" relative flex h-[100%] md:h-full flex-col gap-2 w-full lg:w-[75%] ">
           {screenSharingId !== '' && <div className=" rounded-md md:rounded-xl aspect-[9/16] sm:aspect-[2/3] xl:aspect-[10/8] border overflow-hidden">
             {/* Main Speacker */}
               <VideoPlayer muted={false} stream={screenSharingVideo} className={'object-contain object-center h-full w-full'} />
