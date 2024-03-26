@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 
@@ -5,8 +6,10 @@ const page = async () => {
 
   return (
     <div>
+      <Link href={'/liveclass'}>
 
-    <h1></h1>
+      <Button>Live Class</Button>
+      </Link>
       
     </div>
   )

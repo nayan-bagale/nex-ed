@@ -13,11 +13,11 @@ export default withAuth({
   },
 });
 
-export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/liveclass")) {
-    return NextResponse.rewrite(new URL("/maintenace", request.url));
-  }
-}
+// export function middleware(request: NextRequest) {
+//   if (request.nextUrl.pathname.startsWith("/liveclass")) {
+//     return NextResponse.rewrite(new URL("/maintenace", request.url));
+//   }
+// }
 
 
 export const config = { matcher: ["/dashboard","/profile","/liveclass/:path*"] };
