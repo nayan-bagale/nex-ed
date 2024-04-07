@@ -18,8 +18,8 @@ const Joining = ({ roomid, user }: { roomid: string, user: any }) => {
   return roomActive ? (
     <div className='flex flex-col gap-4 items-center justify-center h-screen'>
       <div className=" relative rounded-xl overflow-hidden">
-        <VideoPlayer muted={true} className={' w-[30rem]'} stream={stream} />
-        <div className=" transform scale-x-[-1] absolute h-16 bottom-0 w-full bg-teal-950/50 backdrop-blur flex items-center justify-center">
+        <VideoPlayer muted={true} className={' transform scale-x-[-1] w-[30rem]'} stream={stream} />
+        <div className="  absolute h-16 bottom-0 w-full bg-teal-950/50 backdrop-blur flex items-center justify-center">
           <h1 className=" text-xl">
             {user?.name || ""}
           </h1>
