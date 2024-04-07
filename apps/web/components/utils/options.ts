@@ -1,6 +1,9 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import { Adapter } from "next-auth/adapters";
+import { db } from "@/database/db";
 import { USERS } from "@/data/constants";
 
 export const authOptions: NextAuthOptions = {
@@ -15,7 +18,7 @@ export const authOptions: NextAuthOptions = {
           email: profile.email,
           image: profile.picture,
         };
-      }
+      },
     }),
     CredentialsProvider({
       name: "Sign in",
@@ -45,6 +48,8 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+
+  adapter: DrizzleAdapter(db) as Adapter,
 
   callbacks: {
     session: ({ session, token }) => {
