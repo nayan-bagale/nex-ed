@@ -11,7 +11,7 @@ const Joining = ({ roomid, user }: { roomid: string, user: any }) => {
   const { stream, setRoomId } = useRoom();
   const [roomActive, setRoomActive] = useState(true);
   ws.on("room-not-found", (roomId: string) => {
-    setRoomActive(false);
+    // setRoomActive(false);
     console.log("Room not found: ", roomId);
   });
 

@@ -32,7 +32,7 @@ export const chatHandler = (socket: Socket) => {
         participants: rooms[roomId],
       });
     } else {
-      socket.emit("room-not-found", roomId);
+      // socket.emit("room-not-found", roomId);
       console.log(`Room not found: ${roomId}`);
       console.log(rooms)
     }
