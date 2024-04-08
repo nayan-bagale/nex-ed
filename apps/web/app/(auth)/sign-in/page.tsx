@@ -53,9 +53,11 @@ export default async function AuthenticationPage() {
               </p>
             </div>
             <UserAuthForm />
+            <Link href={'/forgot-password'}>
             <Button className="ml-auto w-full" variant="outline">
               Forgot password?
             </Button>
+            </Link>
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t" />

@@ -15,6 +15,13 @@
       "when": 1712565682021,
       "tag": "0001_premium_stellaris",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1712603889064,
+      "tag": "0002_polite_steve_rogers",
+      "breakpoints": true
     }
   ]
 }

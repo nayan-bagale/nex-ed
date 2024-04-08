@@ -61,3 +61,12 @@ export const verificationTokens = pgTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 );
+
+export const resetpasswordTokens = pgTable(
+  "resetpasswordToken",
+  {
+    user_id: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    token: text("token").notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  }
+);
