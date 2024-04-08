@@ -4,7 +4,10 @@ import GoogleProvider from "next-auth/providers/google";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { Adapter } from "next-auth/adapters";
 import { db } from "@/database/db";
-import { USERS } from "@/data/constants";
+// import { USERS } from "@/data/constants";
+import { users } from "@/database/schema";
+import { eq } from "drizzle-orm";
+import { compare } from "bcrypt";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -35,15 +38,36 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const user = USERS.find((user) => user.email === credentials.email);
+       
+        const user = await db
+          .select()
+          .from(users)
+          .where(eq(users.email, credentials.email));
 
-        if (!user) {
+        console.log(user)
+
+        if (user.length <= 0) {
           return null;
         }
+
+        if (!user[0].password) {
+          return null
+        }
+
+        const isMatch = await compare(
+          credentials.password,
+          user[0].password,
+        );
+
+        if(!isMatch) {
+          return null;
+        }
+
         return {
-          id: user.id,
-          name: user.name,
-          email: credentials.email,
+          id: user[0].id,
+          name: user[0].name,
+          email: user[0].email,
+          image: user[0].image
         };
       },
     }),

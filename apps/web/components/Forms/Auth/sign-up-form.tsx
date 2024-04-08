@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -17,27 +16,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { formSchema, UserFormValue } from "./schema/sign-up-zod-schema";
 
-
-const formSchema = z
-  .object({
-    email: z.string().email({ message: "Enter a valid email address" }),
-    password: z.string().min(8, { message: "At least 8 letters" }),
-    confirm_password: z.string().min(8, { message: "At least 8 letters" }),
-    firstname: z.string().min(3, { message: "At least 3 letters" }),
-    lastname: z.string().min(3, { message: "At least 3 letters" }),
-  })
-  .refine(
-    (values) => {
-      return values.password === values.confirm_password;
-    },
-    {
-      message: "Passwords do not match",
-      path: ["confirm_password"],
-    }
-  );
-
-type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserAuthForm() {
   const router = useRouter();

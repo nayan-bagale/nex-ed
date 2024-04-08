@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -22,12 +21,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { AlertCircle } from "lucide-react";
 
-const formSchema = z.object({
-  email: z.string().email({ message: "Enter a valid email address" }),
-  password: z.string().min(8, { message: "At least 8 letters" }),
-});
+import { formSchema_signin as formSchema, UserFormValue_signin as UserFormValue } from './schema/sign-in-zod-schema'
 
-type UserFormValue = z.infer<typeof formSchema>;
+
 
 export default function UserAuthForm() {
   const router = useRouter();
