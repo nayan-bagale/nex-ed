@@ -39,7 +39,7 @@ const defaultValues: Partial<ProfileFormValues> = {
   username: "shadcn",
 };
 
- function ProfileForm() {
+function ProfileForm() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
@@ -48,7 +48,7 @@ const defaultValues: Partial<ProfileFormValues> = {
 
 
   function onSubmit(data: ProfileFormValues) {
-    toast.success("You submitted the following values:",{
+    toast.success("You submitted the following values:", {
       description: JSON.stringify(data, null, 2)
     });
   }
@@ -72,7 +72,7 @@ const defaultValues: Partial<ProfileFormValues> = {
               <FormMessage />
             </FormItem>
           )}
-        /> 
+        />
         <Button type="submit">Update profile</Button>
       </form>
     </Form>

@@ -21,9 +21,7 @@ export async function updatePassword(data: ResetFormValue) {
         await db.update(users).set({password: hashPassword}).where(eq(users.id, token[0].user_id))
 
         const deleted = await db.delete(resetpasswordTokens).where(eq(resetpasswordTokens.token, data.token)).returning()
-        console.log(deleted)
         
-        await sleep(3000)
         return true
 
     }catch(e: unknown) {

@@ -7,22 +7,28 @@ export const navItems: NavItem[] = [
     icon: "dashboard",
     label: "Dashboard",
   },
-  {
-    title: "User",
-    href: "/user",
-    icon: "user",
-    label: "user",
-  },
+  // {
+  //   title: "User",
+  //   href: "/user",
+  //   icon: "user",
+  //   label: "user",
+  // },
   {
     title: "Profile",
     href: "/profile",
     icon: "profile",
     label: "profile",
   },
+  // {
+  //   title: "Login",
+  //   href: "/",
+  //   icon: "login",
+  //   label: "login",
+  // },
   {
-    title: "Login",
-    href: "/",
-    icon: "login",
-    label: "login",
+    title:"Settings",
+    href:"/settings",
+    icon:"settings",
+    label:"settings"
   },
 ];

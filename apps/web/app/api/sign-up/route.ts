@@ -1,8 +1,5 @@
-// import { prisma } from "@/lib/prisma";
 import { hash } from "bcrypt";
-import { error } from "console";
 import { NextResponse } from "next/server";
-import { USERS } from "@/data/constants";
 import { db } from "@/database/db";
 import { eq } from "drizzle-orm";
 import { users } from "@/database/schema";
@@ -19,7 +16,7 @@ export async function POST(req: Request) {
       return validatedData; // Valid data
     } catch (error: unknown) {
       // Handle validation errors (e.g., log, return error response)
-      console.error("Validation error:", error.message);
+      console.error("Validation error:", error);
       throw new Error("Invalid form data");
     }
   }
@@ -33,10 +30,7 @@ export async function POST(req: Request) {
     };
 
     // console.log(firstname, lastname, email, password);
-
-    // throw Error("Not implemented yet");
-    // const user = USERS.find((user) => user.email === email);
-
+    
     try {
       const validatedData = validateFormData(submittedData);
       // Proceed with further processing (e.g., save to database)

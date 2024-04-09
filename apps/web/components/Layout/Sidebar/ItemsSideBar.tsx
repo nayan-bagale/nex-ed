@@ -21,7 +21,7 @@ export function ItemsSideBar({ items, setOpen }: ItemsSideBar) {
   }
 
   return (
-    <nav className="grid items-start gap-2">
+    <nav className="grid items-start gap-2 h-full">
       {items.map((item, index) => {
         const Icon = Icons[item.icon || "arrowRight"];
         return (
@@ -47,6 +47,7 @@ export function ItemsSideBar({ items, setOpen }: ItemsSideBar) {
           )
         );
       })}
+      
     </nav>
   );
 }
