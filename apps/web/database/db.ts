@@ -8,10 +8,3 @@ const connection = neon(process.env.DRIZZLE_DATABASE_URL!);
 
 export const db = drizzle(connection, { schema });
 
-// export const insertSurvey = async () =>{
-//     return await db.insert(schema.survey_questions).values({title: "The Awareness Atlas?", questions:awarenessAtlas}).returning();
-// }
-
-// export const getSurvey = async () =>{
-//     return await db.select().from(schema.survey_questions);
-// }

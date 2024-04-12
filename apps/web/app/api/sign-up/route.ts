@@ -22,15 +22,10 @@ export async function POST(req: Request) {
   }
 
   try {
-    const submittedData = (await req.json()) as {
-      firstname: string;
-      lastname: string;
-      email: string;
-      password: string;
-    };
+    const submittedData = (await req.json()) as UserFormValue;
 
     // console.log(firstname, lastname, email, password);
-    
+
     try {
       const validatedData = validateFormData(submittedData);
       // Proceed with further processing (e.g., save to database)
@@ -47,7 +42,10 @@ export async function POST(req: Request) {
       );
     }
 
-    const user = await db.select().from(users).where(eq(users.email, submittedData.email));
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, submittedData.email));
 
     if (user.length > 0) {
       return NextResponse.json(
@@ -59,17 +57,21 @@ export async function POST(req: Request) {
       );
     }
 
-    const hashedPassword = await hash(submittedData.password, 12); 
+    const hashedPassword = await hash(submittedData.password, 12);
 
-    const insertedData = await db.insert(users).values({
-      id:crypto.randomUUID(),
-      name: `${submittedData.firstname} ${submittedData.lastname}`,
-      email: submittedData.email,
-      emailVerified: null,
-      image:"",
-      password:hashedPassword
-    }).returning()
-    
+    const insertedData = await db
+      .insert(users)
+      .values({
+        id: crypto.randomUUID(),
+        name: `${submittedData.firstname} ${submittedData.lastname}`,
+        email: submittedData.email,
+        emailVerified: null,
+        image: "",
+        password: hashedPassword,
+        role: submittedData.role,
+      })
+      .returning();
+
     console.log(insertedData);
 
     return NextResponse.json(
@@ -80,7 +82,7 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.log(error)
+    console.log(error);
     return new NextResponse(
       JSON.stringify({
         status: "error",

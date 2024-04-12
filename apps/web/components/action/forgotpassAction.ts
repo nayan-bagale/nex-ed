@@ -26,8 +26,8 @@ export async function forgotpassAction(email: string) {
       host: "live.smtp.mailtrap.io",
       port: 587,
       auth: {
-        user: "api",
-        pass: "c4b58cfc19ab2b2e839a0a9d8a9d4c68",
+        // user: "demo",
+        // pass: "demo",
       },
     });
 

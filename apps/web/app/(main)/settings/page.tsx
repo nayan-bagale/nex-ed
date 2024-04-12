@@ -33,7 +33,12 @@ function Settings() {
                             <ProfileForm />
                     </AccordionContent>
                 </AccordionItem>
-                
+                <AccordionItem value="item-2">
+                    <AccordionTrigger>Appearence</AccordionTrigger>
+                    <AccordionContent>
+                            
+                    </AccordionContent>
+                </AccordionItem>
             </Accordion>
             </div>
         </div>

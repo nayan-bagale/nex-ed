@@ -7,6 +7,7 @@ export const formSchema = z
     confirm_password: z.string().min(8, { message: "At least 8 letters" }),
     firstname: z.string().min(3, { message: "At least 3 letters" }),
     lastname: z.string().min(3, { message: "At least 3 letters" }),
+    role: z.enum(["student", "teacher"]),
   })
   .refine(
     (values) => {

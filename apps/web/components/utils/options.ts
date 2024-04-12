@@ -20,9 +20,12 @@ export const authOptions: NextAuthOptions = {
           name: profile.name,
           email: profile.email,
           image: profile.picture,
+          role: profile.role ?? "student",
         };
       },
+      allowDangerousEmailAccountLinking: true,
     }),
+
     CredentialsProvider({
       name: "Sign in",
       credentials: {
@@ -38,28 +41,22 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-       
         const user = await db
           .select()
           .from(users)
           .where(eq(users.email, credentials.email));
-
-        console.log(user)
 
         if (user.length <= 0) {
           return null;
         }
 
         if (!user[0].password) {
-          return null
+          return null;
         }
 
-        const isMatch = await compare(
-          credentials.password,
-          user[0].password,
-        );
+        const isMatch = await compare(credentials.password, user[0].password);
 
-        if(!isMatch) {
+        if (!isMatch) {
           return null;
         }
 
@@ -67,7 +64,8 @@ export const authOptions: NextAuthOptions = {
           id: user[0].id,
           name: user[0].name,
           email: user[0].email,
-          image: user[0].image
+          image: user[0].image,
+          role: user[0].role ?? "student",
         };
       },
     }),
@@ -76,24 +74,34 @@ export const authOptions: NextAuthOptions = {
   adapter: DrizzleAdapter(db) as Adapter,
 
   callbacks: {
-    session: ({ session, token }) => {
+    async signIn({ user, account, profile }) {
+      console.log("Sign In Callback", user, account, profile);
+      return true;
+    },
+
+    async jwt({ token, user, trigger, session }) {
+      if (user) {
+        const u = user as unknown as any;
+        token.id = u.id;
+        token.role = u.role;
+      }
+
+      if (trigger === "update" && session?.user) {
+          token.role = session.user.role;
+          token.name = session.user.name;
+      }
+
+      return token;
+    },
+    async session({ session, token }) {
       return {
         ...session,
         user: {
           ...session.user,
           id: token.id,
+          role: token.role,
         },
       };
-    },
-    jwt: ({ token, user }) => {
-      if (user) {
-        const u = user as unknown as any;
-        return {
-          ...token,
-          id: u.id,
-        };
-      }
-      return token;
     },
   },
 

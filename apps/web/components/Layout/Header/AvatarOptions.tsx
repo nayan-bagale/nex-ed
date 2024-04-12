@@ -14,6 +14,8 @@ import {
 
 import { LogOut, Settings, User } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge"
+
 
 // import { useSession, signOut } from "next-auth/react";
 
@@ -43,30 +45,35 @@ export async function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">
+            <div className=" flex justify-between">
+            <p className="text-sm font-medium leading-none pt-1">
               {session.user?.name}
             </p>
-            <p className="text-xs leading-none text-muted-foreground">
-              {session.user?.email}
-            </p>
+              <Badge variant="secondary" className=" capitalize">{session.user?.role}</Badge>
+            </div>
+              <p className="text-xs leading-none text-muted-foreground">
+                {session.user?.email}
+              </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/profile" className="flex items-center w-full">
+            {/* <Link href="/profile" className="flex items-center w-full">
               <User className="mr-2 h-4 w-4" />
               Profile
-            </Link>
+            </Link> */}
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Settings className="mr-2 h-4 w-4" />
-            Settings
+            <Link href={'/settings'} className=" flex items-center w-full">
+              <Settings className="mr-2 h-4 w-4" />
+              Settings
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <SignOutButton/>
+          <SignOutButton />
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuLabel>

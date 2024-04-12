@@ -63,7 +63,7 @@ export default async function AuthenticationPage() {
                 <span className="w-full border-t" />
               </div>
             </div>
-            <GoogleSignInButton/>
+            {/* <GoogleSignInButton/> */}
             <div className="flex flex-col space-y-2 text-center">
               <p className="text-sm  text-muted-foreground">
                 Don't have an account?
