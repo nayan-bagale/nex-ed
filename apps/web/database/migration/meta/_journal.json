@@ -1,0 +1,34 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1712517717450,
+      "tag": "0000_keen_ink",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1712565682021,
+      "tag": "0001_premium_stellaris",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1712603889064,
+      "tag": "0002_polite_steve_rogers",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1712857671737,
+      "tag": "0003_futuristic_may_parker",
+      "breakpoints": true
+    }
+  ]
+}

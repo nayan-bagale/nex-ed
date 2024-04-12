@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -13,42 +12,28 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { formSchema, UserFormValue } from "./schema/sign-up-zod-schema";
 
-
-const formSchema = z
-  .object({
-    email: z.string().email({ message: "Enter a valid email address" }),
-    password: z.string().min(8, { message: "At least 8 letters" }),
-    confirm_password: z.string().min(8, { message: "At least 8 letters" }),
-    firstname: z.string().min(3, { message: "At least 3 letters" }),
-    lastname: z.string().min(3, { message: "At least 3 letters" }),
-  })
-  .refine(
-    (values) => {
-      return values.password === values.confirm_password;
-    },
-    {
-      message: "Passwords do not match",
-      path: ["confirm_password"],
-    }
-  );
-
-type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserAuthForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const defaultValues = {
+  const defaultValues: UserFormValue = {
     email: "",
     password: "",
     confirm_password: "",
     firstname: "",
     lastname: "",
+    role: "student"
+
   };
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
@@ -67,8 +52,8 @@ export default function UserAuthForm() {
   }
 
   const onSubmit = async (data: UserFormValue) => {
-
     setLoading(true);
+    // console.log(data)
     toast.promise(postData(data), {
       loading: "Account creating...",
       success: async (data) => {
@@ -179,6 +164,40 @@ export default function UserAuthForm() {
               </FormItem>
             )}
           /> */}
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Im a ..</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex space-x-1"
+                  >
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="student" />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        Student
+                      </FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="teacher" />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        Teacher
+                      </FormLabel>
+                    </FormItem>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="password"

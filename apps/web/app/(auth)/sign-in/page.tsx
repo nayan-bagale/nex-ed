@@ -53,15 +53,17 @@ export default async function AuthenticationPage() {
               </p>
             </div>
             <UserAuthForm />
+            <Link href={'/forgot-password'}>
             <Button className="ml-auto w-full" variant="outline">
               Forgot password?
             </Button>
+            </Link>
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t" />
               </div>
             </div>
-            <GoogleSignInButton/>
+            {/* <GoogleSignInButton/> */}
             <div className="flex flex-col space-y-2 text-center">
               <p className="text-sm  text-muted-foreground">
                 Don't have an account?

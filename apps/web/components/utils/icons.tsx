@@ -29,6 +29,7 @@ import {
   User2Icon,
   UserX2Icon,
   X,
+  CheckCircleIcon
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -41,6 +42,7 @@ export const Icons = {
   profile: User2Icon,
   spinner: Loader2,
   kanban: CircuitBoardIcon,
+  attendance: CheckCircleIcon,
   chevronLeft: ChevronLeft,
   chevronRight: ChevronRight,
   trash: Trash,

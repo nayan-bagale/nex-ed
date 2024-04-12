@@ -12,9 +12,7 @@ export default function GoogleSignInButton() {
       className="w-full gap-1"
       variant="outline"
       type="button"
-      onClick={() =>
-        signIn("google", { callbackUrl: callbackUrl ?? "/dashboard" })
-      }
+      onClick={() => signIn("google", { callbackUrl: callbackUrl ?? '/dashboard'})}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

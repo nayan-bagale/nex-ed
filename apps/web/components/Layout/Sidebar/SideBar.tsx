@@ -3,6 +3,8 @@ import { navItems } from "@/data/data";
 import { cn } from "@/lib/utils";
 
 export default function Sidebar() {
+
+
   return (
     <nav
       className={cn(`relative hidden h-screen border-r pt-16 md:block w-72`)}
