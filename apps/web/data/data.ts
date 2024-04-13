@@ -116,6 +116,12 @@ export const navItems: NavItem[] = [
     icon: "attendance",
     label: "attendance",
   },
+  {
+    title: "Meeting",
+    href: "/meeting",
+    icon: "meeting",
+    label: "meeting",
+  },
 
   {
     title: "Settings",

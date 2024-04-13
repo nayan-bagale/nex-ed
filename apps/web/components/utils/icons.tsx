@@ -27,9 +27,11 @@ import {
   Twitter,
   User,
   User2Icon,
+  Users2Icon,
   UserX2Icon,
   X,
-  CheckCircleIcon
+  CheckCircleIcon,
+  PictureInPicture2
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -39,7 +41,7 @@ export const Icons = {
   logo: Command,
   login: LogIn,
   close: X,
-  profile: User2Icon,
+  profile: Users2Icon,
   spinner: Loader2,
   kanban: CircuitBoardIcon,
   attendance: CheckCircleIcon,
@@ -62,6 +64,7 @@ export const Icons = {
   sun: SunMedium,
   moon: Moon,
   laptop: Laptop,
+  meeting: PictureInPicture2,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

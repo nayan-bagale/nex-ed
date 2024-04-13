@@ -1,28 +1,30 @@
 import BreadCrumb from "@/components/BreadCrumb";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import Card_ from "@/components/Class/Card";
+import InstantDialog from "@/components/Meeting/DialogBox/InstantDialog";
+import ScheduleDialog from "@/components/Meeting/DialogBox/ScheduleDialog";
 
 function Class_() {
 
     const breadcrumbItems = [
         { title: "Dashboard", link: "/dashboard" },
-        { title: "Class", link: "/class" },
+        { title: "Meeting", link: "/meeting" },
     ];
 
     return (
         <div className="flex-1 space-y-4  p-4 pt-6">
             <BreadCrumb items={breadcrumbItems} />
             <div className="flex items-start justify-between">
-                <Heading title='Class' description='Manage your subjects.' />
-                <Button><Plus className="mr-2 h-4 w-4" /> Add New</Button>
+                <Heading title='Meeting' description='' />
+                <div className=" space-x-2">
+
+                    <InstantDialog />
+                    <ScheduleDialog />
+                </div>
             </div>
             <Separator />
             <div className=" p-2">
-                <Card_/>
-                
+
             </div>
         </div>
     );
