@@ -76,7 +76,7 @@ export default function ClassStreamCreatePostForm({ sub_name }: { sub_name: stri
             return (
                 [...subject_stream, {
                     id: cryptoRandomString({ length: 10 }),
-                    subject_id: 1,
+                    subject_id: '1',
                     subject_name: sub_name,
                     stream: [
                         // ...subject_stream1[0]?.stream,
