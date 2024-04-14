@@ -10,7 +10,9 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button";
 import { PictureInPicture2 } from "lucide-react";
-import InstantMeetingForm from "@/components/Forms/Meeting/instant-form";
+import InstantCreateMeetingForm from "@/components/Forms/Meeting/instant-create-form";
+import InstantJoinMeetingForm from "@/components/Forms/Meeting/instant-join-form";
+import { Separator } from "@/components/ui/separator";
 
 
 const InstantDialog = () => {
@@ -23,13 +25,14 @@ const InstantDialog = () => {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Are you absolutely sure?</DialogTitle>
+                    <DialogTitle>Create or Join a meeting instantly</DialogTitle>
                     <DialogDescription>
-                        This action cannot be undone. This will permanently delete your account
-                        and remove your data from our servers.
+                        You can create a meeting instantly or join a meeting by entering the meeting Id.
                     </DialogDescription>
                 </DialogHeader>
-                <InstantMeetingForm />
+                <InstantCreateMeetingForm />
+                <Separator/>
+                <InstantJoinMeetingForm />
             </DialogContent>
         </Dialog>
 

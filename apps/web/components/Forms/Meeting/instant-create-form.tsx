@@ -33,7 +33,7 @@ export const formSchema = z
 export type UserFormValue = z.infer<typeof formSchema>;
 
 
-export default function InstantMeetingForm() {
+export default function InstantCreateMeetingForm() {
     const [loading, setLoading] = useState(false);
 
     const defaultValues: UserFormValue = {

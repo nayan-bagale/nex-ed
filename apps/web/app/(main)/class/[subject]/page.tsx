@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Teachers } from "@/components/Class/People/Teachers";
 import { Students } from "@/components/Class/People/Students";
 import { StreamCard } from "@/components/Class/Stream/Card";
+import CreateStreamDialogBox from "@/components/Class/Stream/DialogBox/CreateStream";
 
 
 const page = ({ params }: { params: { subject: string } }) => {
@@ -22,17 +23,20 @@ const page = ({ params }: { params: { subject: string } }) => {
             <BreadCrumb items={breadcrumbItems} />
             <div className="flex items-start justify-between">
                 <Heading title={params.subject.toUpperCase()} description='Final Year (2023-24) Sec: B' />
-                <Button><Plus className="mr-2 h-4 w-4" /> Add New</Button>
             </div>
             <Separator />
             <div className=" p-2">
                 <Tabs defaultValue="stream" className="space-y-4">
+                    <div className=" flex justify-between">
+
                     <TabsList>
                         <TabsTrigger value="stream">Stream</TabsTrigger>
                         <TabsTrigger value="people">
                             People
                         </TabsTrigger>
                     </TabsList>
+                    <CreateStreamDialogBox/>
+                    </div>
                     <TabsContent value="stream" className="space-y-4">
                         <ScrollArea className="h-screen">
                             <div className=" space-y-4 mb-4">
@@ -65,6 +69,7 @@ const page = ({ params }: { params: { subject: string } }) => {
                         </ScrollArea>
                     </TabsContent>
                 </Tabs>
+
             </div>
         </div>
     )

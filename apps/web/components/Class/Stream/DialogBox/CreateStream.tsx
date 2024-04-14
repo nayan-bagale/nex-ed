@@ -9,23 +9,23 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button";
-import { CalendarClock } from "lucide-react";
-import ScheduleMeetingForm from "@/components/Forms/Meeting/schedule-form";
+import { Plus } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import ClassStreamCreatePostForm from "@/components/Forms/Class/Stream/ClassStreamCreatePostForm";
 
 
-const ScheduleDialog = () => {
+const CreateStreamDialogBox = () => {
     return (
         <Dialog>
             <DialogTrigger>
                 <Button>
-                    <CalendarClock className="mr-2 h-4 w-4" /> Schedule
+                    <Plus className="mr-2 h-4 w-4" /> Add New
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Schedule Meeting</DialogTitle>
+                    <DialogTitle>Create Post</DialogTitle>
                     {/* <DialogDescription>
                         This action cannot be undone. This will permanently delete your account
                         and remove your data from our servers.
@@ -33,7 +33,7 @@ const ScheduleDialog = () => {
                     <Separator />
                     <ScrollArea>
 
-                        <ScheduleMeetingForm />
+                        <ClassStreamCreatePostForm />
                     </ScrollArea>
                 </DialogHeader>
             </DialogContent>
@@ -42,4 +42,4 @@ const ScheduleDialog = () => {
     )
 }
 
-export default ScheduleDialog
+export default CreateStreamDialogBox

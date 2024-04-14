@@ -36,10 +36,10 @@ export const columns: ColumnDef<User>[] = [
         accessorKey: "company",
         header: "Subject",
     },
-    {
-        accessorKey: "role",
-        header: "Course",
-    },
+    // {
+    //     accessorKey: "role",
+    //     header: "Course",
+    // },
     {
         id: "actions",
         header: "Present",

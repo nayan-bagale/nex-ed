@@ -3,6 +3,7 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import InstantDialog from "@/components/Meeting/DialogBox/InstantDialog";
 import ScheduleDialog from "@/components/Meeting/DialogBox/ScheduleDialog";
+import MeetingCard from "@/components/Meeting/MeetingCard";
 
 function Class_() {
 
@@ -24,7 +25,7 @@ function Class_() {
             </div>
             <Separator />
             <div className=" p-2">
-
+                <MeetingCard />
             </div>
         </div>
     );

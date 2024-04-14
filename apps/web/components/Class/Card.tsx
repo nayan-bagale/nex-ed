@@ -11,7 +11,7 @@ import {
 import { Separator } from "../ui/separator";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Edit, Trash, MoreVertical } from "lucide-react";
 import { AlertModal } from "../Modal/Alert-Modal";
 import {
     DropdownMenu,
@@ -39,7 +39,7 @@ const Menu = () => {
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
                     <span className="sr-only">Open menu</span>
-                    <MoreHorizontal className="h-6 w-6" />
+                    <MoreVertical className="h-6 w-6" />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
