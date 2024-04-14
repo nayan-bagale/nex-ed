@@ -28,20 +28,6 @@ const ConnectionStatus = () => {
         }
     }, [])
 
-    useEffect(() => {
-        const timeout = setTimeout(() => { 
-            if (status) {
-                toast.success('Connected to server')
-            } else {
-                toast.error('Disconnected from server')
-            }
-        }, 1000);
-        return () => {
-            clearTimeout(timeout)
-        }
-
-    }, [status])
-
     return (
         status ? (
             <Badge>

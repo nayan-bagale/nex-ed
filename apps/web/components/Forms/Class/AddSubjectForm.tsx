@@ -18,6 +18,11 @@ import {
 import { toast } from "sonner";
 
 import * as z from "zod";
+import { useSetRecoilState } from "recoil";
+import { subjects, subject_stream } from "@/components/Store/class";
+import { useSession } from "next-auth/react";
+import cryptoRandomString from "crypto-random-string";
+
 
 
 
@@ -32,7 +37,12 @@ export type UserFormValue = z.infer<typeof formSchema>;
 
 
 export default function AddSubjectForm() {
+
+    const {data:session} = useSession();
+
     const [loading, setLoading] = useState(false);
+    const setSubject = useSetRecoilState(subjects);
+    const setSubjectStream = useSetRecoilState(subject_stream);
 
     const defaultValues: UserFormValue = {
         subject_name: "",
@@ -46,9 +56,30 @@ export default function AddSubjectForm() {
 
     const onSubmit = async (data: UserFormValue) => {
         setLoading(true);
+
         console.log(data)
+        const sub_id = cryptoRandomString({ length: 10 })
+        setSubject((subject) => (
+            [...subject, {
+                id: sub_id,
+                name: data.subject_name,
+                description: data.description,
+                teacher: session?.user?.name as string || "Teacher",
+                total_students: 0
+            }]
+        ))
+        // setSubjectStream((subject_stream) => (
+        //     [...subject_stream,
+        //         {
+        //             id: sub_id,
+        //             subject_id: sub_id,
+        //             subject_name: data.subject_name,
+        //             stream: []
+        //         }
+        //     ]
+        // ))
         form.reset(defaultValues);
-        toast.success("User Created Successfully");
+        toast.success("Subject Added Successfully!");
         setLoading(false);
     };
 

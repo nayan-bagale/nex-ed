@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "./ui/breadcrumb";
 
 type BreadCrumbType = {
@@ -24,7 +25,7 @@ export default function BreadCrumb({ items }: BreadCrumbPropsType) {
                     return (
                         <>
                             <BreadcrumbItem key={item?.title}>
-                                <BreadcrumbLink href={item?.link}>{item?.title}</BreadcrumbLink>
+                                <Link href={item?.link}>{item?.title}</Link>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                         </>

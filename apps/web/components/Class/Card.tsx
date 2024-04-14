@@ -21,6 +21,9 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { useRecoilValue } from "recoil";
+import { subjects } from "../Store/class";
+import { ScrollArea } from "../ui/scroll-area";
 
 
 const Menu = () => {
@@ -59,37 +62,45 @@ const Menu = () => {
 
 const Card_ = () => {
 
+    const allsubjects = useRecoilValue(subjects)
+
     return (
-        <Card className=" w-fit">
+        <ScrollArea>
+            <div className=" flex gap-2 flex-wrap">{
+                allsubjects.map((subject) => (
+                    <Card className=" w-[18rem]">
+                        <CardHeader>
+                            <div className=" flex justify-between pr-2 ">
+                                <div className=" space-y-2">
+                                    <Link href={`/class/${subject.name.toLowerCase()}`} className=" hover:underline">
+                                        <CardTitle>
+                                            {subject.name}
+                                        </CardTitle>
+                                    </Link>
 
-            <CardHeader>
-                <div className=" flex justify-between pr-2 ">
-                    <div className=" space-y-2">
-                        <Link href="/class/dlt" className=" hover:underline">
-                            <CardTitle>
-                                DLT
-                            </CardTitle>
-                        </Link>
-
-                    </div>
-                    <div className=" self-start -mt-3 -mr-5">
-                        <Menu />
-                    </div>
-                </div>
-            </CardHeader>
-            {/* <Separator className=" -mt-2 mb-2" /> */}
-            <CardContent>
-                <CardDescription>Final Year (2023-24) Sec: B</CardDescription>
-                <p className="text-sm text-muted-foreground">Prof. Nayan Bagale</p>
-            </CardContent>
-            <Separator className=" -mt-2 mb-2" />
-            <CardFooter>
-                <div className=" flex justify-between w-full">
-                    <p className="text-sm">Total Students: </p>
-                    <p className="text-sm">+99</p>
-                </div>
-            </CardFooter>
-        </Card>
+                                </div>
+                                <div className=" self-start -mt-3 -mr-5">
+                                    <Menu />
+                                </div>
+                            </div>
+                        </CardHeader>
+                        {/* <Separator className=" -mt-2 mb-2" /> */}
+                        <CardContent>
+                            <CardDescription>{subject.description}</CardDescription>
+                            <p className="text-sm text-muted-foreground">{subject.teacher}</p>
+                        </CardContent>
+                        <Separator className=" -mt-2 mb-2" />
+                        <CardFooter>
+                            <div className=" flex justify-between w-full">
+                                <p className="text-sm">Total Students: </p>
+                                <p className="text-sm">{subject.total_students >= 99 ? "+99" : subject.total_students.toString()}</p>
+                            </div>
+                        </CardFooter>
+                    </Card>
+                ))
+            }
+            </div>
+        </ScrollArea>
 
     )
 }

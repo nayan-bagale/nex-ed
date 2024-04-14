@@ -12,7 +12,7 @@ import CreateStreamDialogBox from "@/components/Class/Stream/DialogBox/CreateStr
 
 
 const page = ({ params }: { params: { subject: string } }) => {
-
+   
     const breadcrumbItems = [
         { title: "Dashboard", link: "/dashboard" },
         { title: "Class", link: "/class" },
@@ -35,7 +35,7 @@ const page = ({ params }: { params: { subject: string } }) => {
                             People
                         </TabsTrigger>
                     </TabsList>
-                    <CreateStreamDialogBox/>
+                        <CreateStreamDialogBox sub_name={params.subject} />
                     </div>
                     <TabsContent value="stream" className="space-y-4">
                         <ScrollArea className="h-screen">
@@ -45,7 +45,7 @@ const page = ({ params }: { params: { subject: string } }) => {
                                     <Separator />
                                 </div>
                                 <div className="flex space-x-4 w-full">
-                                    <StreamCard />
+                                    <StreamCard sub_name={params.subject} />
                                 </div>
                             </div>
                         </ScrollArea>
