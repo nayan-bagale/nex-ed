@@ -21,16 +21,24 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
-import { useRecoilValue } from "recoil";
-import { subjects } from "../Store/class";
+import { useSetRecoilState, useRecoilValue } from "recoil";
+import { subjects, subject_stream } from "../Store/class";
 import { ScrollArea } from "../ui/scroll-area";
 
 
-const Menu = () => {
+const Menu = ({ id }: { id: string }) => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
+    const setSubjects = useSetRecoilState(subjects);
+    const setStream = useSetRecoilState(subject_stream)
 
-    const onConfirm = async () => { };
+    const onConfirm = async () => {
+        setLoading(true);
+        setSubjects((prev) => prev.filter((subject) => subject.id !== id));
+        setStream((prev) => prev.filter((stream) => stream.id !== id));
+        setOpen(false);
+        setLoading(false);
+    };
     return (<>
         <AlertModal
             isOpen={open}
@@ -66,7 +74,7 @@ const Card_ = () => {
 
     return (
         <ScrollArea>
-            <div className=" flex gap-2 flex-wrap">{
+            <div className=" flex gap-2 flex-wrap justify-center md:justify-start">{
                 allsubjects.map((subject) => (
                     <Card className=" w-[18rem]">
                         <CardHeader>
@@ -80,14 +88,14 @@ const Card_ = () => {
 
                                 </div>
                                 <div className=" self-start -mt-3 -mr-5">
-                                    <Menu />
+                                    <Menu id={subject.id} />
                                 </div>
                             </div>
                         </CardHeader>
                         {/* <Separator className=" -mt-2 mb-2" /> */}
                         <CardContent>
                             <CardDescription>{subject.description}</CardDescription>
-                            <p className="text-sm text-muted-foreground">{subject.teacher}</p>
+                            <p className="text-sm text-muted-foreground">Prof. {subject.teacher}</p>
                         </CardContent>
                         <Separator className=" -mt-2 mb-2" />
                         <CardFooter>

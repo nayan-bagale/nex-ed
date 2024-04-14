@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Card_ from "@/components/Class/Card";
 import AddSubjectDialog from "@/components/Class/AddSubjectDialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 
 function Class_() {
 
@@ -14,18 +16,21 @@ function Class_() {
     ];
 
     return (
-        <div className="flex-1 space-y-4  p-4 pt-6">
-            <BreadCrumb items={breadcrumbItems} />
-            <div className="flex items-start justify-between">
-                <Heading title='Class' description='Manage your subjects.' />
-                <AddSubjectDialog />
+        // <ScrollArea className="h-full pb-12">
+            <div className="flex-1 space-y-4  p-4 pt-4">
+                <BreadCrumb items={breadcrumbItems} />
+                <div className="flex items-start justify-between">
+                    <Heading title='Class' description='Manage your subjects.' />
+                    <AddSubjectDialog />
+                </div>
+                <Separator />
+                <div className=" p-2">
+                    <Card_ />
+
+                </div>
             </div>
-            <Separator />
-            <div className=" p-2">
-                <Card_/>
-                
-            </div>
-        </div>
+        // </ScrollArea> 
+
     );
 }
 

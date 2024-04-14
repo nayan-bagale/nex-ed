@@ -42,7 +42,6 @@ export default function AddSubjectForm() {
 
     const [loading, setLoading] = useState(false);
     const setSubject = useSetRecoilState(subjects);
-    const setSubjectStream = useSetRecoilState(subject_stream);
 
     const defaultValues: UserFormValue = {
         subject_name: "",
@@ -68,16 +67,6 @@ export default function AddSubjectForm() {
                 total_students: 0
             }]
         ))
-        // setSubjectStream((subject_stream) => (
-        //     [...subject_stream,
-        //         {
-        //             id: sub_id,
-        //             subject_id: sub_id,
-        //             subject_name: data.subject_name,
-        //             stream: []
-        //         }
-        //     ]
-        // ))
         form.reset(defaultValues);
         toast.success("Subject Added Successfully!");
         setLoading(false);

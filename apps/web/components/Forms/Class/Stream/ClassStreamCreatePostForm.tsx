@@ -18,7 +18,7 @@ import {
 import { toast } from "sonner";
 
 import * as z from "zod";
-import { useSetRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilState } from "recoil";
 import { subject_stream } from "@/components/Store/class";
 import { useSession } from "next-auth/react";
 import cryptoRandomString from "crypto-random-string";
@@ -53,7 +53,8 @@ export default function ClassStreamCreatePostForm({ sub_name }: { sub_name: stri
     const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
 
-    const setSubjectStream = useSetRecoilState(subject_stream);
+    const [stream, setSubjectStream] = useRecoilState(subject_stream);
+    console.log(stream)
 
     const defaultValues: UserFormValue = {
         text: "",
@@ -69,25 +70,19 @@ export default function ClassStreamCreatePostForm({ sub_name }: { sub_name: stri
         console.log(data)
         setSubjectStream((subject_stream) => {
 
-            const subject_stream1 = subject_stream.filter((stream) => stream.subject_name.toLowerCase() === sub_name.toLowerCase());
+            const subject_stream1 = subject_stream.find((stream) => stream.subject_name.toLowerCase() === sub_name.toLowerCase());
 
             console.log(subject_stream1)
 
             return (
                 [...subject_stream, {
                     id: cryptoRandomString({ length: 10 }),
-                    subject_id: '1',
                     subject_name: sub_name,
-                    stream: [
-                        // ...subject_stream1[0]?.stream,
-                        {
-                            id: cryptoRandomString({ length: 10 }),
-                            text: data.text,
-                            file: data.file,
-                            teacher: session?.user?.name as string || "Teacher",
-                            date: formatDate(new Date())
-                        },
-                    ]
+                    text: data.text,
+                    file: data.file,
+                    teacher: session?.user?.name as string || "Teacher",
+                    date: formatDate(new Date())
+
                 }]
 
             )

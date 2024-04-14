@@ -20,12 +20,20 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { scheduleMeeting } from "../Store/meeting";
 
-const Menu = () => {
+const Menu = ({id}:{id:string}) => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
+    const setMeeting = useSetRecoilState(scheduleMeeting);
 
-    const onConfirm = async () => { };
+    const onConfirm = async () => {
+        setLoading(true);
+        setMeeting((prev) => prev.filter((meeting) => meeting.id !== id));
+        setOpen(false);
+        setLoading(false);
+    };
     return (
         <>
             <AlertModal
@@ -59,51 +67,60 @@ const Menu = () => {
 }
 
 const MeetingCard = () => {
-    return (
-        <Card className=" w-fit">
-            <CardHeader>
-                <div className=" flex justify-between gap-4">
-                    <div className=" space-y-2">
-                        <CardTitle>
-                            DLT - Lecture 2
-                        </CardTitle>
+    const meetings = useRecoilValue(scheduleMeeting);
 
-                        <CardDescription>Sub: DLT</CardDescription>
-                    </div>
-                    <div className=" self-start -mt-1 ">
-                        <Menu />
-                    </div>
-                </div>
-            </CardHeader>
-            <Separator className=" -mt-2 mb-2" />
-            <CardContent className=" space-y-2">
-                <h3>Prof. Nayan Bagale</h3>
-                <div className=" flex justify-between text-sm text-muted-foreground">
-                    <p>Date:</p>
-                    <p>10/10/2021</p>
-                </div>
-                <div className=" flex justify-between text-sm text-muted-foreground">
-                    <p>Time:</p>
-                    <p>10:00 AM</p>
-                </div>
-                <div className=" flex justify-between text-sm text-muted-foreground">
-                    <p>Duration:</p>
-                    <p>1hr</p>
-                </div>
-                <div className=" flex justify-between text-sm text-muted-foreground">
-                    <p>Camera:</p>
-                    <p>Always On</p>
-                </div>
-                <div className=" flex justify-between text-sm text-muted-foreground">
-                    <p>Visibility:</p>
-                    <p>Private</p>
-                </div>
-            </CardContent>
-            <Separator className=" -mt-2 mb-2" />
-            <CardFooter>
-                <Button variant="default" className="w-full mt-2">Join</Button>
-            </CardFooter>
-        </Card>
+    return (
+            <div className=" flex flex-wrap gap-6 justify-center md:justify-start">
+                {
+                    meetings.map((meeting) => (
+                        <Card key={meeting.id} className=" w-[18rem]">
+                            <CardHeader>
+                                <div className=" flex justify-between gap-4">
+                                    <div className=" space-y-2">
+                                        <CardTitle>
+                                            {meeting.title}
+                                        </CardTitle>
+
+                                        <CardDescription>Sub: {meeting.subject}</CardDescription>
+                                    </div>
+                                    <div className=" self-start -mt-1 ">
+                                        <Menu id={meeting.id} />
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <Separator className=" -mt-2 mb-2" />
+                            <CardContent className=" space-y-2">
+                                <h3>Prof. {meeting.teacher}</h3>
+                                <div className=" flex justify-between text-sm text-muted-foreground">
+                                    <p>Date:</p>
+                                    <p>{meeting.date.toDateString()}</p>
+                                </div>
+                                <div className=" flex justify-between text-sm text-muted-foreground">
+                                    <p>Time:</p>
+                                    <p>10:00 AM</p>
+                                </div>
+                                <div className=" flex justify-between text-sm text-muted-foreground">
+                                    <p>Duration:</p>
+                                    <p>1hr</p>
+                                </div>
+                                <div className=" flex justify-between text-sm text-muted-foreground">
+                                    <p>Camera:</p>
+                                    <p>{meeting.cameraAlwaysOn ? 'Always On' : 'Off'}</p>
+                                </div>
+                                <div className=" flex justify-between text-sm text-muted-foreground">
+                                    <p>Visibility:</p>
+                                    <p>{meeting.visibility === 'private' ? "Private" : "Public"}</p>
+                                </div>
+                            </CardContent>
+                            <Separator className=" -mt-2 mb-2" />
+                            <CardFooter>
+                                <Button variant="default" className="w-full mt-2">Join</Button>
+                            </CardFooter>
+                        </Card>
+                    ))
+                }
+
+            </div>
 
     )
 }

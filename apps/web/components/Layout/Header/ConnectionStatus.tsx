@@ -30,13 +30,13 @@ const ConnectionStatus = () => {
 
     return (
         status ? (
-            <Badge>
-                <UnplugIcon />
+            <Badge >
+                <UnplugIcon className=' h-6 w-6' />
                 {/* <span className=" animate-pulse absolute -right-3 bottom-0 flex w-3 h-3 me-3 bg-green-500 rounded-full"></span> */}
             </Badge>
 
         ) : (
-            <Badge className=' animate-pulse' variant='destructive'><PlugZapIcon /></Badge>
+            <Badge className='animate-pulse' variant='destructive'><PlugZapIcon className=' h-6 w-6' /></Badge>
         ));
 }
 

@@ -35,6 +35,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Switch } from "@/components/ui/switch";
+import { useSession } from "next-auth/react";
+import { useSetRecoilState } from "recoil";
+import { scheduleMeeting } from "@/components/Store/meeting";
+import cryptoRandomString from "crypto-random-string";
+
 
 
 export const formSchema = z
@@ -45,7 +50,7 @@ export const formSchema = z
         endtime: z.string(),
         date: z.date(),
         cameraAlwaysOn: z.boolean(),
-        Visibility: z.string(),
+        visibility: z.string(),
 
     }).refine(
         (values) => {
@@ -79,6 +84,8 @@ export type UserFormValue = z.infer<typeof formSchema>;
 
 export default function ScheduleMeetingForm() {
     const [loading, setLoading] = useState(false);
+    const {data:session} = useSession();
+    const setMeetings = useSetRecoilState(scheduleMeeting);
 
     const defaultValues: UserFormValue = {
         title: "",
@@ -87,7 +94,7 @@ export default function ScheduleMeetingForm() {
         starttime: "",
         endtime: "",
         cameraAlwaysOn: false,
-        Visibility: "private",
+        visibility: "private",
 
     };
     const form = useForm<UserFormValue>({
@@ -96,9 +103,17 @@ export default function ScheduleMeetingForm() {
     });
 
 
-    const onSubmit = async (data: UserFormValue) => {
+    const onSubmit = async (data:any) => {
         setLoading(true);
         console.log(data)
+        setMeetings((prev) => [
+            ...prev,
+            {
+                ...data,
+                teacher: session?.user?.name || "Nayan Bagale",
+                id: cryptoRandomString({ length: 10 }),
+            },
+        ]);
         form.reset(defaultValues);
         toast.success("User Created Successfully");
         setLoading(false);
@@ -259,7 +274,7 @@ export default function ScheduleMeetingForm() {
                     />
                     <FormField
                         control={form.control}
-                        name="Visibility"
+                        name="visibility"
                         render={({ field }) => (
                             <FormItem className="flex flex-col space-y-4 rounded-lg border p-4">
                                 <FormLabel>Visibility</FormLabel>

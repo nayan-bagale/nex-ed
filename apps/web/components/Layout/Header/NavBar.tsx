@@ -21,7 +21,7 @@ export default function Header() {
             Nex-Ed
           </Link>
         </div>
-        <div className={cn("block sm:!hidden")}>
+        <div className={cn("block md:!hidden")}>
           <MobileSidebar />
         </div>
 

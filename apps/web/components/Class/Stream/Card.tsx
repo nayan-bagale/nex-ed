@@ -64,10 +64,11 @@ const Menu = () => {
 
 export const StreamCard = ({ sub_name }: { sub_name: string }) => {
     const streams = useRecoilValue(subject_stream);
+    console.log(streams.filter((streams) => streams.subject_name.toLowerCase() === sub_name.toLowerCase()))
 
     return (
         <div className=" flex flex-col gap-4">{
-            streams.filter((streams) => streams.subject_name === sub_name)[0]?.stream.map((stream: any) => {
+            streams.filter((streams) => streams.subject_name.toLowerCase() === sub_name.toLowerCase()).map((stream: any) => {
                 return (
                     <Card key={stream.id} className=" w-full lg:w-[60%]">
                         <CardHeader>

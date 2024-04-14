@@ -9,6 +9,7 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import ProfileForm from "@/components/Profile/Profile";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 function Settings() {
 
@@ -18,6 +19,7 @@ function Settings() {
     ];
 
     return (
+        <ScrollArea className="h-full pb-12">
         <div className="flex-1 space-y-4  p-4 pt-6">
             <BreadCrumb items={breadcrumbItems} />
             <div className="">
@@ -42,6 +44,7 @@ function Settings() {
             </Accordion>
             </div>
         </div>
+        </ScrollArea>
     );
 }
 
