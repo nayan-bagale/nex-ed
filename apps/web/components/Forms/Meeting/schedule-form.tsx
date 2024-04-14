@@ -109,7 +109,7 @@ export default function ScheduleMeetingForm() {
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-4 w-full"
+                    className="space-y-4 w-full px-2"
                 >
 
                     <FormField

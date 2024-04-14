@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -18,28 +19,24 @@ import { toast } from "sonner";
 
 import * as z from "zod";
 
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-
 
 
 export const formSchema = z
     .object({
-        title: z.string().min(3, { message: "At least 3 letters" }),
-        Visibility: z.string(),
-
+        subject_name: z.string().min(3, { message: "Text must be atleast 3 characters" }),
+        description: z.string().min(3, { message: "Text must be atleast 3 characters" }).max(100, { message: "Text must be atmost 100 characters" }),
     })
 
 
 export type UserFormValue = z.infer<typeof formSchema>;
 
 
-export default function InstantCreateMeetingForm() {
+export default function AddSubjectForm() {
     const [loading, setLoading] = useState(false);
 
     const defaultValues: UserFormValue = {
-        title: "",
-        Visibility: "public",
-
+        subject_name: "",
+        description: "",
     };
     const form = useForm<UserFormValue>({
         resolver: zodResolver(formSchema),
@@ -65,51 +62,47 @@ export default function InstantCreateMeetingForm() {
 
                     <FormField
                         control={form.control}
-                        name="title"
+                        name="subject_name"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Title</FormLabel>
+                                <FormLabel>Subject Name</FormLabel>
                                 <FormControl>
                                     <Input
-                                        type="text"
-                                        placeholder="Title..."
-                                        disabled={loading}
+                                        placeholder="subject name..."
+                                        className="resize-none"
                                         {...field}
                                     />
                                 </FormControl>
+                                {/* <FormDescription>
+                                    You can <span>@mention</span> other users and organizations.
+                                </FormDescription> */}
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Description</FormLabel>
+                                <FormControl>
+                                    <Textarea
+                                        placeholder="description..."
+                                        className="resize-none"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                {/* <FormDescription>
+                                    You can <span>@mention</span> other users and organizations.
+                                </FormDescription> */}
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
 
-                    <FormField
-                        control={form.control}
-                        name="Visibility"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col space-y-4 rounded-lg border p-4">
-                                <FormLabel>Visibility</FormLabel>
-                                <FormControl>
-                                    <RadioGroup
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                        className="flex flex-col space-y-1"
-                                    >
-                                        <FormItem className="flex items-center space-x-3 space-y-0">
-                                            <FormControl>
-                                                <RadioGroupItem value="public" />
-                                            </FormControl>
-                                            <FormLabel className="font-normal">
-                                                Public - Anyone can join
-                                            </FormLabel>
-                                        </FormItem>
-                                    </RadioGroup>
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
                     <Button disabled={loading} className="ml-auto w-full" type="submit">
-                        Create Meeting
+                        Add Subject
                     </Button>
                 </form>
             </Form>

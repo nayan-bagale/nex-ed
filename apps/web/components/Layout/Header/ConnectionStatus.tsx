@@ -1,47 +1,57 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Badge } from "@/components/ui/badge";
 import { UnplugIcon, PlugZapIcon } from 'lucide-react';
-import { ws } from '@/components/Liveclass_V1/ContextAPI/Connection_WS_Peerjs';
 import { toast } from 'sonner';
+import { useRecoilState } from 'recoil';
+import socketIOClient from "socket.io-client";
+import { connectionStatus } from "@/components/Store/connectionstatus"
 
 
 const ConnectionStatus = () => {
-    const [connectionStatus, setConnectionStatus] = useState(false)
+    const [status, setConnectionStatus] = useRecoilState(connectionStatus);
     
     useEffect(() => {
+        const ws = socketIOClient(process.env.NEXT_PUBLIC_WS_URL!);
         ws.on('connect', () => {
             setConnectionStatus(true)
         })
         ws.on('disconnect', () => {
             setConnectionStatus(false)
         })
+
         return () => {
             ws.off('connect')
             ws.off('disconnect')
+            ws.disconnect()
         }
     }, [])
 
     useEffect(() => {
-        if(connectionStatus) {
-            toast.success('Connected to server')
-        } else {
-            toast.error('Disconnected from server')
+        const timeout = setTimeout(() => { 
+            if (status) {
+                toast.success('Connected to server')
+            } else {
+                toast.error('Disconnected from server')
+            }
+        }, 1000);
+        return () => {
+            clearTimeout(timeout)
         }
 
-    }, [connectionStatus])
+    }, [status])
 
-  return (
-    connectionStatus ? (
-          <Badge>
-            <UnplugIcon />
-              {/* <span className=" animate-pulse absolute -right-3 bottom-0 flex w-3 h-3 me-3 bg-green-500 rounded-full"></span> */}
-          </Badge>
-          
-      ) : (
-              <Badge className=' animate-pulse' variant='destructive'><PlugZapIcon/></Badge>
-    ));
+    return (
+        status ? (
+            <Badge>
+                <UnplugIcon />
+                {/* <span className=" animate-pulse absolute -right-3 bottom-0 flex w-3 h-3 me-3 bg-green-500 rounded-full"></span> */}
+            </Badge>
+
+        ) : (
+            <Badge className=' animate-pulse' variant='destructive'><PlugZapIcon /></Badge>
+        ));
 }
 
 export default ConnectionStatus

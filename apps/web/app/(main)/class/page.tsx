@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Card_ from "@/components/Class/Card";
+import AddSubjectDialog from "@/components/Class/AddSubjectDialog";
 
 function Class_() {
 
@@ -17,7 +18,7 @@ function Class_() {
             <BreadCrumb items={breadcrumbItems} />
             <div className="flex items-start justify-between">
                 <Heading title='Class' description='Manage your subjects.' />
-                <Button><Plus className="mr-2 h-4 w-4" /> Add New</Button>
+                <AddSubjectDialog />
             </div>
             <Separator />
             <div className=" p-2">

@@ -4,12 +4,12 @@ import { UserNav } from "./AvatarOptions";
 import CreateJoin from "./CreateJoin";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import ConnectionStatus from "./ConnectionStatus";
+// import ConnectionStatus from "./ConnectionStatus";
 import dynamic from "next/dynamic";
 
-// const ConnectionStatus = dynamic(() => import("./ConnectionStatus"), {
-//   ssr: false,
-// });
+const ConnectionStatus = dynamic(() => import("./ConnectionStatus"), {
+  ssr: false,
+});
 
 
 export default function Header() {
@@ -26,7 +26,7 @@ export default function Header() {
         </div>
 
         <div className="flex h-[60%] items-center gap-4">
-          {/* <ConnectionStatus /> */}
+          <ConnectionStatus />
           {/* <CreateJoin /> */}
           <Separator orientation="vertical" />
           <UserNav />
