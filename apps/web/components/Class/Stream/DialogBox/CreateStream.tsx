@@ -15,7 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import ClassStreamCreatePostForm from "@/components/Forms/Class/Stream/ClassStreamCreatePostForm";
 
 
-const CreateStreamDialogBox = ({ sub_name }: { sub_name:string }) => {
+const CreateStreamDialogBox = ({ sub_id }: { sub_id:string }) => {
     return (
         <Dialog>
             <DialogTrigger>
@@ -33,7 +33,7 @@ const CreateStreamDialogBox = ({ sub_name }: { sub_name:string }) => {
                     <Separator />
                     <ScrollArea>
 
-                        <ClassStreamCreatePostForm sub_name={sub_name} />
+                        <ClassStreamCreatePostForm sub_id={sub_id} />
                     </ScrollArea>
                 </DialogHeader>
             </DialogContent>

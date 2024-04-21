@@ -7,6 +7,7 @@ import NavBar from "@/components/Layout/Header/NavBar";
 import Sidebar from "@/components/Layout/Sidebar/SideBar";
 import Session from "@/components/Providers/Session";
 import RecoilProvider from "@/components/Providers/RecoilProvider";
+import { EdgeStoreProvider } from "@/lib/edgestore";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={inter.className + ''}>
         <RecoilProvider>
           <Session>
             <ThemeProvider
@@ -30,7 +31,8 @@ export default function RootLayout({
               defaultTheme="system"
               enableSystem
               disableTransitionOnChange
-            >
+              >
+              <EdgeStoreProvider>
               <header>
                 <NavBar />
               </header>
@@ -39,6 +41,7 @@ export default function RootLayout({
                 <main className="w-full h-screen mt-12 p-2">{children}</main>
               </div>
               <Toaster />
+              </EdgeStoreProvider>
             </ThemeProvider>
           </Session>
         </RecoilProvider>

@@ -6,9 +6,15 @@ import { Plus } from "lucide-react";
 import Card_ from "@/components/Class/Card";
 import AddSubjectDialog from "@/components/Class/AddSubjectDialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { get_subjects_Action } from "@/action/subject_Action";
+import { SubjectsT } from "@/components/Store/class";
+import { redirect } from "next/navigation";
 
 
-function Class_() {
+async function Class_() {
+
+    const subjects = await get_subjects_Action();
+    if(!subjects) return redirect('/not-found');
 
     const breadcrumbItems = [
         { title: "Dashboard", link: "/dashboard" },
@@ -16,7 +22,7 @@ function Class_() {
     ];
 
     return (
-        // <ScrollArea className="h-full pb-12">
+        <ScrollArea className="h-full pb-12">
             <div className="flex-1 space-y-4  p-4 pt-4">
                 <BreadCrumb items={breadcrumbItems} />
                 <div className="flex items-start justify-between">
@@ -25,11 +31,11 @@ function Class_() {
                 </div>
                 <Separator />
                 <div className=" p-2">
-                    <Card_ />
+                    <Card_ data={subjects as SubjectsT[]} />
 
                 </div>
             </div>
-        // </ScrollArea> 
+         </ScrollArea> 
 
     );
 }

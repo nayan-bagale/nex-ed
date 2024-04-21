@@ -21,10 +21,13 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import DialogBox from "./DialogBox/DialogBox";
-import { updateprofileAction } from '@/components/action/updateprofileAction';
+import { updateprofileAction } from '@/action/updateprofileAction';
+import { useState } from "react";
+import { useEdgeStore } from "@/lib/edgestore";
+import { SingleImageDropzone } from "./SingleImageDropZone";
 
 const profileFormSchema = z.object({
-    // username: z.string(),
+    image: z.any(),
     firstname: z.string().min(3, { message: "At least 3 letters" }),
     lastname: z.string().min(3, { message: "At least 3 letters" }),
     role: z.enum(["student", "teacher"]),
@@ -35,14 +38,18 @@ export type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 function ProfileForm() {
 
-    const {data: session, update} = useSession();
-    console.log(session)
+    const [file, setFile] = useState<File>();
+    const [loading, setLoading] = useState(false);
+    const { edgestore } = useEdgeStore();
+
+    const { data: session, update } = useSession();
+
     // This can come from your database or API.
     const defaultValues: Partial<ProfileFormValues> = {
-        // username: '',
         firstname: session?.user?.name?.split(' ')[0] ?? '',
         lastname: session?.user?.name?.split(' ')[1] ?? '',
         email: session?.user?.email ?? '',
+        image: session?.user?.image ?? '',
         role: session?.user?.role as "student" | "teacher" || "student",
     };
 
@@ -52,46 +59,101 @@ function ProfileForm() {
         mode: "onChange",
     });
 
-
-    function onSubmit(data: ProfileFormValues) {
+    const handleImage = async (data: ProfileFormValues) => {
         const fname = `${data.firstname} ${data.lastname}`
-        toast.promise(updateprofileAction(data), {
+
+        if (file) {
+            if (session?.user?.image) {
+                try {
+                    const fileUrl = session.user.image.replace(/-thumb\.(jpeg|png|jpg)$/, '.$1')
+                    await edgestore.publicImages.delete({
+                        url: fileUrl,
+                    })
+                } catch (e: unknown) {
+                    console.log(e)
+                }
+            }
+
+            const res = await edgestore.publicImages.upload({
+                file: file as File,
+                onProgressChange: (progress) => {
+                    console.log(progress);
+                },
+
+            });
+
+            console.log(res)
+
+            if (res.thumbnailUrl) {
+                data.image = res.thumbnailUrl;
+                setFile(undefined);
+            }
+
+        }
+
+        const $ = await updateprofileAction(data)
+        if ($.ok) {
+            update({ ...session, user: { ...session?.user, name: fname, role: data.role, image: data.image } })
+        }
+        return $;
+    }
+
+    async function onSubmit(data: ProfileFormValues) {
+        setLoading(true);
+        toast.promise(handleImage(data), {
             loading: "Updating profile...",
             success: async (updata) => {
-                if (updata.ok){
-                    update({ ...session, user: { ...session?.user, name: fname , role: data.role}})
-                    console.log(session)
+                if (updata.ok) {
                     return updata.message
                 }
                 return updata.message;
             },
             error: async (error) => {
-               return "Something went wrong";
+                console.log(error)
+                return "Something went wrong";
             }
         });
+        setLoading(false);
+
     }
 
     return (
         <div className=" m-2 p-4 ">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col">
-                    {/* <FormField
+                    <FormField
                         control={form.control}
-                        name="username"
+                        name="image"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Username</FormLabel>
+                                <FormLabel>Profile Image</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Username" disabled {...field} />
+                                    <SingleImageDropzone
+                                        width={200}
+                                        height={200}
+                                        value={file || session?.user?.image || undefined}
+                                        dropzoneOptions={{
+                                            accept: {
+                                                'image/jpeg': [],
+                                                'image/png': []
+                                            },
+                                            maxSize: 4 * 1024 * 1024,
+                                        }}
+                                        onChange={(file) => {
+                                            setFile(file);
+                                        }}
+                                        className="rounded-full"
+                                        disabled={loading}
+                                    />
                                 </FormControl>
-                                <FormDescription>
+                                {/* <FormDescription>
                                     This is your public display name. It can be your real name or a
                                     pseudonym. You can only change this once every 30 days.
-                                </FormDescription>
+                                </FormDescription> */}
                                 <FormMessage />
                             </FormItem>
                         )}
-                    /> */}
+                    />
                     <div className=" flex w-full gap-2">
                         <FormField
                             control={form.control}
@@ -104,6 +166,8 @@ function ProfileForm() {
                                             type="text"
                                             placeholder="First Name"
                                             {...field}
+                                            disabled={loading}
+
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -121,6 +185,8 @@ function ProfileForm() {
                                             type="text"
                                             placeholder="Last Name"
                                             {...field}
+                                            disabled={loading}
+
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -157,6 +223,8 @@ function ProfileForm() {
                                         onValueChange={field.onChange}
                                         defaultValue={field.value}
                                         className="flex space-x-1"
+                                        disabled={loading}
+
                                     >
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
@@ -182,8 +250,11 @@ function ProfileForm() {
                     />
 
 
-                    <Button type="submit">Update profile</Button>
-                    <DialogBox email={session?.user?.email as string}/>
+                    <Button type="submit"
+                        disabled={loading}
+                    >Update profile</Button>
+
+                    <DialogBox email={session?.user?.email as string} />
 
                 </form>
             </Form>

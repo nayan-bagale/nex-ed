@@ -1,6 +1,9 @@
+"use client";
+
+import { Files } from "@/database/schema";
 import { atom } from "recoil";
 
-interface subjects {
+export interface SubjectsT {
   id: string;
   name: string;
   description: string;
@@ -8,39 +11,23 @@ interface subjects {
   total_students: number;
 }
 
-interface subject_stream {
+export interface Subject_streamT {
   id: string;
-  subject_name: string;
+  subject_id: string;
   text: string;
-  file: string;
+  files: Files[];
   teacher: string;
   date: string;
+  profile: string;
 }
+
 
 export const subjects = atom({
   key: "subjects",
-  default: [
-    {
-      id: "1",
-      name: "DLT",
-      description: "Final Year (2023-24) Sec: B",
-      teacher: "Nayan Bagale",
-      total_students: 99,
-    },
-  ] as subjects[],
+  default: [] as SubjectsT[],
 });
 
 export const subject_stream = atom({
   key: "subject_stream",
-  default: [
-    {
-      id: "1",
-      subject_name: "dlt",
-
-      text: "Students who were absent in the UT 1 have to submit whole question paper in the form of assignment on or before 26th March 2024. Question paper is attached below.",
-      file: "file",
-      teacher: "Nayan Bagale",
-      date: "Mar 24, 2023",
-    },
-  ] as subject_stream[],
+  default: [] as Subject_streamT[],
 });

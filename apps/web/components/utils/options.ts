@@ -11,20 +11,20 @@ import { compare } from "bcrypt";
 
 export const authOptions: NextAuthOptions = {
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      profile(profile) {
-        return {
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-          image: profile.picture,
-          role: profile.role ?? "student",
-        };
-      },
-      allowDangerousEmailAccountLinking: true,
-    }),
+    // GoogleProvider({
+    //   clientId: process.env.GOOGLE_CLIENT_ID!,
+    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    //   profile(profile) {
+    //     return {
+    //       id: profile.sub,
+    //       name: profile.name,
+    //       email: profile.email,
+    //       image: profile.picture,
+    //       role: profile.role ?? "student",
+    //     };
+    //   },
+    //   allowDangerousEmailAccountLinking: true,
+    // }),
 
     CredentialsProvider({
       name: "Sign in",
@@ -75,7 +75,7 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log("Sign In Callback", user, account, profile);
+      // console.log("Sign In Callback", user, account, profile);
       return true;
     },
 
@@ -84,11 +84,13 @@ export const authOptions: NextAuthOptions = {
         const u = user as unknown as any;
         token.id = u.id;
         token.role = u.role;
+        token.image = u.image;
       }
 
       if (trigger === "update" && session?.user) {
           token.role = session.user.role;
           token.name = session.user.name;
+          token.image = session.user.image;
       }
 
       return token;
@@ -100,6 +102,7 @@ export const authOptions: NextAuthOptions = {
           ...session.user,
           id: token.id,
           role: token.role,
+          image: token.image as string,
         },
       };
     },

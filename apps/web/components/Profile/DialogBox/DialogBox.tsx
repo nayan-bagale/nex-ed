@@ -26,7 +26,7 @@ import { toast } from "sonner";
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import * as z from "zod";
-import { changepassAction } from "@/components/action/changepassAction";
+import { changepassAction } from "@/action/changepassAction";
 
 export const formSchema = z
     .object({

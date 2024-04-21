@@ -11,7 +11,7 @@ import {
 import { Separator } from "../ui/separator";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { Edit, Trash, MoreVertical } from "lucide-react";
+import { Edit, Trash, MoreVertical, Share2 } from "lucide-react";
 import { AlertModal } from "../Modal/Alert-Modal";
 import {
     DropdownMenu,
@@ -20,10 +20,13 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
-import { subjects, subject_stream } from "../Store/class";
+import { subjects, subject_stream, SubjectsT } from "../Store/class";
 import { ScrollArea } from "../ui/scroll-area";
+import ShareButton from "./ShareButton";
+import { delete_subject_Action } from "@/action/subject_Action";
+import { toast } from "sonner";
 
 
 const Menu = ({ id }: { id: string }) => {
@@ -32,12 +35,26 @@ const Menu = ({ id }: { id: string }) => {
     const setSubjects = useSetRecoilState(subjects);
     const setStream = useSetRecoilState(subject_stream)
 
-    const onConfirm = async () => {
+    const handledelete = async () => {
         setLoading(true);
+        const res = await delete_subject_Action(id);
+        if (!res) {
+            setLoading(false);
+            throw new Error("Failed to Delete Subject");
+        }
         setSubjects((prev) => prev.filter((subject) => subject.id !== id));
         setStream((prev) => prev.filter((stream) => stream.id !== id));
         setOpen(false);
         setLoading(false);
+    }
+
+    const onConfirm = async () => {
+        toast.promise(handledelete(), {
+            loading: 'Adding Subject...',
+            success: 'Subject Added Successfully!',
+            error: 'Failed to Add Subject'
+        })
+       
     };
     return (<>
         <AlertModal
@@ -59,6 +76,11 @@ const Menu = ({ id }: { id: string }) => {
                 <DropdownMenuItem
                     onClick={() => console.log("Edit")}
                 >
+                    <ShareButton id={id} />
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => console.log("Edit")}
+                >
                     <Edit className="mr-2 h-4 w-4" /> Update
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setOpen(true)}>
@@ -68,7 +90,12 @@ const Menu = ({ id }: { id: string }) => {
         </DropdownMenu></>)
 }
 
-const Card_ = () => {
+const Card_ = ({data}:{data: SubjectsT[]}) => {
+    const setSubjects = useSetRecoilState(subjects);
+
+    useEffect(() => {
+        setSubjects(data);
+    }, [data]);
 
     const allsubjects = useRecoilValue(subjects)
 
@@ -80,7 +107,7 @@ const Card_ = () => {
                         <CardHeader>
                             <div className=" flex justify-between pr-2 ">
                                 <div className=" space-y-2">
-                                    <Link href={`/class/${subject.name.toLowerCase()}`} className=" hover:underline">
+                                    <Link href={`/class/${subject.id}`} className=" hover:underline">
                                         <CardTitle>
                                             {subject.name}
                                         </CardTitle>

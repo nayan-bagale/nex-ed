@@ -16,9 +16,6 @@ import { LogOut, Settings, User } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge"
 
-
-// import { useSession, signOut } from "next-auth/react";
-
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/components/utils/options";
@@ -33,6 +30,7 @@ export async function UserNav() {
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
             <AvatarImage
+            className=" object-cover"
               src={session.user?.image ?? ""}
               alt={session.user?.name ?? ""}
             />

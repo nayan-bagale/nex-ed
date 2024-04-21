@@ -1,7 +1,7 @@
 'use server'
 
 import { db } from "@/database/db";
-import { UserFormValue, formSchema } from "../Profile/DialogBox/DialogBox";
+import { UserFormValue, formSchema } from "../components/Profile/DialogBox/DialogBox";
 import { users } from "@/database/schema";
 import { eq } from "drizzle-orm";
 import { compare, hash } from "bcrypt";

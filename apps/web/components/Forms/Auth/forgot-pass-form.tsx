@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import * as z from "zod";
-import { forgotpassAction } from "@/components/action/forgotpassAction";
+import { forgotpassAction } from "@/action/forgotpassAction";
 
 
 export const formSchema = z

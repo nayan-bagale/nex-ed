@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea"
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,10 +17,16 @@ import {
 import { toast } from "sonner";
 
 import * as z from "zod";
-import { useSetRecoilState, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { subject_stream } from "@/components/Store/class";
 import { useSession } from "next-auth/react";
 import cryptoRandomString from "crypto-random-string";
+import { MultiFileDropzone, FileState } from "./MultiFileDropzone";
+import { create_stream_Action } from "@/action/stream_Action";
+import { formatDate } from "@/components/utils/DateFormatter";
+import { useEdgeStore } from "@/lib/edgestore";
+import { Files } from "@/database/schema";
+
 
 
 
@@ -29,67 +34,112 @@ import cryptoRandomString from "crypto-random-string";
 export const formSchema = z
     .object({
         text: z.string().min(10, { message: "Text must be atleast 10 characters" }).max(250, { message: "Text must be less than 100 characters" }),
-        file: z.any()
-            .refine((file) => {
-                console.log(file)
-                return file?.length >= 1
-            }, `Max image size is 5MB.`)
+        files: z.any().optional()
 
     })
 
 
 export type UserFormValue = z.infer<typeof formSchema>;
 
-function formatDate(date: Date) {
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const month = months[date.getMonth()];
-    const day = date.getDate();
-    const year = date.getFullYear();
-    return `${month} ${day}, ${year}`;
-}
 
-
-export default function ClassStreamCreatePostForm({ sub_name }: { sub_name: string }) {
+export default function ClassStreamCreatePostForm({ sub_id }: { sub_id: string }) {
     const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
+    const [fileStates, setFileStates] = useState<FileState[]>([]);
+    const { edgestore } = useEdgeStore();
 
     const [stream, setSubjectStream] = useRecoilState(subject_stream);
-    console.log(stream)
+    // console.log(stream)
 
     const defaultValues: UserFormValue = {
         text: "",
-        file: "",
+        files: undefined
     };
     const form = useForm<UserFormValue>({
         resolver: zodResolver(formSchema),
         defaultValues,
     });
 
-    const onSubmit = async (data: UserFormValue) => {
+
+
+    const uploadFiles = async () => {
+        function updateFileProgress(key: string, progress: FileState['progress']) {
+            setFileStates((fileStates) => {
+                const newFileStates = structuredClone(fileStates);
+                const fileState = newFileStates.find(
+                    (fileState) => fileState.key === key,
+                );
+                if (fileState) {
+                    fileState.progress = progress;
+                }
+                return newFileStates;
+            });
+        }
+        let files:Files[] = []
+        await Promise.all(
+            fileStates.map(async (addedFileState) => {
+                try {
+                    const res = await edgestore.publicFiles.upload({
+                        file: addedFileState.file,
+                        onProgressChange: async (progress) => {
+                            updateFileProgress(addedFileState.key, progress);
+                            if (progress === 100) {
+                                // wait 1 second to set it to complete
+                                // so that the user can see the progress bar at 100%
+                                await new Promise((resolve) => setTimeout(resolve, 1000));
+                                updateFileProgress(addedFileState.key, 'COMPLETE');
+                            }
+                        },
+                    });
+
+                    files.push({
+                        name: addedFileState.file.name,
+                        url: res.url,
+                        size: addedFileState.file.size as number
+                    });
+
+                    console.log(res);
+                } catch (err) {
+                    updateFileProgress(addedFileState.key, 'ERROR');
+                }
+            }),
+        );
+
+        return files;
+    }
+
+    const handleSubmit = async (data: UserFormValue) => {
         setLoading(true);
         console.log(data)
-        setSubjectStream((subject_stream) => {
+        const files = await uploadFiles();
+        const pro_data = {
+            id: cryptoRandomString({ length: 10 }),
+            subject_id: sub_id,
+            text: data.text,
+            files: files,
+            teacher: session?.user?.name as string,
+            date: formatDate(new Date()),
+            profile: session?.user?.image as string
+        }
 
-            const subject_stream1 = subject_stream.find((stream) => stream.subject_name.toLowerCase() === sub_name.toLowerCase());
+        const res = await create_stream_Action(pro_data);
+        if (!res) {
+            setLoading(false);
+            throw Error("Something went wrong!")
+        }
 
-            console.log(subject_stream1)
-
-            return (
-                [...subject_stream, {
-                    id: cryptoRandomString({ length: 10 }),
-                    subject_name: sub_name,
-                    text: data.text,
-                    file: data.file,
-                    teacher: session?.user?.name as string || "Teacher",
-                    date: formatDate(new Date())
-
-                }]
-
-            )
-        })
+        setSubjectStream((subject_stream) => ([...subject_stream, pro_data]))
         form.reset(defaultValues);
         toast.success("Post Created Successfully!");
         setLoading(false);
+    }
+
+    const onSubmit = async (data: UserFormValue) => {
+        toast.promise(handleSubmit(data), {
+            loading: "Creating Post...",
+            success: "Post Created Successfully!",
+            error: "Failed to create post!"
+        })
     };
 
     return (
@@ -111,6 +161,7 @@ export default function ClassStreamCreatePostForm({ sub_name }: { sub_name: stri
                                         placeholder="text..."
                                         className="resize-none"
                                         {...field}
+                                        disabled={loading}
                                     />
                                 </FormControl>
                                 {/* <FormDescription>
@@ -120,23 +171,33 @@ export default function ClassStreamCreatePostForm({ sub_name }: { sub_name: stri
                             </FormItem>
                         )}
                     />
+
                     <FormField
                         control={form.control}
-                        name="file"
-                        render={({ field }) => (
+                        name="files"
+                        render={() => (
                             <FormItem>
-                                <FormLabel>File</FormLabel>
+                                <FormLabel>Files</FormLabel>
                                 <FormControl>
-                                    <Input
-                                        placeholder="text..."
-                                        className="resize-none"
-                                        type="file"
-                                        {...field}
+                                    <MultiFileDropzone
+                                        value={fileStates}
+                                        className="w-full"
+                                        onChange={(files) => {
+                                            setFileStates(files);
+                                        }}
+                                        dropzoneOptions={{
+                                            maxFiles: 2,
+                                        }}
+                                        disabled={loading}
+                                        onFilesAdded={async (addedFiles) => {
+                                            setFileStates([...fileStates, ...addedFiles]);
+
+                                        }}
                                     />
                                 </FormControl>
-                                {/* <FormDescription>
-                                    You can <span>@mention</span> other users and organizations.
-                                </FormDescription> */}
+                                <FormDescription>
+                                    Maximum 2 files.
+                                </FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}

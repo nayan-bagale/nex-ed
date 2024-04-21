@@ -19,9 +19,10 @@ import { toast } from "sonner";
 
 import * as z from "zod";
 import { useSetRecoilState } from "recoil";
-import { subjects, subject_stream } from "@/components/Store/class";
+import { subjects, subject_stream, SubjectsT } from "@/components/Store/class";
 import { useSession } from "next-auth/react";
 import cryptoRandomString from "crypto-random-string";
+import { create_subject_Action } from "@/action/subject_Action";
 
 
 
@@ -52,23 +53,32 @@ export default function AddSubjectForm() {
         defaultValues,
     });
 
+    const handlesubmit = async (data: SubjectsT) => {
+            const res = await create_subject_Action(data);
+            if(!res) throw new Error("Failed to Add Subject");
+            setSubject((subject) => (
+                [...subject, data]
+            ))
+            form.reset(defaultValues);
+            console.log(data);
+    }
 
     const onSubmit = async (data: UserFormValue) => {
         setLoading(true);
 
-        console.log(data)
-        const sub_id = cryptoRandomString({ length: 10 })
-        setSubject((subject) => (
-            [...subject, {
-                id: sub_id,
-                name: data.subject_name,
-                description: data.description,
-                teacher: session?.user?.name as string || "Teacher",
-                total_students: 0
-            }]
-        ))
-        form.reset(defaultValues);
-        toast.success("Subject Added Successfully!");
+        const newSub = {
+            id: cryptoRandomString({ length: 10 }),
+            name: data.subject_name,
+            description: data.description,
+            teacher: session?.user?.name as string || "Teacher",
+            total_students: 0
+        }
+        toast.promise(handlesubmit(newSub),{
+            loading: 'Adding Subject...',
+            success: 'Subject Added Successfully!',
+            error: 'Failed to Add Subject'
+        })
+        
         setLoading(false);
     };
 

@@ -21,15 +21,40 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator"
-import { subject_stream } from "@/components/Store/class";
-import { useRecoilValue } from "recoil";
+import { subject_stream, Subject_streamT } from "@/components/Store/class";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { get_stream_Action, delete_stream_Action } from "@/action/stream_Action"
+import Image from "next/image"
+import Link from "next/link"
+import { toast } from "sonner"
 
-const Menu = () => {
+const Menu = ({ id }: { id: string }) => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-    const onConfirm = async () => { };
+    const setStream = useSetRecoilState(subject_stream);
+
+    const handleDelete = async () => {
+        setLoading(true);
+        const res = await delete_stream_Action(id);
+        if (!res) {
+            setLoading(false);
+            setOpen(false);
+            return;
+        }
+        setStream((old) => old.filter((stream) => stream.id !== id));
+        setLoading(false);
+        setOpen(false);
+    }
+
+    const onConfirm = async () => {
+        toast.promise(handleDelete(), {
+            loading: "Deleting...",
+            success: "Deleted",
+            error: "Error",
+        });
+    };
 
     return (
         <>
@@ -62,21 +87,29 @@ const Menu = () => {
         </>)
 }
 
-export const StreamCard = ({ sub_name }: { sub_name: string }) => {
-    const streams = useRecoilValue(subject_stream);
-    console.log(streams.filter((streams) => streams.subject_name.toLowerCase() === sub_name.toLowerCase()))
+export const StreamCard = ({ sub_id }: { sub_id: string }) => {
+    const [streams, setStream] = useRecoilState(subject_stream);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await get_stream_Action(sub_id);
+            setStream(data as Subject_streamT[]);
+        }
+        fetchData();
+    }, [sub_id])
+
 
     return (
         <div className=" flex flex-col gap-4">{
-            streams.filter((streams) => streams.subject_name.toLowerCase() === sub_name.toLowerCase()).map((stream: any) => {
+            streams.filter((streams) => streams.subject_id === sub_id).map((stream) => {
                 return (
-                    <Card key={stream.id} className=" w-full lg:w-[60%]">
+                    <Card key={stream.id} className=" w-full">
                         <CardHeader>
                             {/* <CardTitle>Card Title</CardTitle> */}
 
                             <div className="flex items-center">
                                 <Avatar className="h-9 w-9">
-                                    <AvatarImage src="/avatars/01.png" alt="Avatar" />
+                                    <AvatarImage className=" object-cover" src={stream.profile} alt="Avatar" />
                                     <AvatarFallback>NB</AvatarFallback>
                                 </Avatar>
                                 <div className="ml-4 space-y-1">
@@ -86,13 +119,19 @@ export const StreamCard = ({ sub_name }: { sub_name: string }) => {
                                     </p>
                                 </div>
                                 <div className="ml-auto self-start font-medium">
-                                    <Menu />
+                                    <Menu id={stream.id} />
                                 </div>
                             </div>
                             <Separator />
                         </CardHeader>
                         <CardContent>
-                            <p>{stream.text}</p>
+                            <p className="mb-3">{stream.text}</p>
+                            {stream.files.length !== 0 && (
+                                <>
+                                    <div className="flex flex-wrap gap-2">
+                                        <StreamFiles files={stream.files} /> 
+                                    </div>
+                                </>)}
                         </CardContent>
                         {/* <CardFooter>
                             <CardDescription>
@@ -107,6 +146,39 @@ export const StreamCard = ({ sub_name }: { sub_name: string }) => {
             )
         }
 
+        </div>
+    )
+}
+
+
+const StreamFiles = ({ files }: { files: { size: number, name: string, url: string }[] }) => {
+    return (
+        <div className="flex flex-col gap-4">
+            {files.map((file) => {
+                const ext = file.name.split('.').pop();
+                if (ext === 'pdf' || ext === 'docx' || ext === 'doc' || ext === 'ppt' || ext === 'pptx' || ext === 'xls' || ext === 'xlsx') {
+                    return (
+                        <Link key={file.name} href={file.url} className="">
+                            {file.name} <span></span>
+                        </Link>
+                    )
+                } else if (ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'gif') {
+                    return (<div key={file.name} className=' flex flex-col gap-1'>
+                        <Link href={file.url} className="">
+                        <Image src={file.url} alt={file.name} width={300} height={300} />
+                            {file.name}
+                        </Link>
+                    </div>
+                    )
+                } 
+
+                return (
+                    <a key={file.name} href ={file.url} className="text-primary-foreground">
+                        {file.name}
+                    </a>
+                )
+            }
+            )}
         </div>
     )
 }

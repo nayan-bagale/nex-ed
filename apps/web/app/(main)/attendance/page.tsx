@@ -5,6 +5,7 @@ import { DatePickerDemo } from "@/components/Attendance/DatePicker";
 import { ComboboxDemo } from "@/components/Attendance/SubSelect";
 import { UserClient } from "@/components/tables/Attendance-Tables/Client";
 import { users } from "@/data/data";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 
 const page = () => {
@@ -14,6 +15,8 @@ const page = () => {
     ];
 
     return (
+        
+        // <ScrollArea>
         <div className="flex-1 space-y-4  p-4 pt-6">
             <BreadCrumb items={breadcrumbItems} />
             <div className="flex items-start justify-between">
@@ -30,6 +33,7 @@ const page = () => {
                 <UserClient data={users} />
             </div>
         </div>
+        // </ScrollArea>
     );
 }
 

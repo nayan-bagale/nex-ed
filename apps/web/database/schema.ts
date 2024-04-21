@@ -6,6 +6,8 @@ import {
   json,
   integer,
   primaryKey,
+  boolean,
+  date,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
 
@@ -71,3 +73,48 @@ export const resetpasswordTokens = pgTable(
     expires: timestamp("expires", { mode: "date" }).notNull(),
   }
 );
+
+export const subjects = pgTable("subjects", {
+  id: text("id").notNull().primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+});
+
+export const studenthassubjects = pgTable(
+  "student_has_subject",
+  {
+    student_id: text("student_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    subject_id: text("subject_id").notNull().references(() => subjects.id, { onDelete: "cascade" }),
+    enrolled: boolean("enrolled").notNull().default(false),
+  },
+  (shs) => ({
+    compoundKey: primaryKey({ columns: [shs.student_id, shs.subject_id] }),
+  })
+);
+
+export const teachershassubjects = pgTable(
+  "teacher_has_subject",
+  {
+    teacher_id: text("teacher_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    subject_id: text("subject_id").notNull().references(() => subjects.id, { onDelete: "cascade" }),
+  },
+  (ths) => ({
+    compoundKey: primaryKey({ columns: [ths.teacher_id, ths.subject_id] }),
+  })
+);
+
+export interface Files {
+  name: string;
+  url: string;
+  size: number;
+}
+
+export const stream = pgTable("stream", {
+  id: text("id").notNull().primaryKey(),
+  subject_id: text("subject_id").notNull().references(() => subjects.id, { onDelete: "cascade" }),
+  teacher_id: text("teacher_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  date: date("date").notNull(),
+  description: text("description").notNull(),
+  deleted: boolean("deleted").notNull().default(false),
+  files: json("files").$type<Files[]>(),
+});
