@@ -29,20 +29,39 @@ import { get_stream_Action, delete_stream_Action } from "@/action/stream_Action"
 import Image from "next/image"
 import Link from "next/link"
 import { toast } from "sonner"
+import { useEdgeStore } from "@/lib/edgestore"
+import RoleCheckerClient from "@/components/utils/RoleCheckerClient"
 
 const Menu = ({ id }: { id: string }) => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+    const { edgestore } = useEdgeStore();
     const setStream = useSetRecoilState(subject_stream);
 
     const handleDelete = async () => {
         setLoading(true);
         const res = await delete_stream_Action(id);
-        if (!res) {
+        if (!res.ok) {
             setLoading(false);
             setOpen(false);
             return;
         }
+
+        if (Array.isArray(res?.data?.files) && res?.data?.files.length !== 0) {
+            await Promise.all(
+                res?.data?.files.map(async (file) => {
+                    try {
+                        await edgestore.publicFiles.delete({
+                            url: file.url,
+                        });
+                        console.log('done')
+                    } catch (e: unknown) {
+                        console.log(e)
+                    }
+                })
+            );
+        }
+
         setStream((old) => old.filter((stream) => stream.id !== id));
         setLoading(false);
         setOpen(false);
@@ -52,7 +71,9 @@ const Menu = ({ id }: { id: string }) => {
         toast.promise(handleDelete(), {
             loading: "Deleting...",
             success: "Deleted",
-            error: "Error",
+            error: (err) => {
+                return err.message
+            },
         });
     };
 
@@ -118,9 +139,11 @@ export const StreamCard = ({ sub_id }: { sub_id: string }) => {
                                         {stream.date}
                                     </p>
                                 </div>
-                                <div className="ml-auto self-start font-medium">
-                                    <Menu id={stream.id} />
-                                </div>
+                                <RoleCheckerClient>
+                                    <div className="ml-auto self-start font-medium">
+                                        <Menu id={stream.id} />
+                                    </div>
+                                </RoleCheckerClient>
                             </div>
                             <Separator />
                         </CardHeader>
@@ -129,7 +152,7 @@ export const StreamCard = ({ sub_id }: { sub_id: string }) => {
                             {stream.files.length !== 0 && (
                                 <>
                                     <div className="flex flex-wrap gap-2">
-                                        <StreamFiles files={stream.files} /> 
+                                        <StreamFiles files={stream.files} />
                                     </div>
                                 </>)}
                         </CardContent>
@@ -165,15 +188,15 @@ const StreamFiles = ({ files }: { files: { size: number, name: string, url: stri
                 } else if (ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'gif') {
                     return (<div key={file.name} className=' flex flex-col gap-1'>
                         <Link href={file.url} className="">
-                        <Image src={file.url} alt={file.name} width={300} height={300} />
+                            <Image src={file.url} alt={file.name} width={300} height={300} />
                             {file.name}
                         </Link>
                     </div>
                     )
-                } 
+                }
 
                 return (
-                    <a key={file.name} href ={file.url} className="text-primary-foreground">
+                    <a key={file.name} href={file.url} className="text-primary-foreground">
                         {file.name}
                     </a>
                 )

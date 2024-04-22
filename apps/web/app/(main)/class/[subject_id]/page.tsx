@@ -14,6 +14,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { subjects, SubjectsT } from "@/components/Store/class";
 import { useEffect } from "react";
 import { get_subject_Action } from "@/action/subject_Action";
+import RoleCheckerClient from "@/components/utils/RoleCheckerClient";
 
 
 const page = ({ params }: { params: { subject_id: string } }) => {
@@ -62,7 +63,10 @@ const page = ({ params }: { params: { subject_id: string } }) => {
                                 People
                             </TabsTrigger>
                         </TabsList>
+                        <RoleCheckerClient>
+                            
                             <CreateStreamDialogBox sub_id={params.subject_id} />
+                        </RoleCheckerClient>
                     </div>
                     <TabsContent value="stream" className="space-y-4">
                         <ScrollArea className="h-screen">

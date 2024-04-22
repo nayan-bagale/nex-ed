@@ -9,12 +9,18 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { get_subjects_Action } from "@/action/subject_Action";
 import { SubjectsT } from "@/components/Store/class";
 import { redirect } from "next/navigation";
+import { authOptions } from "@/components/utils/options";
+import { getServerSession } from "next-auth";
+import RoleChekerServer from "@/components/utils/RoleChekerServer";
+import JoinDialog from "@/components/Class/Join/JoinDialog";
 
 
 async function Class_() {
 
+    const session = await getServerSession(authOptions);
+
     const subjects = await get_subjects_Action();
-    if(!subjects) return redirect('/not-found');
+    if (!subjects.ok) return redirect('/not-found');
 
     const breadcrumbItems = [
         { title: "Dashboard", link: "/dashboard" },
@@ -27,15 +33,35 @@ async function Class_() {
                 <BreadCrumb items={breadcrumbItems} />
                 <div className="flex items-start justify-between">
                     <Heading title='Class' description='Manage your subjects.' />
-                    <AddSubjectDialog />
+                        {
+                            session?.user.role === 'teacher' ? (
+                                <AddSubjectDialog />
+                            ) : (
+                                <JoinDialog/>
+                            )
+                        }
+                    
                 </div>
                 <Separator />
-                <div className=" p-2">
-                    <Card_ data={subjects as SubjectsT[]} />
+                <div className=" p-2">{
+                    subjects.data?.length === 0 ? (
 
+                        session?.user.role === 'teacher' ? (
+                            <div className="flex items-center justify-center space-x-2">
+                                <p className="text-lg">No subjects yet.</p>
+                                <Button />
+                            </div>
+                        ) : (
+                            <p className="text-lg">No subjects yet.</p>
+                        )
+
+                    ) : (
+                        <Card_ data={subjects.data as SubjectsT[]} />
+                    )
+                }
                 </div>
             </div>
-         </ScrollArea> 
+        </ScrollArea>
 
     );
 }

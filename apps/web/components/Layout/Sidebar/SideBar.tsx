@@ -1,9 +1,11 @@
+import { authOptions } from "@/components/utils/options";
 import { ItemsSideBar } from "./ItemsSideBar";
-import { navItems } from "@/data/data";
+import { StudentnavItems, TeachernavItems } from "@/data/data";
 import { cn } from "@/lib/utils";
+import { getServerSession } from "next-auth";
 
-export default function Sidebar() {
-
+export default async function Sidebar() {
+ const session = await getServerSession(authOptions)
 
   return (
     <nav
@@ -15,7 +17,7 @@ export default function Sidebar() {
             <h2 className="mb-2 px-4 text-xl font-semibold tracking-tight">
               Overview
             </h2>
-            <ItemsSideBar items={navItems} />
+            <ItemsSideBar items={session?.user.role === 'teacher' ? TeachernavItems : StudentnavItems} />
           </div>
         </div>
       </div>

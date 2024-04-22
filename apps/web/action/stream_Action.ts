@@ -69,7 +69,10 @@ export async function get_stream_Action(subject_id: string) {
 export async function delete_stream_Action(id: string) {
   const session = await getServerSession(authOptions);
   if (session?.user.role !== "teacher") {
-    return false;
+    return {
+      ok: false,
+      message: "You are not authorized to delete this stream",
+    };
   }
 
   try {
@@ -77,14 +80,14 @@ export async function delete_stream_Action(id: string) {
       .delete(stream)
       .where(eq(stream.id, id)).returning();
 
-    if(res[0]?.files?.length ?? 0 <= 0){
-      return true;
-    }
-
-
-    return true;
+    return {
+      data: res[0],
+      ok: true,
+    };
   } catch (error: unknown) {
     console.log(error);
-    return false;
+    return {
+      ok: false,
+    };
   }
 }

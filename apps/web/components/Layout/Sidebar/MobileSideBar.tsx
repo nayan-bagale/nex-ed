@@ -1,13 +1,14 @@
 "use client";
 // import { DashboardNav } from "@/components/dashboard-nav";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { navItems } from "@/data/data";
+import { StudentnavItems, TeachernavItems } from "@/data/data";
 import { MenuIcon } from "lucide-react";
 import { useState } from "react";
 
 import { ItemsSideBar } from "./ItemsSideBar";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
+import { useSession } from "next-auth/react";
 
 // import { Playlist } from "../data/playlists";
 
@@ -17,6 +18,8 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function MobileSidebar({ className }: SidebarProps) {
   const [open, setOpen] = useState(false);
+  const {data:session} = useSession();
+
   return (
     <>
       <Sheet open={open} onOpenChange={setOpen}>
@@ -36,7 +39,7 @@ export function MobileSidebar({ className }: SidebarProps) {
                 Overview
               </h2>
               <div className="space-y-1">
-                <ItemsSideBar items={navItems} setOpen={setOpen} />
+                <ItemsSideBar items={session?.user.role === 'teacher' ? TeachernavItems : StudentnavItems} setOpen={setOpen} />
               </div>
             </div>
           </div>

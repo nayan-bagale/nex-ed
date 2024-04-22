@@ -1,70 +1,47 @@
+import { get_subject_Action, join_subject_Action } from "@/action/subject_Action";
 import BreadCrumb from "@/components/BreadCrumb";
+import JoinForm from "@/components/Class/Join/JoinForm";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 
 
-const page = ({ params }: { params: { subject: string } }) => {
+const page = async ({ params }: { params: { subject_id: string } }) => {
+    if(params.subject_id.length !== 10) return <div>Invalid Id</div>;
+    const subject = await get_subject_Action(params.subject_id);
+    if (!subject) {
+        return <div>Not Found</div>;
+    }
+
 
     const breadcrumbItems = [
         { title: "Dashboard", link: "/dashboard" },
         { title: "Class", link: "/class" },
-        { title: params.subject, link: `/class/${params.subject}` },
-        { title: "Join", link: `/class/${params.subject}/join` }
+        { title: subject.name, link: `/class/${params.subject_id}` },
+        { title: "Join", link: `/class/${params.subject_id}/join` }
     ];
+    
     return (
         // <ScrollArea className="h-full pb-12">
         <div className="flex-1 space-y-4  p-4 pt-4">
-            <BreadCrumb items={breadcrumbItems} />
+            {/* <BreadCrumb items={breadcrumbItems} /> */}
             <div className="flex items-start justify-between">
-                <Heading title={`Join ${params.subject.toUpperCase()}`} description='' />
+                <Heading title={`Join ${subject.name}`} description={`${subject.description}`} />
             </div>
             <Separator />
-            {/* <div className=" p-2">
-                <Tabs defaultValue="stream" className="space-y-4">
-                    <div className=" flex justify-between">
-
-                        <TabsList>
-                            <TabsTrigger value="stream">Stream</TabsTrigger>
-                            <TabsTrigger value="people">
-                                People
-                            </TabsTrigger>
-                        </TabsList>
-                        <CreateStreamDialogBox sub_name={params.subject} />
+            <div className="flex flex-col space-y-4">
+                <div className="flex flex-col space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h2>Teacher:</h2>
+                        <h3>Prof. {subject.teacher}</h3>
                     </div>
-                    <TabsContent value="stream" className="space-y-4">
-                        <ScrollArea className="h-screen">
-                            <div className=" space-y-4 mb-4">
-                                <div className=" space-y-2">
-                                    <Heading title={"Stream"} description='' />
-                                    <Separator />
-                                </div>
-                                <div className="flex space-x-4 w-full">
-                                    <StreamCard sub_name={params.subject} />
-                                </div>
-                            </div>
-                        </ScrollArea>
-                    </TabsContent>
-                    <TabsContent value="people" className="space-y-4">
-                        <ScrollArea className="h-screen">
-                            <div className=" space-y-4 mb-4">
-                                <div className=" space-y-2">
-                                    <Heading title={"Teachers"} description='' />
-                                    <Separator />
-                                </div>
-                                <Teachers />
-                            </div>
-                            <div className=" space-y-4 mb-4">
-                                <div className=" space-y-2">
-                                    <Heading title={"Students"} description='' />
-                                    <Separator />
-                                </div>
-                                <Students />
-                            </div>
-                        </ScrollArea>
-                    </TabsContent>
-                </Tabs>
-
-            </div> */}
+                    <div className="flex items-center justify-between">
+                        <h2>Join Code</h2>
+                        <h3>{subject.id}</h3>
+                    </div>
+                </div>
+            </div>
+            <Separator />
+            <JoinForm id={subject.id} />
         </div>
         // </ScrollArea>
     )

@@ -91,7 +91,35 @@ export const users: User[] = [
   },
 ];
 
-export const navItems: NavItem[] = [
+export const StudentnavItems: NavItem[] = [
+  {
+    title: "Dashboard",
+    href: "/dashboard",
+    icon: "dashboard",
+    label: "Dashboard",
+  },
+  {
+    title: "Class",
+    href: "/class",
+    icon: "laptop",
+    label: "laptop",
+  },
+  {
+    title: "Meeting",
+    href: "/meeting",
+    icon: "meeting",
+    label: "meeting",
+  },
+
+  {
+    title: "Settings",
+    href: "/settings",
+    icon: "settings",
+    label: "settings",
+  },
+];
+
+export const TeachernavItems: NavItem[] = [
   {
     title: "Dashboard",
     href: "/dashboard",

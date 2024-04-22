@@ -11,7 +11,7 @@ import {
 import { Separator } from "../ui/separator";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { Edit, Trash, MoreVertical, Share2 } from "lucide-react";
+import { Edit, Trash, MoreVertical, Share2, BookX } from "lucide-react";
 import { AlertModal } from "../Modal/Alert-Modal";
 import {
     DropdownMenu,
@@ -25,11 +25,12 @@ import { useSetRecoilState, useRecoilValue } from "recoil";
 import { subjects, subject_stream, SubjectsT } from "../Store/class";
 import { ScrollArea } from "../ui/scroll-area";
 import ShareButton from "./ShareButton";
-import { delete_subject_Action } from "@/action/subject_Action";
+import { delete_subject_Action, leave_subject_Action } from "@/action/subject_Action";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 
-const Menu = ({ id }: { id: string }) => {
+const MenuT = ({ id }: { id: string }) => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const setSubjects = useSetRecoilState(subjects);
@@ -54,7 +55,7 @@ const Menu = ({ id }: { id: string }) => {
             success: 'Subject Added Successfully!',
             error: 'Failed to Add Subject'
         })
-       
+
     };
     return (<>
         <AlertModal
@@ -72,26 +73,78 @@ const Menu = ({ id }: { id: string }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <Separator className=" mb-1" />
 
                 <DropdownMenuItem
                     onClick={() => console.log("Edit")}
                 >
                     <ShareButton id={id} />
                 </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setOpen(true)}>
+                        <Trash className="mr-2 h-4 w-4" /> Delete
+                    </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu></>)
+}
+const MenuS = ({ id }: { id: string }) => {
+    const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState(false);
+    const setSubjects = useSetRecoilState(subjects);
+    const setStream = useSetRecoilState(subject_stream)
+
+    const handledelete = async () => {
+        setLoading(true);
+        const res = await leave_subject_Action(id);
+        if (!res.ok) {
+            setLoading(false);
+            throw new Error("Failed to Delete Subject");
+        }
+        setSubjects((prev) => prev.filter((subject) => subject.id !== id));
+        setStream((prev) => prev.filter((stream) => stream.id !== id));
+        setOpen(false);
+        setLoading(false);
+    }
+
+    const onConfirm = async () => {
+        toast.promise(handledelete(), {
+            loading: 'Leaving Subject...',
+            success: 'Subject Left Successfully!',
+            error: 'Failed to Leave Subject'
+        })
+
+    };
+    return (<>
+        <AlertModal
+            isOpen={open}
+            onClose={() => setOpen(false)}
+            onConfirm={onConfirm}
+            loading={loading}
+        />
+        <DropdownMenu modal={false}>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                    <span className="sr-only">Open menu</span>
+                    <MoreVertical className="h-6 w-6" />
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <Separator className=" mb-1" />
                 <DropdownMenuItem
                     onClick={() => console.log("Edit")}
                 >
-                    <Edit className="mr-2 h-4 w-4" /> Update
+                    <ShareButton id={id} />
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setOpen(true)}>
-                    <Trash className="mr-2 h-4 w-4" /> Delete
-                </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setOpen(true)}>
+                    <BookX className="mr-2 h-4 w-4" /> Unenroll
+                    </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu></>)
 }
 
-const Card_ = ({data}:{data: SubjectsT[]}) => {
+const Card_ = ({ data }: { data: SubjectsT[] }) => {
     const setSubjects = useSetRecoilState(subjects);
+    const {data:session} = useSession();
 
     useEffect(() => {
         setSubjects(data);
@@ -115,7 +168,7 @@ const Card_ = ({data}:{data: SubjectsT[]}) => {
 
                                 </div>
                                 <div className=" self-start -mt-3 -mr-5">
-                                    <Menu id={subject.id} />
+                                    {session?.user.role === 'teacher' ? (<MenuT id={subject.id} />) : (<MenuS id={subject.id} />)}
                                 </div>
                             </div>
                         </CardHeader>

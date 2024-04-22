@@ -19,11 +19,11 @@ const ShareButton = ({ id }:Props) => {
         <RWebShare 
         data={{
                 text: `${subject_data.name} - ${subject_data.description} by ${subject_data.teacher}`,
-                url: `${process.env.NEXT_PUBLIC_ORIGIN_URL!}/class/${subject_data.id}`,
+                url: `${process.env.NEXT_PUBLIC_ORIGIN_URL!}/class/${subject_data.id}/join`,
                 title: `Click to Join ${subject_data.name}`
         }}
         >
-        <Button> <Share2 className="mr-2 h-4 w-4" /> Invite</Button>
+            <p className=" flex items-center"> <Share2 className="mr-2 h-4 w-4" /> Invite</p>
         </RWebShare>
     )
 }
