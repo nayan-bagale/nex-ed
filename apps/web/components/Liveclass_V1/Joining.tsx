@@ -5,7 +5,7 @@ import { Button } from "../ui/button"
 import { useRoom } from "./ContextAPI/RoomContext/RoomContext";
 import { Info } from "lucide-react";
 
-import { schedule_meetingT } from "@/database/schema";
+import { instant_meetingT, schedule_meetingT } from "@/database/schema";
 import { Separator } from "../ui/separator";
 import {
   Popover,
@@ -39,7 +39,7 @@ const Joining = ({ roomid, user, meeting }: { roomid: string, user: any, meeting
               <Separator />
               <div className=" flex gap-4 justify-between">
                 <h3>Visibility:</h3>
-                <p>{meeting.visibility ? 'Public' : 'Private'}</p>
+                <p>{meeting.hasOwnProperty('visibility') ? (meeting.visibility ? 'Public' : 'Private') : 'Public'}</p>
               </div>
               <div className=" flex gap-4 justify-between">
                 <h3>Start Time:</h3>
@@ -55,7 +55,7 @@ const Joining = ({ roomid, user, meeting }: { roomid: string, user: any, meeting
               </div>
               <div className=" flex gap-4 justify-between">
                 <h3>Camera Always On:</h3>
-                <p>{meeting.camera ? 'Yes' : 'No'}</p>
+                <p>{meeting.hasOwnProperty('camera') ? (meeting.camera ? 'Yes' : 'No') : 'No'}</p>
               </div>
             </div>
           </PopoverContent>

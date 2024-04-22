@@ -26,7 +26,7 @@ const RoomProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
     const [username, setUsername] = useState<any>({});
 
-    const [meeting, setMeeting] = useState<schedule_meetingT>({});
+    const [meeting, setMeeting] = useState<schedule_meetingT>();
 
     const [roomId, setRoomId] = useState<string>("");
     const [stream, setStream] = useState<MediaStream>();

@@ -76,6 +76,7 @@ export default function InstantCreateMeetingForm() {
             id: pro_data.id,
             title: pro_data.title,
             date: pro_data.date,
+            host_id: pro_data.host_id,
             visibility: data.Visibility as 'public' | 'private'
         }]));
 

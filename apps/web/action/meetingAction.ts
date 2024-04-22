@@ -328,6 +328,40 @@ export async function get_instant_meeting() {
   }
 }
 
+export async function get_instant_meeting_by_id(id: string) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return {
+      ok: false,
+      message: "You need to be logged in to perform this action",
+    };
+  }
+
+  try {
+    const res = await db
+      .select()
+      .from(instant_meeting)
+      .where(eq(instant_meeting.id, id));
+    if (res.length === 0) {
+      return {
+        ok: false,
+        message: "Meeting not found",
+      };
+    }
+
+    return {
+      ok: true,
+      data: res[0],
+    };
+  } catch (e: unknown) {
+    console.log(e);
+    return {
+      ok: false,
+      message: "An error occurred while fetching the meeting",
+    };
+  }
+}
+
 export async function delete_instant_meeting(id: string) {
   const session = await getServerSession(authOptions);
   if (!session) {

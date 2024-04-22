@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import dynamic from "next/dynamic";
 import ClassLoading from "@/components/Templates/Loading/ClassLoading";
 import { get_schedule_meeting_by_id } from "@/action/meetingAction";
-// import Room from "@/components/Liveclass/_Room";
 
 
 const Room = dynamic(

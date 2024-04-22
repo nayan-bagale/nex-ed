@@ -1,5 +1,5 @@
 "use client";
-import { schedule_meetingT } from "@/database/schema";
+import { instant_meetingT, schedule_meetingT } from "@/database/schema";
 import { useRoom } from "./ContextAPI/RoomContext/RoomContext";
 import { useSetUserData } from "./CustomHooks/useSetUserData";
 import Joining from "./Joining";
