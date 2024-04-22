@@ -10,6 +10,7 @@ import {
   date,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
+import { title } from "process";
 
 export const users = pgTable("user", {
   id: text("id").notNull().primaryKey(),
@@ -117,4 +118,29 @@ export const stream = pgTable("stream", {
   description: text("description").notNull(),
   deleted: boolean("deleted").notNull().default(false),
   files: json("files").$type<Files[]>(),
+});
+
+
+export const schedule_meeting = pgTable("schedule_meeting", {
+  id: text("id").notNull().primaryKey(),
+  teacher_id: text("teacher_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  subject_id: text("subject_id").notNull().references(() => subjects.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  date: date("date").notNull(),
+  start_time: text("start_time").notNull(),
+  end_time: text("end_time").notNull(),
+  camera: boolean("camera").notNull().default(false),
+  visibility: boolean("visibility").notNull().default(false),
+  done: boolean("done").notNull().default(false),
+});
+
+export const instant_meeting = pgTable("instant_meeting", {
+  id: text("id").notNull().primaryKey(),
+  host_role: text("host_role").notNull(),
+  host_id: text("host_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  date: date("date").notNull(),
+  start_time: text("start_time").notNull(),
+  end_time: text("end_time").notNull(),
+  done: boolean("done").notNull().default(false),
 });

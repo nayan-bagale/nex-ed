@@ -16,6 +16,7 @@ const Room = dynamic(
 
 const page = async({ params }: { params: { roomid: string } }) => {
   const session = await getServerSession(authOptions);
+  
   return (
     <div>
       <Room roomid={params.roomid} user={session?.user} />

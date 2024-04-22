@@ -39,16 +39,18 @@ import { useSession } from "next-auth/react";
 import { useSetRecoilState } from "recoil";
 import { scheduleMeeting } from "@/components/Store/meeting";
 import cryptoRandomString from "crypto-random-string";
+import SelectItemsFetch from "./select-items-fetch";
+import { add_schedule_meeting } from "@/action/meetingAction";
 
 
 
 export const formSchema = z
     .object({
         title: z.string().min(3, { message: "At least 3 letters" }),
-        subject: z.string(),
+        subject_id: z.string(),
         starttime: z.string(),
         endtime: z.string(),
-        date: z.date(),
+        date: z.string(),
         cameraAlwaysOn: z.boolean(),
         visibility: z.string(),
 
@@ -70,11 +72,11 @@ export const formSchema = z
     }
 ).refine(
         (values) => {
-            return values.subject !== '' && values.subject !== null;
+        return values.subject_id !== '' && values.subject_id !== null;
         },
         {
             message: "Select a subject",
-            path: ["subject"],
+            path: ["subject_id"],
         }
     );
 
@@ -89,8 +91,8 @@ export default function ScheduleMeetingForm() {
 
     const defaultValues: UserFormValue = {
         title: "",
-        subject: "",
-        date: new Date(),
+        subject_id: "",
+        date: new Date().toDateString(),
         starttime: "",
         endtime: "",
         cameraAlwaysOn: false,
@@ -102,20 +104,43 @@ export default function ScheduleMeetingForm() {
         defaultValues,
     });
 
-
-    const onSubmit = async (data:any) => {
+    const handleSubmit = async (data: UserFormValue) => {
         setLoading(true);
         console.log(data)
+        const pro_data = {
+            id: cryptoRandomString({ length: 10 }),
+            title: data.title,
+            subject_id: data.subject_id,
+            date: data.date,
+            start_time: data.starttime,
+            end_time: data.endtime,
+            camera: data.cameraAlwaysOn,
+            visibility: data.visibility,
+        }
+        const res = await add_schedule_meeting(pro_data);
+
         setMeetings((prev) => [
             ...prev,
             {
                 ...data,
+                visibility: data.visibility === "public" ? "public" : "private",
                 teacher: session?.user?.name || "Nayan Bagale",
                 id: cryptoRandomString({ length: 10 }),
             },
         ]);
-        form.reset(defaultValues);
+        // form.reset(defaultValues);
         toast.success("User Created Successfully");
+        setLoading(false);
+    }
+
+
+    const onSubmit = async (data: UserFormValue) => {
+        setLoading(true);
+        toast.promise(handleSubmit(data), {
+            loading: "Creating Meeting...",
+            success: "Meeting Created Successfully",
+            error: "Failed to Create Meeting",
+        });
         setLoading(false);
     };
 
@@ -147,7 +172,7 @@ export default function ScheduleMeetingForm() {
                     />
                     <FormField
                         control={form.control}
-                        name="subject"
+                        name="subject_id"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Subject</FormLabel>
@@ -158,7 +183,7 @@ export default function ScheduleMeetingForm() {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="dlt">DLT</SelectItem>
+                                        <SelectItemsFetch/>
                                         <SelectItem value="demo">demo</SelectItem>
                                     </SelectContent>
                                 </Select>
@@ -197,7 +222,7 @@ export default function ScheduleMeetingForm() {
                                     <PopoverContent className="w-auto p-0" align="start">
                                         <Calendar
                                             mode="single"
-                                            selected={field.value}
+                                            selected={new Date(field.value)}
                                             onSelect={field.onChange}
                                             disabled={(date) =>
                                                 new Date(date.getTime() + (1 * 24 * 60 * 60 * 1000)) < new Date()
