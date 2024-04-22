@@ -4,14 +4,16 @@ interface visibility {
   visibility: 'public' | 'private'
 }
 
-interface instantCreateT extends visibility {
+interface instantMeetingT extends visibility {
     id: string;
     title: string;
+    date: string;
+    host_id:string;
 }
 
-export const instantCreate = atom({
-  key: "instantCreate",
-  default: {} as instantCreateT,
+export const instantMeeting = atom({
+  key: "instantMeeting",
+  default: [] as instantMeetingT[],
 });
 
 interface scheduleMeetingT extends visibility {

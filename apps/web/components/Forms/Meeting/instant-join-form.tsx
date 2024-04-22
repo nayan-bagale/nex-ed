@@ -17,12 +17,14 @@ import {
 import { toast } from "sonner";
 
 import * as z from "zod";
+import { get_schedule_meeting_by_id } from "@/action/meetingAction";
+import { useRouter } from "next/navigation";
 
 
 
 export const formSchema = z
     .object({
-        join: z.string().min(3, { message: "At least 3 letters" }),
+        join: z.string().min(10, { message: "At least 10 letters" }).max(10, { message: "At most 10 letters" }),
     })
 
 
@@ -31,6 +33,7 @@ export type UserFormValue = z.infer<typeof formSchema>;
 
 export default function InstantJoinMeetingForm() {
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     const defaultValues: UserFormValue = {
         join: "",
@@ -41,12 +44,29 @@ export default function InstantJoinMeetingForm() {
         defaultValues,
     });
 
+    const handleSubmit = async (data: UserFormValue) => {
+        const res = await get_schedule_meeting_by_id(data.join);
+        if (!res.ok) {
+            throw new Error(res.message);
+        }
+        form.reset(defaultValues);
+        
+        return res;
+    }
+
 
     const onSubmit = async (data: UserFormValue) => {
         setLoading(true);
-        console.log(data)
-        form.reset(defaultValues);
-        toast.success("User Created Successfully");
+        toast.promise(handleSubmit(data), {
+            loading: 'Joining...',
+            success: () => {
+                router.push(`/liveclass/${data.join}`);
+                return 'Redirecting to meeting...';
+            },
+            error: (err) => {
+                return err.message;
+            }
+        });
         setLoading(false);
     };
 

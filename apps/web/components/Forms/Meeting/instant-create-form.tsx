@@ -19,6 +19,13 @@ import { toast } from "sonner";
 import * as z from "zod";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { add_instant_meeting } from "@/action/meetingAction";
+import { useSession } from "next-auth/react";
+import cryptoRandomString from "crypto-random-string";
+import { hostname } from "os";
+import { date } from "drizzle-orm/pg-core";
+import { useSetRecoilState } from "recoil";
+import { instantMeeting } from "@/components/Store/meeting";
 
 
 
@@ -35,6 +42,8 @@ export type UserFormValue = z.infer<typeof formSchema>;
 
 export default function InstantCreateMeetingForm() {
     const [loading, setLoading] = useState(false);
+    const {data:session} = useSession();
+    const setIntantMeeting = useSetRecoilState(instantMeeting);
 
     const defaultValues: UserFormValue = {
         title: "",
@@ -46,12 +55,43 @@ export default function InstantCreateMeetingForm() {
         defaultValues,
     });
 
+    const handleSubmit = async (data: UserFormValue) => {
+        const pro_data = {
+            id: cryptoRandomString({ length: 10 }),
+            host_role: session?.user.role as string,
+            host_id: session?.user.id as string,
+            title: data.title,
+            date: new Date().toDateString(),
+            start_time: new Date().toTimeString().slice(0, 5),
+            end_time: '00:00',
+            done: false,
+        }
+
+        const res = await add_instant_meeting(pro_data);
+        if (!res.ok) {
+            throw new Error(res.message);
+        }
+
+        setIntantMeeting((prev) => ([...prev, {
+            id: pro_data.id,
+            title: pro_data.title,
+            date: pro_data.date,
+            visibility: data.Visibility as 'public' | 'private'
+        }]));
+
+        console.log(data)
+        form.reset(defaultValues);
+
+        return res.message;
+    }
 
     const onSubmit = async (data: UserFormValue) => {
         setLoading(true);
-        console.log(data)
-        form.reset(defaultValues);
-        toast.success("User Created Successfully");
+        toast.promise(handleSubmit(data), {
+            loading: 'Creating Meeting...',
+            success: (e) => e,
+            error: (e) => e.message
+        });
         setLoading(false);
     };
 

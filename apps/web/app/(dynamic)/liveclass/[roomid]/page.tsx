@@ -2,6 +2,7 @@ import { authOptions } from "@/components/utils/options";
 import { getServerSession } from "next-auth";
 import dynamic from "next/dynamic";
 import ClassLoading from "@/components/Templates/Loading/ClassLoading";
+import { get_schedule_meeting_by_id } from "@/action/meetingAction";
 // import Room from "@/components/Liveclass/_Room";
 
 
@@ -16,10 +17,19 @@ const Room = dynamic(
 
 const page = async({ params }: { params: { roomid: string } }) => {
   const session = await getServerSession(authOptions);
-  
+  const res = await get_schedule_meeting_by_id(params.roomid);
+
+  if(!res.ok || !res.data) {
+    return (
+      <div>
+        <h1>{res.message}</h1>
+      </div>
+    )
+  }
+
   return (
     <div>
-      <Room roomid={params.roomid} user={session?.user} />
+      <Room roomid={params.roomid} user={session?.user} meeting={res?.data} />
     </div>
   );
 }

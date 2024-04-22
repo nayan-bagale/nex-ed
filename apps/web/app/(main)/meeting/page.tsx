@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/components/utils/options";
 import RoleChekerServer from "@/components/utils/RoleChekerServer";
+import InstantCard from "@/components/Meeting/InstantCard";
 
 function Class_() {
     const session = getServerSession(authOptions);
@@ -31,7 +32,8 @@ function Class_() {
                     </div>
                 </div>
                 <Separator />
-                <div className="h-full p-2">
+                <div className="h-full p-2 gap-4 flex flex-col">
+                    <InstantCard />
                     <MeetingCard />
                 </div>
             </div>

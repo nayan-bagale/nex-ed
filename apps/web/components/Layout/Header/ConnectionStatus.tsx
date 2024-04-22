@@ -31,7 +31,7 @@ const ConnectionStatus = () => {
     return (
         status ? (
             <Badge >
-                <UnplugIcon className=' h-6 w-6' />
+                <UnplugIcon className=' h-5 w-5' />
                 {/* <span className=" animate-pulse absolute -right-3 bottom-0 flex w-3 h-3 me-3 bg-green-500 rounded-full"></span> */}
             </Badge>
 

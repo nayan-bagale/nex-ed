@@ -6,7 +6,8 @@ import { Toaster } from "@/components/ui/sonner";
 import Session from "@/components/Providers/Session";
 import dynamic from "next/dynamic";
 import ClassLoading from "@/components/Templates/Loading/ClassLoading";
-import NavBarLiveClass from "@/components/Layout/Header/NavBarLiveClass";
+import NavBarLiveClass from "@/components/Layout/Header/LiveClass/NavBarLiveClass";
+import RecoilProvider from "@/components/Providers/RecoilProvider";
 // import LiveClassContext from "@/components/Liveclass/ContextAPI/_LiveClassContext";
 
 const LiveClassContext = dynamic(() => import('@/components/Liveclass_V1/ContextAPI/_LiveClassContext'), {
@@ -29,6 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={inter.className}>
+        <RecoilProvider>
         <Session>
           <ThemeProvider
             attribute="class"
@@ -43,6 +45,7 @@ export default function RootLayout({
             <Toaster />
           </ThemeProvider>
         </Session>
+        </RecoilProvider>
       </body>
     </html>
   );

@@ -6,7 +6,7 @@ import { useState } from "react";
 
 
 const ActionButtons = ({ setIsOpen }: { setIsOpen:any}) => {
-    const { shareScreen, leaveRoom, mute, pause } = useRoom();
+    const { shareScreen, leaveRoom, mute, pause, meeting } = useRoom();
 
     const [cameraOff, setCameraOff] = useState(false)
     const [micOff, setMicOff] = useState(false)
@@ -25,14 +25,14 @@ const ActionButtons = ({ setIsOpen }: { setIsOpen:any}) => {
 
   return (
       <div className=" fixed bottom-1 border-t left-0 md:static flex items-center justify-evenly mt-2 h-[4.8rem] md:h-[5rem] md:w-[50%] w-full md:self-center md:border rounded-2xl">
-          <div className=" flex flex-col items-center">
+          {meeting.camera && (<div className=" flex flex-col items-center">
               <Button className=" rounded-full px-2" variant={"outline"}
                   onClick={handleCamera}
               >
                   {cameraOff ? <VideoOff/> : <Video />}
               </Button>
               <p className="text-xs md:text-sm">Video</p>
-          </div>
+          </div>)}
 
           <div className=" flex flex-col items-center">
               <Button className=" rounded-full px-2" variant={"outline"}

@@ -15,10 +15,9 @@ export const chatHandler = (socket: Socket) => {
         rooms[roomId] = [];
     }
     console.log(`Creating room: ${roomId}`);
-    socket.emit("room-created", roomId);
   };
   const joinRoom = ({ roomId, peerId, profile }: IRoomParams) => {
-    // console.log(profile);
+    if(roomId === '' || peerId === '') return;
     if (Object.hasOwn(rooms, roomId)) {
       console.log(`Joining room: ${roomId} ${peerId} ${profile?.name}`);
       rooms[roomId].push(peerId);
@@ -32,7 +31,18 @@ export const chatHandler = (socket: Socket) => {
         participants: rooms[roomId],
       });
     } else {
-      // socket.emit("room-not-found", roomId);
+      createRoom({ roomId });
+      rooms[roomId].push(peerId);
+
+      socket.join(roomId);
+
+      socket.to(roomId).emit("user-joined", { peerId: peerId });
+
+      socket.to(roomId).emit("get-users", {
+        roomId,
+        participants: rooms[roomId],
+      });
+
       console.log(`Room not found: ${roomId}`);
       console.log(rooms)
     }

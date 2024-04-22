@@ -17,7 +17,7 @@ import {
 } from "react";
 
 import { rtcpeer, ws } from "../Connection_WS_Peerjs";
-import { steps } from "framer-motion";
+import { schedule_meetingT } from "@/database/schema";
 
 const RoomContext = createContext<null | any>(null);
 
@@ -25,6 +25,8 @@ const RoomProvider: React.FC<{ children: React.ReactNode }> = ({
     children,
 }) => {
     const [username, setUsername] = useState<any>({});
+
+    const [meeting, setMeeting] = useState<schedule_meetingT>({});
 
     const [roomId, setRoomId] = useState<string>("");
     const [stream, setStream] = useState<MediaStream>();
@@ -196,12 +198,14 @@ const RoomProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
 
-    console.log(peers)
-    console.log({ screenSharingId })
+    // console.log(peers)
+    // console.log({ screenSharingId })
 
     return (
         <RoomContext.Provider
             value={{
+                setMeeting,
+                meeting,
                 setUsername,
                 username,
                 setRoomId,

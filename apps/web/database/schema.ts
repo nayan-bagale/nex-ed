@@ -134,6 +134,8 @@ export const schedule_meeting = pgTable("schedule_meeting", {
   done: boolean("done").notNull().default(false),
 });
 
+export type schedule_meetingT = typeof schedule_meeting.$inferSelect;
+
 export const instant_meeting = pgTable("instant_meeting", {
   id: text("id").notNull().primaryKey(),
   host_role: text("host_role").notNull(),
@@ -144,3 +146,5 @@ export const instant_meeting = pgTable("instant_meeting", {
   end_time: text("end_time").notNull(),
   done: boolean("done").notNull().default(false),
 });
+
+export type instant_meetingT = typeof instant_meeting.$inferSelect;

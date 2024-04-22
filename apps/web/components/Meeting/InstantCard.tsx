@@ -1,16 +1,13 @@
 'use client'
 
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-import { Separator } from "../ui/separator";
-import { Button } from "../ui/button";
-import { Edit, Trash, MoreVerticalIcon } from "lucide-react";
+import React, { useState } from 'react'
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { instantMeeting } from '../Store/meeting';
+import { Separator } from '@/components/ui/separator';
+import Link from "next/link";
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../ui/card';
+import RoleCheckerClient from '../utils/RoleCheckerClient';
 import { AlertModal } from "../Modal/Alert-Modal";
 import {
     DropdownMenu,
@@ -19,36 +16,37 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { scheduleMeeting } from "../Store/meeting";
-import { delete_schedule_meeting, get_schedule_meeting } from "@/action/meetingAction";
-import { toast } from "sonner";
-import Link from "next/link";
-import RoleCheckerClient from "../utils/RoleCheckerClient";
-import useMeetingsFetch from "../CustomHooks/useMeetingsFetch";
+import { toast } from 'sonner';
+import { Edit, MoreVerticalIcon, Trash } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { delete_instant_meeting } from '@/action/meetingAction';
 
 const Menu = ({ id }: { id: string }) => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
-    const setMeeting = useSetRecoilState(scheduleMeeting);
+    const setInstantMeeting = useSetRecoilState(instantMeeting);
+
 
     const handleDelete = async () => {
-        const res = await delete_schedule_meeting(id);
+        const res = await delete_instant_meeting(id);
         if (!res.ok) {
             setOpen(false);
             throw new Error(res.message);
         }
-        setMeeting((prev) => prev.filter((meeting) => meeting.id !== id));
+        setInstantMeeting((prev) => prev.filter((meeting) => meeting.id !== id));
+
         setOpen(false);
+
+        return res.message;
+
     }
 
     const onConfirm = async () => {
         setLoading(true);
         toast.promise(handleDelete(), {
             loading: 'Deleting...',
-            success: 'Meeting Deleted',
-            error: 'Error Deleting Meeting'
+            success: (res) => res,
+            error: (err) => err.message
         });
         setLoading(false);
     };
@@ -69,12 +67,7 @@ const Menu = ({ id }: { id: string }) => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <Separator className='mb-1'/>
-                    {/* <DropdownMenuItem
-                        onClick={() => console.log("Edit")}
-                    >
-                        <Edit className="mr-2 h-4 w-4" /> Update
-                    </DropdownMenuItem> */}
+                    <Separator className='mb-1' />
                     <DropdownMenuItem onClick={() => setOpen(true)}>
                         <Trash className="mr-2 h-4 w-4" /> Delete
                     </DropdownMenuItem>
@@ -84,22 +77,14 @@ const Menu = ({ id }: { id: string }) => {
     )
 }
 
-const MeetingCard = () => {
-
-    const meetings = useRecoilValue(scheduleMeeting);
-    
-    if (meetings.length === 0) {
-        return (
-            <div className=" flex justify-center items-center">
-                <h1 className=" text-2xl font-bold text-muted-foreground">No Meetings</h1>
-            </div>
-        )
-    }
+const InstantCard = () => {
+    const intantMeetings = useRecoilValue(instantMeeting);
+    const { data: session } = useSession();
 
     return (
-        <div className=" flex flex-wrap gap-6 justify-center md:justify-start">
-            {
-                meetings.map((meeting) => (
+        <div className=' flex flex-wrap gap-4'>
+            {intantMeetings.map((meeting) => {
+                return (
                     <Card key={meeting.id} className=" w-[18rem]">
                         <CardHeader>
                             <div className=" flex justify-between gap-4">
@@ -107,34 +92,19 @@ const MeetingCard = () => {
                                     <CardTitle>
                                         {meeting.title}
                                     </CardTitle>
-
-                                    <CardDescription>Sub: {meeting.subject_id}</CardDescription>
                                 </div>
-                                <RoleCheckerClient>
-                                <div className=" self-start -mt-1 ">
+                                {meeting.host_id === session?.user.id && (<div className=" self-start -mt-1 ">
                                     <Menu id={meeting.id} />
-                                </div>
-                                </RoleCheckerClient>
+                                </div>)}
+
                             </div>
                         </CardHeader>
                         <Separator className=" -mt-2 mb-2" />
                         <CardContent className=" space-y-2">
-                            <h3>Prof. {meeting.teacher}</h3>
+                            {/* <h3>Prof. {meeting.teacher}</h3> */}
                             <div className=" flex justify-between text-sm text-muted-foreground">
                                 <p>Date:</p>
                                 <p>{meeting.date}</p>
-                            </div>
-                            <div className=" flex justify-between text-sm text-muted-foreground">
-                                <p>Time:</p>
-                                <p>10:00 AM</p>
-                            </div>
-                            <div className=" flex justify-between text-sm text-muted-foreground">
-                                <p>Duration:</p>
-                                <p>1hr</p>
-                            </div>
-                            <div className=" flex justify-between text-sm text-muted-foreground">
-                                <p>Camera:</p>
-                                <p>{meeting.cameraAlwaysOn ? 'Always On' : 'Off'}</p>
                             </div>
                             <div className=" flex justify-between text-sm text-muted-foreground">
                                 <p>Visibility:</p>
@@ -148,12 +118,10 @@ const MeetingCard = () => {
                             </Link>
                         </CardFooter>
                     </Card>
-                ))
-            }
-
+                )
+            })}
         </div>
-
     )
 }
 
-export default MeetingCard;
+export default InstantCard
