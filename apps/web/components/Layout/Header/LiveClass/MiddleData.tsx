@@ -8,7 +8,7 @@ const MiddleData = () => {
     const { meeting } = useRoom();
     return (
         <>
-            <p className=' text-sm md:text-base'>{meeting.title}</p>
+            <p className=' text-sm md:text-base'>{meeting?.title}</p>
             <Clock/>
         </>
     )

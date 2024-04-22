@@ -1,11 +1,12 @@
 import Peer from "peerjs";
 import socketIOClient from "socket.io-client";
+import cryptoRandomString from "crypto-random-string";
 
 export const ws = socketIOClient(process.env.NEXT_PUBLIC_WS_URL!);
 
 
 export const rtcpeer = () => {
-  const uid = crypto.randomUUID();
+  const uid = cryptoRandomString({ length: 10, type: "url-safe"});
 
   return new Peer(uid, {
     path: "/myapp",
