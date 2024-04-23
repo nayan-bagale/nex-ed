@@ -198,7 +198,7 @@ const RoomProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
 
-    // console.log(peers)
+    console.log(peers)
     // console.log({ screenSharingId })
 
     return (
