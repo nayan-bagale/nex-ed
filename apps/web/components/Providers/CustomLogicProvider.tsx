@@ -2,12 +2,12 @@
 
 import React, { FC } from 'react'
 import useMeetingsFetch from '../CustomHooks/useMeetingsFetch';
-import useInstantMeetingsFetch from '../CustomHooks/useInstantMeetingsFetch';
+// import useInstantMeetingsFetch from '../CustomHooks/useInstantMeetingsFetch';
 
 const CustomLogicProvider:FC<{children: React.ReactNode}> = ({children}) => {
   
     useMeetingsFetch();
-    useInstantMeetingsFetch();
+    // useInstantMeetingsFetch();
     
     return (
     <>

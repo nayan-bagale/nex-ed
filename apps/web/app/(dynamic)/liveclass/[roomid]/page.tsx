@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import dynamic from "next/dynamic";
 import ClassLoading from "@/components/Templates/Loading/ClassLoading";
 import { get_schedule_meeting_by_id } from "@/action/meetingAction";
+import { redirect } from "next/navigation";
 
 
 const Room = dynamic(
@@ -19,11 +20,7 @@ const page = async({ params }: { params: { roomid: string } }) => {
   const res = await get_schedule_meeting_by_id(params.roomid);
 
   if(!res.ok || !res.data) {
-    return (
-      <div>
-        <h1>{res.message}</h1>
-      </div>
-    )
+    redirect('/not-found')
   }
 
   return (

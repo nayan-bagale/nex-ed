@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import RoleCheckerClient from "../utils/RoleCheckerClient";
 import useMeetingsFetch from "../CustomHooks/useMeetingsFetch";
+import { convert24To12 } from "../utils/TimeFormatter";
 
 const Menu = ({ id }: { id: string }) => {
     const [loading, setLoading] = useState(false);
@@ -126,11 +127,11 @@ const MeetingCard = () => {
                             </div>
                             <div className=" flex justify-between text-sm text-muted-foreground">
                                 <p>Time:</p>
-                                <p>10:00 AM</p>
+                                <p>{convert24To12(meeting.starttime)}</p>
                             </div>
                             <div className=" flex justify-between text-sm text-muted-foreground">
                                 <p>Duration:</p>
-                                <p>1hr</p>
+                                <p>{+meeting.endtime.split(':')[0] - +meeting.starttime.split(':')[0]} hr</p>
                             </div>
                             <div className=" flex justify-between text-sm text-muted-foreground">
                                 <p>Camera:</p>

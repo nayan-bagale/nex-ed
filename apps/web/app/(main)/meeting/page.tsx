@@ -12,6 +12,7 @@ import InstantCard from "@/components/Meeting/InstantCard";
 
 function Class_() {
     const session = getServerSession(authOptions);
+    
 
     const breadcrumbItems = [
         { title: "Dashboard", link: "/dashboard" },
@@ -25,7 +26,7 @@ function Class_() {
                 <div className="flex items-start justify-between">
                     <Heading title='Meeting' description='' />
                     <div className=" space-x-2">
-                        <InstantDialog />
+                        {/* <InstantDialog /> */}
                         <RoleChekerServer>
                             <ScheduleDialog />
                         </RoleChekerServer>
@@ -33,7 +34,7 @@ function Class_() {
                 </div>
                 <Separator />
                 <div className="h-full p-2 gap-4 flex flex-col">
-                    <InstantCard />
+                    {/* <InstantCard /> */}
                     <MeetingCard />
                 </div>
             </div>
