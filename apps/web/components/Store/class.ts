@@ -1,7 +1,5 @@
-"use client";
 
 import { Files } from "@/database/schema";
-import { atom } from "recoil";
 
 export interface SubjectsT {
   id: string;
@@ -21,13 +19,3 @@ export interface Subject_streamT {
   profile: string;
 }
 
-
-export const subjects = atom({
-  key: "subjects",
-  default: [] as SubjectsT[],
-});
-
-export const subject_stream = atom({
-  key: "subject_stream",
-  default: [] as Subject_streamT[],
-});

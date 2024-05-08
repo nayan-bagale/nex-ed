@@ -18,8 +18,7 @@ import {
 import { toast } from "sonner";
 
 import * as z from "zod";
-import { useSetRecoilState } from "recoil";
-import { subjects, subject_stream, SubjectsT } from "@/components/Store/class";
+import {  SubjectsT } from "@/components/Store/class";
 import { useSession } from "next-auth/react";
 import cryptoRandomString from "crypto-random-string";
 import { create_subject_Action } from "@/action/subject_Action";
@@ -42,7 +41,6 @@ export default function AddSubjectForm() {
     const {data:session} = useSession();
 
     const [loading, setLoading] = useState(false);
-    const setSubject = useSetRecoilState(subjects);
 
     const defaultValues: UserFormValue = {
         subject_name: "",
@@ -56,11 +54,8 @@ export default function AddSubjectForm() {
     const handlesubmit = async (data: SubjectsT) => {
             const res = await create_subject_Action(data);
             if(!res) throw new Error("Failed to Add Subject");
-            setSubject((subject) => (
-                [...subject, data]
-            ))
             form.reset(defaultValues);
-            console.log(data);
+            
     }
 
     const onSubmit = async (data: UserFormValue) => {

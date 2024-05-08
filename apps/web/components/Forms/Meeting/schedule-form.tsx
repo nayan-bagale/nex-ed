@@ -36,8 +36,6 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Switch } from "@/components/ui/switch";
 import { useSession } from "next-auth/react";
-import { useSetRecoilState } from "recoil";
-import { scheduleMeeting } from "@/components/Store/meeting";
 import cryptoRandomString from "crypto-random-string";
 import SelectItemsFetch from "./select-items-fetch";
 import { add_schedule_meeting } from "@/action/meetingAction";
@@ -87,7 +85,6 @@ export type UserFormValue = z.infer<typeof formSchema>;
 export default function ScheduleMeetingForm() {
     const [loading, setLoading] = useState(false);
     const {data:session} = useSession();
-    const setMeetings = useSetRecoilState(scheduleMeeting);
 
     const defaultValues: UserFormValue = {
         title: "",
@@ -118,16 +115,6 @@ export default function ScheduleMeetingForm() {
             visibility: data.visibility,
         }
         const res = await add_schedule_meeting(pro_data);
-
-        // setMeetings((prev) => [
-        //     ...prev,
-        //     {
-        //         ...data,
-        //         visibility: data.visibility === "public" ? "public" : "private",
-        //         teacher: session?.user?.name || "Nayan Bagale",
-        //         id: cryptoRandomString({ length: 10 }),
-        //     },
-        // ]);
         form.reset(defaultValues);
         toast.success("User Created Successfully");
         setLoading(false);

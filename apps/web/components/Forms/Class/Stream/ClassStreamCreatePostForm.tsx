@@ -17,8 +17,6 @@ import {
 import { toast } from "sonner";
 
 import * as z from "zod";
-import { useRecoilState } from "recoil";
-import { subject_stream } from "@/components/Store/class";
 import { useSession } from "next-auth/react";
 import cryptoRandomString from "crypto-random-string";
 import { MultiFileDropzone, FileState } from "./MultiFileDropzone";
@@ -47,8 +45,6 @@ export default function ClassStreamCreatePostForm({ sub_id }: { sub_id: string }
     const [loading, setLoading] = useState(false);
     const [fileStates, setFileStates] = useState<FileState[]>([]);
     const { edgestore } = useEdgeStore();
-
-    const [stream, setSubjectStream] = useRecoilState(subject_stream);
     // console.log(stream)
 
     const defaultValues: UserFormValue = {
@@ -128,7 +124,6 @@ export default function ClassStreamCreatePostForm({ sub_id }: { sub_id: string }
             throw Error("Something went wrong!")
         }
 
-        setSubjectStream((subject_stream) => ([...subject_stream, pro_data]))
         form.reset(defaultValues);
         toast.success("Post Created Successfully!");
         setLoading(false);

@@ -22,11 +22,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { add_instant_meeting } from "@/action/meetingAction";
 import { useSession } from "next-auth/react";
 import cryptoRandomString from "crypto-random-string";
-import { hostname } from "os";
-import { date } from "drizzle-orm/pg-core";
-import { useSetRecoilState } from "recoil";
-import { instantMeeting } from "@/components/Store/meeting";
-
 
 
 export const formSchema = z
@@ -43,7 +38,6 @@ export type UserFormValue = z.infer<typeof formSchema>;
 export default function InstantCreateMeetingForm() {
     const [loading, setLoading] = useState(false);
     const {data:session} = useSession();
-    const setIntantMeeting = useSetRecoilState(instantMeeting);
 
     const defaultValues: UserFormValue = {
         title: "",
@@ -71,16 +65,6 @@ export default function InstantCreateMeetingForm() {
         if (!res.ok) {
             throw new Error(res.message);
         }
-
-        setIntantMeeting((prev) => ([...prev, {
-            id: pro_data.id,
-            title: pro_data.title,
-            date: pro_data.date,
-            host_id: pro_data.host_id,
-            visibility: data.Visibility as 'public' | 'private'
-        }]));
-
-        console.log(data)
         form.reset(defaultValues);
 
         return res.message;

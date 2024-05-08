@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+
 
 interface visibility {
   visibility: 'public' | 'private'
@@ -11,10 +11,6 @@ interface instantMeetingT extends visibility {
     host_id:string;
 }
 
-export const instantMeeting = atom({
-  key: "instantMeeting",
-  default: [] as instantMeetingT[],
-});
 
 interface scheduleMeetingT extends visibility {
   id: string;
@@ -27,10 +23,7 @@ interface scheduleMeetingT extends visibility {
   cameraAlwaysOn: boolean;
 }
 
-export const scheduleMeeting = atom({
-  key: "scheduleMeeting",
-  default: [] as scheduleMeetingT[],
-});
+
 
 
 

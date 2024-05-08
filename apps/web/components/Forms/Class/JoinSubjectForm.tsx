@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -18,8 +17,6 @@ import {
 import { toast } from "sonner";
 
 import * as z from "zod";
-import { useSetRecoilState } from "recoil";
-import { subjects } from "@/components/Store/class";
 import { useSession } from "next-auth/react";
 import { join_subject_Action } from "@/action/subject_Action";
 
@@ -35,10 +32,7 @@ export type UserFormValue = z.infer<typeof formSchema>;
 
 export default function JoinSubjectForm() {
 
-    const { data: session } = useSession();
-
     const [loading, setLoading] = useState(false);
-    const setSubject = useSetRecoilState(subjects);
 
     const defaultValues: UserFormValue = {
         subject_id: "",
