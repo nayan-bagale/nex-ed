@@ -28,6 +28,7 @@ import ShareButton from "./ShareButton";
 import { delete_subject_Action, leave_subject_Action } from "@/action/subject_Action";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
+import { CardSpotlight } from "../ui/CardSpotlight";
 
 
 const MenuT = ({ id }: { id: string }) => {
@@ -156,7 +157,7 @@ const Card_ = ({ data }: { data: SubjectsT[] }) => {
         <ScrollArea>
             <div className=" flex gap-2 flex-wrap justify-center md:justify-start">{
                 allsubjects.map((subject) => (
-                    <Card className=" w-[18rem]">
+                    <Card key={subject.id} className=" w-[18rem]">
                         <CardHeader>
                             <div className=" flex justify-between pr-2 ">
                                 <div className=" space-y-2">

@@ -14,7 +14,7 @@ const ConnectionStatus = dynamic(() => import("./ConnectionStatus"), {
 
 export default function Header() {
   return (
-    <div className="fixed top-0 left-0 right-0 supports-backdrop-blur:bg-background/60 border-b bg-background/95 backdrop-blur z-20">
+    <div className="fixed top-0 left-0 right-0 border-b transition-colors backdrop-blur-md  z-20">
       <nav className="h-14 flex items-center justify-between px-4">
         <div className="hidden md:block">
           <Link href="/" className="font-semibold tracking-tight text-lg">
