@@ -119,16 +119,16 @@ export default function ScheduleMeetingForm() {
         }
         const res = await add_schedule_meeting(pro_data);
 
-        setMeetings((prev) => [
-            ...prev,
-            {
-                ...data,
-                visibility: data.visibility === "public" ? "public" : "private",
-                teacher: session?.user?.name || "Nayan Bagale",
-                id: cryptoRandomString({ length: 10 }),
-            },
-        ]);
-        // form.reset(defaultValues);
+        // setMeetings((prev) => [
+        //     ...prev,
+        //     {
+        //         ...data,
+        //         visibility: data.visibility === "public" ? "public" : "private",
+        //         teacher: session?.user?.name || "Nayan Bagale",
+        //         id: cryptoRandomString({ length: 10 }),
+        //     },
+        // ]);
+        form.reset(defaultValues);
         toast.success("User Created Successfully");
         setLoading(false);
     }

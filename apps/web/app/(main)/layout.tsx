@@ -8,7 +8,6 @@ import Sidebar from "@/components/Layout/Sidebar/SideBar";
 import Session from "@/components/Providers/Session";
 import RecoilProvider from "@/components/Providers/RecoilProvider";
 import { EdgeStoreProvider } from "@/lib/edgestore";
-import CustomLogicProvider from "@/components/Providers/CustomLogicProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className + ' '}>
         <RecoilProvider>
-          <CustomLogicProvider>
+          
           <Session>
             <ThemeProvider
               attribute="class"
@@ -46,7 +45,7 @@ export default function RootLayout({
               </EdgeStoreProvider>
             </ThemeProvider>
           </Session>
-          </CustomLogicProvider>
+          
         </RecoilProvider>
       </body>
     </html>

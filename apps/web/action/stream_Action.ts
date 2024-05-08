@@ -6,12 +6,15 @@ import { Subject_streamT } from "@/components/Store/class";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/components/utils/options";
 import { eq } from "drizzle-orm";
-import { profile } from "console";
+import { revalidateTag, unstable_cache } from "next/cache";
 
 export async function create_stream_Action(data: Subject_streamT) {
   const session = await getServerSession(authOptions);
   if (session?.user.role !== "teacher") {
-    return false;
+    return {
+      ok: false,
+      message: "You are not authorized to create a stream",
+    };
   }
 
   try {
@@ -27,21 +30,37 @@ export async function create_stream_Action(data: Subject_streamT) {
         files: data.files,
       })
       .returning();
-
+    revalidateTag("stream_data");
     // console.log(res);
 
-    return true;
+    return {
+      data: res[0],
+      ok: true,
+    };
   } catch (error: unknown) {
     console.log(error);
-    return false;
+    return {
+      ok: false,
+      message: "An error occurred",
+    };
   }
 }
 
-export async function get_stream_Action(subject_id: string) {
-    const session = await getServerSession(authOptions);
-    if (session?.user?.role !== "teacher" && session?.user?.role !== "student" && session?.user?.role !== "admin") {
-      return [];
-    }
+export const getSubjects = unstable_cache(
+  async (id) => get_stream_Action(id),
+  ["stream_data"],
+  { tags: ["stream_data"] }
+);
+
+async function get_stream_Action(subject_id: string) {
+  const session = await getServerSession(authOptions);
+  if (
+    session?.user?.role !== "teacher" &&
+    session?.user?.role !== "student" &&
+    session?.user?.role !== "admin"
+  ) {
+    return [];
+  }
   try {
     const data = await db
       .select()
@@ -76,10 +95,8 @@ export async function delete_stream_Action(id: string) {
   }
 
   try {
-    const res = await db
-      .delete(stream)
-      .where(eq(stream.id, id)).returning();
-
+    const res = await db.delete(stream).where(eq(stream.id, id)).returning();
+    revalidateTag("stream_data");
     return {
       data: res[0],
       ok: true,

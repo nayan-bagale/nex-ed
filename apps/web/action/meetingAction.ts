@@ -11,6 +11,7 @@ import {
 } from "@/database/schema";
 import { and, eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
+import { revalidateTag, unstable_cache } from "next/cache";
 
 export async function get_subject_by_teacher_id() {
   const session = await getServerSession(authOptions);
@@ -82,11 +83,29 @@ export async function add_schedule_meeting(data: any) {
       })
       .returning();
 
+    revalidateTag("get_schedule_meeting");
+
     console.log(res);
+    return {
+      ok: true,
+      message: "Meeting scheduled successfully",
+    };
   } catch (e: unknown) {
     console.log(e);
+    return {
+      ok: false,
+      message: "An error occurred while scheduling the meeting",
+    };
   }
 }
+
+export const getCachedMeeting = unstable_cache(
+  get_schedule_meeting,
+  ["get_schedule_meeting"],
+  {
+    tags: ["get_schedule_meeting"],
+  }
+);
 
 export async function get_schedule_meeting() {
   const session = await getServerSession(authOptions);
@@ -266,6 +285,7 @@ export async function delete_schedule_meeting(id: string) {
       .returning();
 
     // console.log(res);
+    revalidateTag("get_schedule_meeting");
     return {
       ok: true,
       message: "Meeting deleted successfully",

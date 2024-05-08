@@ -10,12 +10,16 @@ import { SubjectsT } from "@/components/Store/class";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/components/utils/options";
 import { and, eq } from "drizzle-orm";
+import { revalidateTag, unstable_cache } from "next/cache";
 
 export async function create_subject_Action(data: SubjectsT) {
   const session = await getServerSession(authOptions);
   try {
     if (!session || session.user.role !== "teacher") {
-      return false;
+      return {
+        ok: false,
+        message: "Unauthorized",
+      };
     }
     const subject = await db.insert(subjects).values({
       id: data.id,
@@ -28,11 +32,18 @@ export async function create_subject_Action(data: SubjectsT) {
     });
 
     // console.log(subject, teacher);
+    revalidateTag("subjects_data");
 
-    return true;
+    return {
+      ok: true,
+      data: {},
+    };
   } catch (error: unknown) {
     console.log(error);
-    return false;
+    return {
+      ok: false,
+      message: "Unexpected Error Occured",
+    };
   }
 }
 
@@ -41,7 +52,10 @@ export async function delete_subject_Action(id: string) {
   console.log(id);
   try {
     if (!session || session.user.role !== "teacher") {
-      return false;
+      return {
+        ok: false,
+        message: "Unauthorized",
+      };
     }
     const subject = await db.delete(subjects).where(eq(subjects.id, id));
     const teacher = await db
@@ -49,15 +63,28 @@ export async function delete_subject_Action(id: string) {
       .where(eq(teachershassubjects.subject_id, id));
 
     // console.log(subject, teacher);
+    revalidateTag("subjects_data");
 
-    return true;
+    return {
+      ok: true,
+      data: {},
+    };
   } catch (error: unknown) {
     console.log(error);
-    return false;
+    return {
+      ok: false,
+      message: "Unexpected Error Occured",
+    };
   }
 }
 
-export async function get_subjects_Action() {
+export const getSubjects = unstable_cache(
+  get_subjects_Action,
+  ["subjects_data"],
+  { tags: ["subjects_data"] }
+);
+
+async function get_subjects_Action() {
   const session = await getServerSession(authOptions);
   try {
     if (!session) {
@@ -133,7 +160,10 @@ export async function get_subject_Action(id: string) {
   const session = await getServerSession(authOptions);
   try {
     if (!session) {
-      return false;
+      return {
+        ok: false,
+        message: "Unauthorized",
+      };
     }
 
     if (
@@ -153,13 +183,22 @@ export async function get_subject_Action(id: string) {
         };
       });
 
-      return subject[0];
+      return {
+        ok: true,
+        data: subject,
+      };
     } else {
-      return false;
+      return {
+        ok: false,
+        message: "Unauthorized",
+      };
     }
   } catch (error: unknown) {
     console.log(error);
-    return false;
+    return {
+      ok: false,
+      message: "Unexpected Error Occured",
+    };
   }
 }
 
@@ -207,6 +246,7 @@ export async function join_subject_Action(id: string) {
           subject_id: id,
         })
         .returning();
+      revalidateTag("subjects_data");
 
       return {
         ok: true,
@@ -235,6 +275,8 @@ export async function join_subject_Action(id: string) {
           enrolled: true,
         })
         .returning();
+      revalidateTag("subjects_data");
+
       return {
         ok: true,
         message: "Joined Successfully",
@@ -302,20 +344,20 @@ export async function leave_subject_Action(id: string) {
             eq(studenthassubjects.subject_id, id),
             eq(studenthassubjects.student_id, session.user.id)
           )
-        ).returning();
+        )
+        .returning();
+      revalidateTag("subjects_data");
 
       return {
         ok: true,
         message: "Left Successfully",
       };
-
     }
 
     return {
       ok: false,
       message: "Not Allowed",
     };
-
   } catch (error: unknown) {
     console.log(error);
     return {
