@@ -1,10 +1,10 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./Cell-Action";
-import { User } from "@/data/data";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Attendance } from "@/types/attendance-table";
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<Attendance>[] = [
     // {
     //     id: "select",
     //     header: ({ table }) => (
@@ -33,8 +33,8 @@ export const columns: ColumnDef<User>[] = [
         header: "NAME",
     },
     {
-        accessorKey: "company",
-        header: "Subject",
+        accessorKey: "subject_name",
+        header: "SUBJECT",
     },
     // {
     //     accessorKey: "role",
@@ -42,8 +42,8 @@ export const columns: ColumnDef<User>[] = [
     // },
     {
         id: "actions",
-        header: "Present",
-        cell: ({ row }) => <CellAction data={row.original} action={'present'} />,
+        header: "P/A",
+        cell: ({ row }) => <CellAction data={row.original}/>,
     },
     // {
     //     id:"actions",

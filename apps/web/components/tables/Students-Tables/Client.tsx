@@ -1,8 +1,8 @@
 "use client";
 
 import { DataTable } from "@/components/ui/data-table";
-import { User } from "@/data/data";
 import { columns } from "./Columns";
+import { User } from "@/types/student-table";
 
 interface ProductsClientProps {
     data: User[];

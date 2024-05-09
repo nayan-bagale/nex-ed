@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 // import ConnectionStatus from "./ConnectionStatus";
 import dynamic from "next/dynamic";
+import { Suspense } from "react";
 
 const ConnectionStatus = dynamic(() => import("./ConnectionStatus"), {
   ssr: false,
@@ -29,7 +30,7 @@ export default function Header() {
           <ConnectionStatus />
           {/* <CreateJoin /> */}
           <Separator orientation="vertical" />
-          <UserNav />
+            <UserNav />
         </div>
       </nav>
     </div>

@@ -6,18 +6,23 @@ import { ComboboxDemo } from "@/components/Attendance/SubSelect";
 import { UserClient } from "@/components/tables/Attendance-Tables/Client";
 import { users } from "@/data/data";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { getStudents } from "@/action/studentsAction";
 
 
-const page = () => {
+const page = async () => {
     const breadcrumbItems = [
         { title: "Dashboard", link: "/dashboard" },
         { title: "Attendance", link: "/attendance" },
     ];
 
+    const students = await getStudents();
+    console.log(students)
+
+
     return (
         
         // <ScrollArea>
-        <div className="flex-1 space-y-4  p-4 pt-6">
+        <div className="flex-1 space-y-4 p-0 md:p-4 pt-3 md:pt-6">
             <BreadCrumb items={breadcrumbItems} />
             <div className="flex items-start justify-between">
                 <Heading title='Attendance' description='' />
@@ -25,12 +30,12 @@ const page = () => {
             </div>
             <Separator />
             <div className=" p-2 space-y-3">
-                <div className=" flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4">
-                    <DatePickerDemo />
-                    <ComboboxDemo />
-                </div>
+                
+                    {/* <DatePickerDemo />
+                    <ComboboxDemo /> */}
 
-                <UserClient data={users} />
+
+                <UserClient data={students.data as any} />
             </div>
         </div>
         // </ScrollArea>

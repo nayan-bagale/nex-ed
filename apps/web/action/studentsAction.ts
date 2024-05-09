@@ -1,0 +1,75 @@
+"use server";
+
+import { authOptions } from "@/components/utils/options";
+import { db } from "@/database/db";
+import { studenthassubjects, subjects, users } from "@/database/schema";
+import { arrayContained, eq } from "drizzle-orm";
+import { getServerSession } from "next-auth";
+
+async function getSubjectsByTeacherId(teacherId: string) {
+  const subject = await db
+    .select()
+    .from(subjects)
+    .where(eq(subjects.teacher_id, teacherId));
+
+  return subject.map((s) => {
+    return {
+        id:s.id,
+        subject_name:s.name,
+    };
+  });
+}
+
+export async function getStudents() {
+  const session = await getServerSession(authOptions);
+  if (
+    !session ||
+    (session.user.role !== "teacher" && session.user.role !== "admin")
+  ) {
+    return {
+      ok: false,
+      message: "Unauthorized",
+    };
+  }
+  try {
+    const sub = await getSubjectsByTeacherId(session.user.id);
+    // console.log(sub);
+
+    const data = await Promise.all(
+      sub.map(async (s) => {
+        const student = await db
+          .select()
+          .from(users)
+          .leftJoin(
+            studenthassubjects,
+            eq(users.id, studenthassubjects.student_id)
+          )
+          .where(eq(studenthassubjects.subject_id, s.id));
+        return student;
+      })
+    );
+
+    return {
+      ok: true,
+      data: data.flat(1).map((d, i) => {
+        return {
+            id: i+1,
+            student_id: d.user.id,
+            name:d.user.name,
+            email: d.user.email,
+            image: d.user.image,
+            subject_name: sub.find((s) => s.id === d.student_has_subject?.subject_id)?.subject_name,
+            subject_id: d.student_has_subject?.subject_id,
+        }
+      }),
+    };
+
+
+  } catch (e: unknown) {
+    console.error(e);
+    return {
+      ok: false,
+      message: "An error occurred while fetching students",
+    };
+  }
+}

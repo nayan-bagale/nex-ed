@@ -16,9 +16,31 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+
+import { format, set } from "date-fns"
+import { Calendar as CalendarIcon } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Calendar } from "@/components/ui/calendar"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import { Input } from "./input";
 import { Button } from "./button";
 import { ScrollArea, ScrollBar } from "./scroll-area";
+import { useState } from "react";
+import { useAttendance } from "../Attendance/ContextAPI";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -31,6 +53,9 @@ export function DataTable<TData, TValue>({
     data,
     searchKey,
 }: DataTableProps<TData, TValue>) {
+
+    const { date, setDate, setSubject, handleSubmit } = useAttendance();
+
     const table = useReactTable({
         data,
         columns,
@@ -40,16 +65,64 @@ export function DataTable<TData, TValue>({
 
     /* this can be used to get the selectedrows 
     console.log("value", table.getFilteredSelectedRowModel()); */
+    const handleSelectChange = (e: string) => {
+        if (e !== 'all') {
+            table.getColumn("subject_name")?.setFilterValue(e);
+            setSubject(e);
+            return;
+        }
+        setSubject("");
+        table.getColumn("subject_name")?.setFilterValue("");
+    };
 
     return (
         <>
+            <div className=" flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4">
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant={"outline"}
+                            className={cn(
+                                "w-[280px] justify-start text-left font-normal",
+                                !date && "text-muted-foreground"
+                            )}
+                        >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {date ? format(date, "PPP") : <span>Pick a date</span>}
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                        <Calendar
+                            mode="single"
+                            selected={date}
+                            onSelect={setDate}
+                            initialFocus
+                        />
+                    </PopoverContent>
+                </Popover>
+                <div className="w-[80wh] md:max-w-sm">
+                <Select onValueChange={handleSelectChange} >
+                    <SelectTrigger id="company">
+                        <SelectValue placeholder="Select Subject" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                                <SelectItem value="Blockchain">Blockchain</SelectItem>
+                            <SelectItem value="DLT">DLT</SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+                </div>
+
+            </div>
+
             <Input
                 placeholder={`Search ${searchKey}...`}
                 value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
                 onChange={(event) =>
                     table.getColumn(searchKey)?.setFilterValue(event.target.value)
                 }
-                className="w-full md:max-w-sm"
+                className="w-[80wh] md:max-w-sm"
             />
 
 
@@ -110,7 +183,7 @@ export function DataTable<TData, TValue>({
                     {table.getFilteredRowModel().rows.length} row(s) selected.
                 </div>
                 <div className="space-x-2">
-                    <Button
+                    {/* <Button
                         variant="outline"
                         size="sm"
                         onClick={() => table.previousPage()}
@@ -125,6 +198,14 @@ export function DataTable<TData, TValue>({
                         disabled={!table.getCanNextPage()}
                     >
                         Next
+                    </Button> */}
+                    <Button
+                        variant="default"
+                        // size="sm"
+                        onClick={handleSubmit}
+                        // disabled={!table.getCanNextPage()}
+                    >
+                        Submit
                     </Button>
                 </div>
             </div>

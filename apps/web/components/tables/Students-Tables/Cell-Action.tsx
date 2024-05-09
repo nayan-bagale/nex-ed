@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Eye } from "lucide-react"
+import { Info } from "lucide-react"
 
 
 import { Button } from "@/components/ui/button"
@@ -13,10 +13,10 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from "@/components/ui/drawer"
-import { User } from "@/data/data"
 import { BarGraph } from "@/components/Students/BarGraph"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {SimpleBarChart} from "@/components/Students/SimpleBarChart"
+import { User } from "@/types/student-table"
 
 
 interface CellActionProps {
@@ -28,17 +28,17 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <>
             <Drawer>
                 <DrawerTrigger>
-                    <Eye />
+                    <Info />
                 </DrawerTrigger>
                 <DrawerContent>
                     <ScrollArea>
                     <div className="mx-auto w-full max-w-sm">
                         <DrawerHeader>
                             <DrawerTitle>{data.name}</DrawerTitle>
-                            <DrawerDescription>{data.role}</DrawerDescription>
-                            <DrawerDescription>
+                            <DrawerDescription>{data.subject_name}</DrawerDescription>
+                            {/* <DrawerDescription>
                                 <p>{data.company}</p>
-                            </DrawerDescription>
+                            </DrawerDescription> */}
                         </DrawerHeader>
                         <div className="p-4 pb-0">              
                                 {/* <BarGraph/> */}
