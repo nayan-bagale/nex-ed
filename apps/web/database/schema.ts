@@ -10,7 +10,6 @@ import {
   date,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
-import { title } from "process";
 
 export const users = pgTable("user", {
   id: text("id").notNull().primaryKey(),
@@ -140,6 +139,7 @@ export const schedule_meeting = pgTable("schedule_meeting", {
 
 export type schedule_meetingT = typeof schedule_meeting.$inferSelect;
 
+// instant meeting needs to be removed
 export const instant_meeting = pgTable("instant_meeting", {
   id: text("id").notNull().primaryKey(),
   host_role: text("host_role").notNull(),
@@ -152,3 +152,31 @@ export const instant_meeting = pgTable("instant_meeting", {
 });
 
 export type instant_meetingT = typeof instant_meeting.$inferSelect;
+// end of instant meeting
+
+export const attendance = pgTable("attendance", {
+  id: text("id").notNull().primaryKey(),
+  date: date("date").notNull(),
+  subject_id: text("subject_id").notNull().references(() => subjects.id, { onDelete: "cascade" }),
+  subject_name: text("subject_name").notNull(),
+  teacher_id: text("teacher_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  teacher_name: text("teacher_name").notNull(),
+  mode: text("mode").notNull().$type<"Offline" | "Online">(),
+  total_students: integer("total_students").notNull(),
+  percentage: integer("percentage").notNull(),
+});
+
+export type attendanceT = typeof attendance.$inferSelect;
+
+export const attended = pgTable("attended", {
+  id: serial("id").notNull().primaryKey(),
+  attendance_id: text("attendance_id")
+    .notNull()
+    .references(() => attendance.id, { onDelete: "cascade" }),
+  student_id: text("student_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  status: text("status").notNull().$type<"Present" | "Absent">(),
+});
+
+export type attendedT = typeof attended.$inferSelect;

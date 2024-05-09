@@ -39,8 +39,9 @@ import {
 import { Input } from "./input";
 import { Button } from "./button";
 import { ScrollArea, ScrollBar } from "./scroll-area";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useAttendance } from "../Attendance/ContextAPI";
+import { Matcher } from "react-day-picker";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -54,7 +55,7 @@ export function DataTable<TData, TValue>({
     searchKey,
 }: DataTableProps<TData, TValue>) {
 
-    const { date, setDate, setSubject, handleSubmit } = useAttendance();
+    const { date, setDate, setSubject, handleSubmit, setTotal } = useAttendance();
 
     const table = useReactTable({
         data,
@@ -63,17 +64,29 @@ export function DataTable<TData, TValue>({
         getFilteredRowModel: getFilteredRowModel(),
     });
 
+    const subjects = data.filter((a: any, i) => data.findIndex((s: any) => a.subject_id === s.subject_id) === i).map((s: any) => ({ subject_id: s.subject_id, subject_name: s.subject_name }));
+
     /* this can be used to get the selectedrows 
     console.log("value", table.getFilteredSelectedRowModel()); */
     const handleSelectChange = (e: string) => {
         if (e !== 'all') {
             table.getColumn("subject_name")?.setFilterValue(e);
-            setSubject(e);
+            setSubject(subjects.find((s) => s.subject_name === e));
             return;
         }
-        setSubject("");
+        setSubject({});
         table.getColumn("subject_name")?.setFilterValue("");
     };
+
+    useMemo(() => setTotal(table.getFilteredRowModel().rows.length), [table.getFilteredRowModel().rows.length])
+
+
+    const arrayMatcher: Matcher = [
+        // new Date(2024, 4, 8),
+        // new Date(2024, 4, 9),
+        // new Date(2024, 4, 5),
+    ];
+
 
     return (
         <>
@@ -83,7 +96,7 @@ export function DataTable<TData, TValue>({
                         <Button
                             variant={"outline"}
                             className={cn(
-                                "w-[280px] justify-start text-left font-normal",
+                                "w-full md:w-[280px] justify-start text-left font-normal",
                                 !date && "text-muted-foreground"
                             )}
                         >
@@ -94,24 +107,39 @@ export function DataTable<TData, TValue>({
                     <PopoverContent className="w-auto p-0">
                         <Calendar
                             mode="single"
-                            selected={date}
+                            selected={date || new Date()}
                             onSelect={setDate}
+                            disabled={arrayMatcher}
                             initialFocus
+                            defaultMonth={new Date()}
+                            modifiers={{ booked: arrayMatcher }}
+                            modifiersClassNames={{ booked: "booked" }}
                         />
                     </PopoverContent>
                 </Popover>
-                <div className="w-[80wh] md:max-w-sm">
-                <Select onValueChange={handleSelectChange} >
-                    <SelectTrigger id="company">
-                        <SelectValue placeholder="Select Subject" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                                <SelectItem value="Blockchain">Blockchain</SelectItem>
-                            <SelectItem value="DLT">DLT</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
+                <div className=" w-full md:max-w-sm">
+                    <Select onValueChange={handleSelectChange} >
+                        <SelectTrigger id="subject">
+                            <SelectValue placeholder="Select Subject" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                {subjects.length ? (subjects.map((s: any) => {
+                                    return (
+                                        <SelectItem key={s.subject_id} value={s.subject_name}>
+                                            {s.subject_name}
+                                        </SelectItem>
+                                    );
+                                })) : (
+                                    <SelectItem value="all">
+                                        All
+                                    </SelectItem>
+                                )}
+                                {/* <SelectItem value="Blockchain">Blockchain</SelectItem> */}
+                                <SelectItem value="DLT">DLT</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
                 </div>
 
             </div>
@@ -122,7 +150,7 @@ export function DataTable<TData, TValue>({
                 onChange={(event) =>
                     table.getColumn(searchKey)?.setFilterValue(event.target.value)
                 }
-                className="w-[80wh] md:max-w-sm"
+                className=" w-full md:max-w-sm"
             />
 
 
@@ -154,7 +182,7 @@ export function DataTable<TData, TValue>({
                                     data-state={row.getIsSelected() && "selected"}
                                 >
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
+                                        <TableCell className=" text-xs md:text-base" key={cell.id}>
                                             {flexRender(
                                                 cell.column.columnDef.cell,
                                                 cell.getContext(),
@@ -178,10 +206,10 @@ export function DataTable<TData, TValue>({
                 <ScrollBar orientation="horizontal" />
             </ScrollArea>
             <div className="flex items-center justify-end space-x-2 py-4">
-                <div className="flex-1 text-sm text-muted-foreground">
+                {/* <div className="flex-1 text-sm text-muted-foreground">
                     {table.getFilteredSelectedRowModel().rows.length} of{" "}
                     {table.getFilteredRowModel().rows.length} row(s) selected.
-                </div>
+                </div> */}
                 <div className="space-x-2">
                     {/* <Button
                         variant="outline"
@@ -203,7 +231,7 @@ export function DataTable<TData, TValue>({
                         variant="default"
                         // size="sm"
                         onClick={handleSubmit}
-                        // disabled={!table.getCanNextPage()}
+                    // disabled={!table.getCanNextPage()}
                     >
                         Submit
                     </Button>

@@ -157,3 +157,19 @@
     @apply bg-background text-foreground;
   }
 }
+
+.booked {
+  position: relative;
+}
+/* Strikeout */
+.booked::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: currentColor;
+  z-index: 1;
+  transform: rotate(-45deg);
+}

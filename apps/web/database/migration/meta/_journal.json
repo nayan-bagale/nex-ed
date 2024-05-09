@@ -64,6 +64,20 @@
       "when": 1715236681232,
       "tag": "0008_sturdy_kingpin",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1715280236072,
+      "tag": "0009_aromatic_loki",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1715280536027,
+      "tag": "0010_soft_shadow_king",
+      "breakpoints": true
     }
   ]
 }

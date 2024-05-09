@@ -16,24 +16,18 @@ const page = async () => {
     ];
 
     const students = await getStudents();
-    console.log(students)
-
 
     return (
         
         // <ScrollArea>
-        <div className="flex-1 space-y-4 p-0 md:p-4 pt-3 md:pt-6">
+        <div className="flex-1 space-y-4 p-2 md:p-4 pt-6">
             <BreadCrumb items={breadcrumbItems} />
             <div className="flex items-start justify-between">
                 <Heading title='Attendance' description='' />
                 {/* <Button><Plus className="mr-2 h-4 w-4" /> Add New</Button> */}
             </div>
             <Separator />
-            <div className=" p-2 space-y-3">
-                
-                    {/* <DatePickerDemo />
-                    <ComboboxDemo /> */}
-
+            <div className="space-y-3">
 
                 <UserClient data={students.data as any} />
             </div>

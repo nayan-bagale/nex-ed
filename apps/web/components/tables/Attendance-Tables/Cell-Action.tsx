@@ -35,7 +35,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         const debounce = setTimeout(() => {
             if(select === '') return;
             handleStatus();
-            console.log('debounce', students)
+            // console.log('debounce', students)
         }, 1000);
 
         return () => clearTimeout(debounce);
