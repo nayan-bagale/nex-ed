@@ -117,6 +117,8 @@ function ProfileForm() {
 
     }
 
+    const img = session?.user?.image?.replace(/-thumb\.(jpeg|png|jpg)$/, '.$1');
+
     return (
         <div className=" m-2 p-4 ">
             <Form {...form}>
@@ -131,7 +133,7 @@ function ProfileForm() {
                                     <SingleImageDropzone
                                         width={200}
                                         height={200}
-                                        value={file || session?.user?.image || undefined}
+                                        value={file || img || undefined}
                                         dropzoneOptions={{
                                             accept: {
                                                 'image/jpeg': [],

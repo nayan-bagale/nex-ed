@@ -12,11 +12,18 @@ import RoleCheckerClient from "@/components/utils/RoleCheckerClient";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import Image from "next/image";
-import { getSubjects } from "@/action/stream_Action";
+import { getStream } from "@/action/stream_Action";
 import { Menu } from "./StreamMenu";
 
 export const StreamCard = async ({ sub_id }: { sub_id: string }) => {
-    const streams = await getSubjects(sub_id);
+    const streams = await getStream(sub_id);
+    if(!streams.length){
+        return (
+            <div className=" flex justify-center items-center w-full">
+                <h1 className=" text-2xl font-bold text-muted-foreground">No posts</h1>
+            </div>
+        )
+    }
   
     return (
         <div className=" flex flex-col gap-4">{

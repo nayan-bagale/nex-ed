@@ -5,7 +5,7 @@ export interface SubjectsT {
   id: string;
   name: string;
   description: string;
-  teacher: string;
+  teacher_name: string;
   total_students: number;
 }
 

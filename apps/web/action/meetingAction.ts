@@ -8,6 +8,7 @@ import {
   studenthassubjects,
   subjects,
   teachershassubjects,
+  users,
 } from "@/database/schema";
 import { and, eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
@@ -78,6 +79,7 @@ export async function add_schedule_meeting(data: any) {
       .values({
         ...data,
         teacher_id: session.user.id,
+        teacher_name: session.user.name,
         visibility: data.visibility === "public" ? true : false,
         done: false,
       })
@@ -107,7 +109,7 @@ export const getCachedMeeting = unstable_cache(
   }
 );
 
-export async function get_schedule_meeting() {
+async function get_schedule_meeting() {
   const session = await getServerSession(authOptions);
   if (!session) {
     return {
@@ -146,8 +148,6 @@ export async function get_schedule_meeting() {
           eq(studenthassubjects.student_id, session.user.id)
         )
         .where(eq(schedule_meeting.subject_id, studenthassubjects.subject_id));
-
-      // console.log(res);
 
       return {
         ok: true,

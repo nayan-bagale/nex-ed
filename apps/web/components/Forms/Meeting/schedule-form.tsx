@@ -103,20 +103,21 @@ export default function ScheduleMeetingForm() {
 
     const handleSubmit = async (data: UserFormValue) => {
         setLoading(true);
-        console.log(data)
+        const sub = data.subject_id.split(":");
         const pro_data = {
             id: cryptoRandomString({ length: 10 }),
             title: data.title,
-            subject_id: data.subject_id,
+            subject_id: sub[0],
+            subject_name: sub[1],
             date: data.date,
             start_time: data.starttime,
             end_time: data.endtime,
             camera: data.cameraAlwaysOn,
             visibility: data.visibility,
         }
+        console.log(pro_data)
         const res = await add_schedule_meeting(pro_data);
         form.reset(defaultValues);
-        toast.success("User Created Successfully");
         setLoading(false);
     }
 

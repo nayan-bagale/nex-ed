@@ -5,11 +5,12 @@ import {
   teachershassubjects,
   subjects,
   studenthassubjects,
+  users,
 } from "@/database/schema";
 import { SubjectsT } from "@/components/Store/class";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/components/utils/options";
-import { and, eq } from "drizzle-orm";
+import { and, count, countDistinct, eq } from "drizzle-orm";
 import { revalidateTag, unstable_cache } from "next/cache";
 
 export async function create_subject_Action(data: SubjectsT) {
@@ -25,6 +26,8 @@ export async function create_subject_Action(data: SubjectsT) {
       id: data.id,
       name: data.name,
       description: data.description,
+      teacher_name: session?.user?.name as string,
+      teacher_id: session?.user?.id as string,
     });
     const teacher = await db.insert(teachershassubjects).values({
       teacher_id: session?.user?.id as string,
@@ -78,14 +81,35 @@ export async function delete_subject_Action(id: string) {
   }
 }
 
-export const getSubjects = unstable_cache(
-  get_subjects_Action,
-  ["subjects_data"],
-  { tags: ["subjects_data"] }
-);
+// export const getSubjects = unstable_cache(
+//  async(id) => get_subjects_Action(id),
+//   ["subjects_data"],
+//   { tags: ["subjects_data"] }
+// );
 
-async function get_subjects_Action() {
+export async function getTotalStudents(id: string) {
+  try{
+    const res = await db
+      .select({ value: count() })
+      .from(studenthassubjects)
+      .where(eq(studenthassubjects.subject_id, id));
+
+      // console.log(res);
+
+      return {
+        ok: true,
+        data: res[0].value
+      }
+
+  }catch(error: unknown){
+    console.log(error);
+    return {ok: false, message: "Unexpected Error Occured"}
+  }
+}
+
+export async function getSubjects(id: string) {
   const session = await getServerSession(authOptions);
+
   try {
     if (!session) {
       return {
@@ -102,14 +126,14 @@ async function get_subjects_Action() {
           teachershassubjects,
           eq(subjects.id, teachershassubjects.subject_id)
         )
-        .where(eq(teachershassubjects.teacher_id, session.user.id));
+        .where(eq(teachershassubjects.teacher_id, id));
 
       const subjects_pro = res.map((subject) => {
         return {
           id: subject.subjects.id,
           name: subject.subjects.name,
           description: subject.subjects.description,
-          teacher: session.user.name as string,
+          teacher_name: subject.subjects.teacher_name,
           total_students: 0,
         };
       });
@@ -125,15 +149,14 @@ async function get_subjects_Action() {
         .leftJoin(
           studenthassubjects,
           eq(subjects.id, studenthassubjects.subject_id)
-        )
-        .where(eq(studenthassubjects.student_id, session.user.id));
+        ).where(eq(studenthassubjects.student_id, id));
 
       const subjects_pro = res.map((subject) => {
         return {
           id: subject.subjects.id,
           name: subject.subjects.name,
           description: subject.subjects.description,
-          teacher: "",
+          teacher_name: subject.subjects.teacher_name,
           total_students: 0,
         };
       });

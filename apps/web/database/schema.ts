@@ -79,6 +79,8 @@ export const subjects = pgTable("subjects", {
   id: text("id").notNull().primaryKey(),
   name: text("name").notNull(),
   description: text("description"),
+  teacher_name: text("teacher_name").notNull(),
+  teacher_id: text("teacher_id").notNull().references(() => users.id, { onDelete: "cascade" }),
 });
 
 export const studenthassubjects = pgTable(
@@ -124,7 +126,9 @@ export const stream = pgTable("stream", {
 export const schedule_meeting = pgTable("schedule_meeting", {
   id: text("id").notNull().primaryKey(),
   teacher_id: text("teacher_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  teacher_name: text("teacher_name").notNull(),
   subject_id: text("subject_id").notNull().references(() => subjects.id, { onDelete: "cascade" }),
+  subject_name: text("subject_name").notNull(),
   title: text("title").notNull(),
   date: date("date").notNull(),
   start_time: text("start_time").notNull(),

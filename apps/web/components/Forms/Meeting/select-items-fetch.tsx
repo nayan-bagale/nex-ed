@@ -15,7 +15,7 @@ const SelectItemsFetch = () => {
     }, [])
 
     return data.map((item) => (
-        <SelectItem value={item.id}>{item.name}</SelectItem>
+        <SelectItem value={`${item.id}:${item.name}`}>{item.name}</SelectItem>
     ));
 }
 

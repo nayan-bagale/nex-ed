@@ -1,7 +1,12 @@
 "use server";
 
 import { db } from "@/database/db";
-import { stream, users } from "@/database/schema";
+import {
+  stream,
+  studenthassubjects,
+  teachershassubjects,
+  users,
+} from "@/database/schema";
 import { Subject_streamT } from "@/components/Store/class";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/components/utils/options";
@@ -46,7 +51,7 @@ export async function create_stream_Action(data: Subject_streamT) {
   }
 }
 
-export const getSubjects = unstable_cache(
+export const getStream = unstable_cache(
   async (id) => get_stream_Action(id),
   ["stream_data"],
   { tags: ["stream_data"] }
@@ -105,6 +110,67 @@ export async function delete_stream_Action(id: string) {
     console.log(error);
     return {
       ok: false,
+    };
+  }
+}
+
+export async function get_students(subject_id: string) {
+  try {
+    const data = await db
+      .select()
+      .from(users)
+      .leftJoin(studenthassubjects, eq(users.id, studenthassubjects.student_id))
+      .where(eq(studenthassubjects.subject_id, subject_id));
+
+    return {
+      ok: true,
+      data: data.map((d) => {
+        return {
+          id: d.user.id,
+          name: d.user.name,
+          image: d.user.image,
+          email: d.user.email,
+        };
+      }),
+    };
+  } catch (error: unknown) {
+    console.log(error);
+    return {
+      ok: false,
+      message: "An error occurred",
+    };
+  }
+}
+
+export async function get_teacher(subject_id: string) {
+  try {
+    const res = await db
+      .select()
+      .from(users)
+      .leftJoin(
+        teachershassubjects,
+        eq(users.id, teachershassubjects.teacher_id)
+      )
+      .where(eq(teachershassubjects.subject_id, subject_id));
+
+      // console.log(res);
+      return {
+      ok: true,
+      data: res.map((d) => {
+        return {
+          id: d.user.id,
+          name: d.user.name,
+          image: d.user.image,
+          email: d.user.email,
+        };
+      }),
+      }
+
+  } catch (error: unknown) {
+    console.log(error);
+    return {
+      ok: false,
+      message: "An error occurred",
     };
   }
 }

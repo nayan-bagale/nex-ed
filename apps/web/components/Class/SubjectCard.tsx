@@ -1,5 +1,5 @@
 
-import { getSubjects } from "@/action/subject_Action";
+import { getSubjects, getTotalStudents } from "@/action/subject_Action";
 import { SubjectsT } from "@/components/Store/class";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/components/utils/options";
@@ -21,25 +21,37 @@ import { MenuS, MenuT } from "@/components/Class/SubjectMenu";
 const SubjectCard = async () => {
     const session = await getServerSession(authOptions);
 
-    const subjects = await getSubjects();
-    if (!subjects.ok) return redirect('/not-found');
+    const subjects = await getSubjects(session?.user.id as string);
+    // if (!subjects.ok) return redirect('/not-found');
     if (!subjects.data) {
         if (session?.user.role === 'teacher') {
             return (
-                <div className="flex items-center justify-center space-x-2">
-                    <p className="text-lg">No subjects yet.</p>
-                    <Button />
+                <div className=" flex justify-center items-center w-full">
+                    <h1 className=" text-2xl font-bold text-muted-foreground">
+                        No subjects, Click on the button above to add a subject.
+                    </h1>
                 </div>
             )
         } else {
-            return <p className="text-lg">No subjects yet.</p>
+            return (
+                <div className=" flex justify-center items-center w-full">
+                    <h1 className=" text-2xl font-bold text-muted-foreground">
+                        Not enrolled in any subjects.
+                    </h1>
+                </div>
+            )
         }
     }
 
     return (
         <div className=" p-2">
             <div className=" flex gap-2 flex-wrap justify-center md:justify-start">{
-                subjects.data.map((subject) => (
+                subjects.data.map(async (subject) => {
+                    
+                    const count = await getTotalStudents(subject.id)
+                    subject.total_students = count.data as number
+
+                    return (
                     <Card key={subject.id} className=" w-[18rem]">
                         <CardHeader>
                             <div className=" flex justify-between pr-2 ">
@@ -59,7 +71,7 @@ const SubjectCard = async () => {
                         {/* <Separator className=" -mt-2 mb-2" /> */}
                         <CardContent>
                             <CardDescription>{subject.description}</CardDescription>
-                            <p className="text-sm text-muted-foreground">Prof. {subject.teacher}</p>
+                            <p className="text-sm text-muted-foreground">Prof. {subject.teacher_name}</p>
                         </CardContent>
                         <Separator className=" -mt-2 mb-2" />
                         <CardFooter>
@@ -68,8 +80,8 @@ const SubjectCard = async () => {
                                 <p className="text-sm">{subject.total_students >= 99 ? "+99" : subject.total_students.toString()}</p>
                             </div>
                         </CardFooter>
-                    </Card>
-                ))
+                    </Card>)
+                })
             }
             </div>
         </div>

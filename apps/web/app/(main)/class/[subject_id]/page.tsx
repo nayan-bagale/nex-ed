@@ -76,14 +76,14 @@ const page = async ({ params }: { params: { subject_id: string } }) => {
                                         <Heading title={"Teachers"} description='' />
                                         <Separator />
                                     </div>
-                                    <Teachers />
+                                    <Teachers sub_id={params.subject_id} />
                                 </div>
                                 <div className=" space-y-4 mb-4">
                                     <div className=" space-y-2">
                                         <Heading title={"Students"} description='' />
                                         <Separator />
                                     </div>
-                                    <Students />
+                                    <Students sub_id={params.subject_id} />
                                 </div>
                             </ScrollArea>
                         </TabsContent>

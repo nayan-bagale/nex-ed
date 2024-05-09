@@ -25,10 +25,12 @@ const meetingCard = async () => {
                     id: meeting.id,
                     title: meeting.title,
                     subject_id: meeting.subject_id,
+                    subject_name:meeting.subject_name,
                     date: meeting.date,
                     starttime: meeting.start_time,
                     endtime: meeting.end_time,
-                    teacher: meeting.teacher_id,
+                    teacher_id: meeting.teacher_id,
+                    teacher_name: meeting.teacher_name,
                     cameraAlwaysOn: meeting.camera,
                     visibility: meeting.visibility ? 'public' : 'private' as 'public' | 'private',
                 }
@@ -38,7 +40,7 @@ const meetingCard = async () => {
     }
     const meetings = await fetchmeetings();
 
-    if(!meetings) {
+    if(!meetings?.length) {
         return (
             <div className=" flex justify-center items-center">
                 <h1 className=" text-2xl font-bold text-muted-foreground">No Meetings</h1>
@@ -59,7 +61,7 @@ const meetingCard = async () => {
                                             {meeting.title}
                                         </CardTitle>
 
-                                        <CardDescription>Sub: {meeting.subject_id}</CardDescription>
+                                        <CardDescription>Sub: {meeting.subject_name}</CardDescription>
                                     </div>
                                     <RoleCheckerClient>
                                         <div className=" self-start -mt-1 ">
@@ -72,7 +74,7 @@ const meetingCard = async () => {
                             </CardHeader>
                             <Separator className=" -mt-2 mb-2" />
                             <CardContent className=" space-y-2">
-                                <h3>Prof. {meeting.teacher}</h3>
+                                <h3>Prof. {meeting.teacher_name}</h3>
                                 <div className=" flex justify-between text-sm text-muted-foreground">
                                     <p>Date:</p>
                                     <p>{meeting.date}</p>

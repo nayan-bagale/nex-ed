@@ -43,6 +43,27 @@
       "when": 1713788262890,
       "tag": "0005_bizarre_newton_destine",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1715234670858,
+      "tag": "0006_hesitant_komodo",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1715234731685,
+      "tag": "0007_fat_vengeance",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1715236681232,
+      "tag": "0008_sturdy_kingpin",
+      "breakpoints": true
     }
   ]
 }

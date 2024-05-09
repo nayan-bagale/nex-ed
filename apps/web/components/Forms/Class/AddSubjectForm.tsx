@@ -51,7 +51,7 @@ export default function AddSubjectForm() {
         defaultValues,
     });
 
-    const handlesubmit = async (data: SubjectsT) => {
+    const handlesubmit = async (data: any) => {
             const res = await create_subject_Action(data);
             if(!res) throw new Error("Failed to Add Subject");
             form.reset(defaultValues);
@@ -65,7 +65,6 @@ export default function AddSubjectForm() {
             id: cryptoRandomString({ length: 10 }),
             name: data.subject_name,
             description: data.description,
-            teacher: session?.user?.name as string || "Teacher",
             total_students: 0
         }
         toast.promise(handlesubmit(newSub),{
