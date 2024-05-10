@@ -48,7 +48,7 @@ export const formSchema = z
         subject_id: z.string(),
         starttime: z.string(),
         endtime: z.string(),
-        date: z.string(),
+        date: z.date(),
         cameraAlwaysOn: z.boolean(),
         visibility: z.string(),
 
@@ -89,7 +89,7 @@ export default function ScheduleMeetingForm() {
     const defaultValues: UserFormValue = {
         title: "",
         subject_id: "",
-        date: new Date().toDateString(),
+        date: new Date(),
         starttime: "",
         endtime: "",
         cameraAlwaysOn: false,
