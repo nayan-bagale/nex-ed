@@ -3,6 +3,7 @@
 import { authOptions } from "@/components/utils/options";
 import { db } from "@/database/db";
 import { attendance, attended } from "@/database/schema";
+import { eq } from "drizzle-orm";
 import cryptoRandomString from "crypto-random-string";
 import { getServerSession } from "next-auth";
 
@@ -54,6 +55,44 @@ export async function addAttendace(data: any) {
       ok: true,
       message: "Attendance added successfully",
     };
+  } catch (e: unknown) {
+    console.log(e);
+    return {
+      ok: false,
+      message: "Something went wrong",
+    };
+  }
+}
+
+export async function getAttedanceDate(){
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return {
+      ok: false,
+      message: "Unauthorized",
+    };
+  }
+
+  try {
+    const res = await db
+      .select()
+      .from(attendance)
+      .where(eq(attendance.teacher_id, session?.user.id))
+      .limit(30);
+
+      const obj:{[key: string]: string[]} = {}
+ 
+      res.forEach(e => {
+        obj[e.subject_id] = obj[e.subject_id]
+          ? [...obj[e.subject_id], e.date]
+          : [e.date];
+      });
+
+    return {
+      ok: true,
+      data: obj,
+    };
+    
   } catch (e: unknown) {
     console.log(e);
     return {

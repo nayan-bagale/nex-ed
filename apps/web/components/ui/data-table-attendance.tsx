@@ -47,15 +47,18 @@ interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     searchKey: string;
+    dates: {[key: string]: string[]}
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
     searchKey,
+    dates
 }: DataTableProps<TData, TValue>) {
 
     const { date, setDate, setSubject, handleSubmit, setTotal } = useAttendance();
+    const [matcher, setMatcher] = useState<Matcher>([]);
 
     const table = useReactTable({
         data,
@@ -70,8 +73,9 @@ export function DataTable<TData, TValue>({
     console.log("value", table.getFilteredSelectedRowModel()); */
     const handleSelectChange = (e: string) => {
         if (e !== 'all') {
-            table.getColumn("subject_name")?.setFilterValue(e);
-            setSubject(subjects.find((s) => s.subject_name === e));
+            table.getColumn("subject_name")?.setFilterValue(e.split(":")[0]);
+            setSubject(subjects.find((s) => s.subject_name === e.split(":")[0]));
+            setMatcher(dates[e.split(":")[1]].map((d: string) => new Date(d)) as Matcher);
             return;
         }
         setSubject({});
@@ -80,17 +84,33 @@ export function DataTable<TData, TValue>({
 
     useMemo(() => setTotal(table.getFilteredRowModel().rows.length), [table.getFilteredRowModel().rows.length])
 
-
-    const arrayMatcher: Matcher = [
-        // new Date(2024, 4, 8),
-        // new Date(2024, 4, 9),
-        // new Date(2024, 4, 5),
-    ];
-
-
     return (
         <>
             <div className=" flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4">
+                <div className=" w-full md:max-w-sm">
+                    <Select onValueChange={handleSelectChange} >
+                        <SelectTrigger id="subject">
+                            <SelectValue placeholder="Select Subject" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                {subjects.length ? (subjects.map((s: any) => {
+                                    return (
+                                        <SelectItem key={s.subject_id} value={`${s.subject_name}:${s.subject_id}`}>
+                                            {s.subject_name}
+                                        </SelectItem>
+                                    );
+                                })) : (
+                                    <SelectItem value="all">
+                                        All
+                                    </SelectItem>
+                                )}
+                                {/* <SelectItem value="Blockchain">Blockchain</SelectItem> */}
+                                {/* <SelectItem value="DLT">DLT</SelectItem> */}
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
                 <Popover>
                     <PopoverTrigger asChild>
                         <Button
@@ -109,39 +129,14 @@ export function DataTable<TData, TValue>({
                             mode="single"
                             selected={date || new Date()}
                             onSelect={setDate}
-                            disabled={arrayMatcher}
+                            disabled={matcher}
                             initialFocus
                             defaultMonth={new Date()}
-                            modifiers={{ booked: arrayMatcher }}
+                            modifiers={{ booked: matcher }}
                             modifiersClassNames={{ booked: "booked" }}
                         />
                     </PopoverContent>
                 </Popover>
-                <div className=" w-full md:max-w-sm">
-                    <Select onValueChange={handleSelectChange} >
-                        <SelectTrigger id="subject">
-                            <SelectValue placeholder="Select Subject" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                {subjects.length ? (subjects.map((s: any) => {
-                                    return (
-                                        <SelectItem key={s.subject_id} value={s.subject_name}>
-                                            {s.subject_name}
-                                        </SelectItem>
-                                    );
-                                })) : (
-                                    <SelectItem value="all">
-                                        All
-                                    </SelectItem>
-                                )}
-                                {/* <SelectItem value="Blockchain">Blockchain</SelectItem> */}
-                                <SelectItem value="DLT">DLT</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </div>
-
             </div>
 
             <Input

@@ -7,6 +7,7 @@ import { UserClient } from "@/components/tables/Attendance-Tables/Client";
 import { users } from "@/data/data";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getStudents } from "@/action/studentsAction";
+import { getAttedanceDate } from "@/action/attendanceAction";
 
 
 const page = async () => {
@@ -16,6 +17,8 @@ const page = async () => {
     ];
 
     const students = await getStudents();
+    const data = await getAttedanceDate();
+    // console.log(dates)
 
     return (
         
@@ -29,7 +32,7 @@ const page = async () => {
             <Separator />
             <div className="space-y-3">
 
-                <UserClient data={students.data as any} />
+                <UserClient data={students.data as any} dates={data.data} />
             </div>
         </div>
         // </ScrollArea>

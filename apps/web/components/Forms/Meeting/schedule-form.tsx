@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,9 +35,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Switch } from "@/components/ui/switch";
-import { useSession } from "next-auth/react";
 import cryptoRandomString from "crypto-random-string";
-import SelectItemsFetch from "./select-items-fetch";
 import { add_schedule_meeting } from "@/action/meetingAction";
 
 
@@ -81,10 +79,22 @@ export const formSchema = z
 
 export type UserFormValue = z.infer<typeof formSchema>;
 
+interface ScheduleMeetingFormProps {
+    subjects: {
+        ok: boolean;
+        data?: {
+            name: string;
+            id: string;
+        }[];
+        message?: string;
+    };
+}
 
-export default function ScheduleMeetingForm() {
+
+export default function ScheduleMeetingForm({ subjects }: ScheduleMeetingFormProps) {
     const [loading, setLoading] = useState(false);
-    const {data:session} = useSession();
+
+    const subs = subjects.ok && subjects.data ? subjects.data : [];
 
     const defaultValues: UserFormValue = {
         title: "",
@@ -137,7 +147,7 @@ export default function ScheduleMeetingForm() {
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-4 w-full px-2"
+                    className="space-y-4 w-full px-2 pr-3 md:pr-2"
                 >
 
                     <FormField
@@ -171,13 +181,14 @@ export default function ScheduleMeetingForm() {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItemsFetch/>
-                                        <SelectItem value="demo">demo</SelectItem>
+                                        {subs.map((item) => (
+                                            <SelectItem value={`${item.id}:${item.name}`}>{item.name}</SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
-                                <FormDescription>
+                                {/* <FormDescription>
                                     You can select demo subject if you want to test the application
-                                </FormDescription>
+                                </FormDescription> */}
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -270,9 +281,8 @@ export default function ScheduleMeetingForm() {
                             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                                 <div className="space-y-0.5">
                                     <FormLabel className="text-base">Camera Always On</FormLabel>
-                                    <FormDescription>
-                                        If you enable this option, your camera will be always on during the
-                                        meeting.
+                                    <FormDescription className=" max-w-[40ch]">
+                                        If you enable this option, all the participants camera will be always on during the meeting.
                                     </FormDescription>
                                 </div>
                                 <FormControl>

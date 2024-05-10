@@ -13,9 +13,10 @@ import { CalendarClock } from "lucide-react";
 import ScheduleMeetingForm from "@/components/Forms/Meeting/schedule-form";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { FC } from "react";
 
 
-const ScheduleDialog = () => {
+const ScheduleDialog: FC<{ subjects: any }> = ({ subjects }) => {
     return (
         <Dialog>
             <DialogTrigger>
@@ -26,16 +27,14 @@ const ScheduleDialog = () => {
             <DialogContent className=" h-[85%]">
                 <DialogHeader>
                     <DialogTitle>Schedule Meeting</DialogTitle>
-                    {/* <DialogDescription>
-                        This action cannot be undone. This will permanently delete your account
-                        and remove your data from our servers.
-                    </DialogDescription> */}
+                    <DialogDescription>
+                        This action cannot editied once saved. Please make sure to fill all the fields correctly.
+                    </DialogDescription>
                     <Separator />
-                    
                 </DialogHeader>
-                    <ScrollArea>
-                        <ScheduleMeetingForm />
-                    </ScrollArea>
+                <ScrollArea>
+                    <ScheduleMeetingForm subjects={subjects} />
+                </ScrollArea>
             </DialogContent>
         </Dialog>
 
