@@ -11,7 +11,7 @@ import { SubjectsT } from "@/components/Store/class";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/components/utils/options";
 import { and, count, countDistinct, eq } from "drizzle-orm";
-import { revalidateTag, unstable_cache } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 
 export async function create_subject_Action(data: SubjectsT) {
   const session = await getServerSession(authOptions);
@@ -88,22 +88,21 @@ export async function delete_subject_Action(id: string) {
 // );
 
 export async function getTotalStudents(id: string) {
-  try{
+  try {
     const res = await db
       .select({ value: count() })
       .from(studenthassubjects)
       .where(eq(studenthassubjects.subject_id, id));
 
-      // console.log(res);
+    // console.log(res);
 
-      return {
-        ok: true,
-        data: res[0].value
-      }
-
-  }catch(error: unknown){
+    return {
+      ok: true,
+      data: res[0].value,
+    };
+  } catch (error: unknown) {
     console.log(error);
-    return {ok: false, message: "Unexpected Error Occured"}
+    return { ok: false, message: "Unexpected Error Occured" };
   }
 }
 
@@ -149,7 +148,8 @@ export async function getSubjects(id: string) {
         .leftJoin(
           studenthassubjects,
           eq(subjects.id, studenthassubjects.subject_id)
-        ).where(eq(studenthassubjects.student_id, id));
+        )
+        .where(eq(studenthassubjects.student_id, id));
 
       const subjects_pro = res.map((subject) => {
         return {
@@ -253,7 +253,12 @@ export async function join_subject_Action(id: string) {
         .select()
         .from(teachershassubjects)
         .leftJoin(subjects, eq(subjects.id, teachershassubjects.subject_id))
-        .where(eq(teachershassubjects.teacher_id, session.user.id));
+        .where(
+          and(
+            eq(teachershassubjects.teacher_id, session.user.id),
+            eq(teachershassubjects.subject_id, id)
+          )
+        );
 
       if (res.length > 0) {
         return {
@@ -280,9 +285,14 @@ export async function join_subject_Action(id: string) {
         .select()
         .from(studenthassubjects)
         .leftJoin(subjects, eq(subjects.id, studenthassubjects.subject_id))
-        .where(eq(studenthassubjects.student_id, session.user.id));
+        .where(
+          and(
+            eq(studenthassubjects.student_id, session.user.id),
+            eq(studenthassubjects.subject_id, id)
+          )
+        );
 
-      console.log(res);
+      console.log(res, id, subject);
       if (res.length > 0) {
         return {
           ok: false,
@@ -298,7 +308,9 @@ export async function join_subject_Action(id: string) {
           enrolled: true,
         })
         .returning();
-      revalidateTag("subjects_data");
+        
+        revalidatePath("/class");
+      // revalidateTag("subjects_data");
 
       return {
         ok: true,

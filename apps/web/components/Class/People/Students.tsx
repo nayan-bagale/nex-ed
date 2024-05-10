@@ -18,7 +18,7 @@ export async function Students({ sub_id }: { sub_id: string }) {
         return (<div className="space-y-8 px-2">
             <div className="flex items-center">
                 <Avatar className="h-9 w-9">
-                    <AvatarImage src={s.image as string} alt="Avatar" />
+                    <AvatarImage className=' object-cover' src={s.image as string} alt="Avatar" />
                     <AvatarFallback>{`${fallback[0]?.charAt(0) ?? ''}${fallback[1]?.charAt(0) ?? '' }`}</AvatarFallback>
                 </Avatar>
                 <div className="ml-4 space-y-1">

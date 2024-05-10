@@ -15,6 +15,7 @@ const JoinForm = ({ id }: { id: string }) => {
 
     const handleSubmit = async () => {
         const res = await join_subject_Action(id);
+        console.log(res)
         if (!res.ok) {
             throw new Error(res.message);
         }
@@ -23,13 +24,24 @@ const JoinForm = ({ id }: { id: string }) => {
 
     const onSubmit = async () => {
         setLoading(true);
-        toast.promise(handleSubmit(), {
+        const d = toast.promise(handleSubmit(), {
             loading: 'Joining Class...',
-            success: (res) => res.message,
-            error: (err) => err.message,
+            success: (res) => {
+                setBool(true);
+                return res.message
+            },
+            error: (err) => err.message
         });
         setLoading(false);
     };
+
+    useMemo(() => {
+        if (bool) {
+            sleep(1000).then(() => {
+                route.push('/class');
+            })
+        }
+    }, [bool])
 
     return (
         <>

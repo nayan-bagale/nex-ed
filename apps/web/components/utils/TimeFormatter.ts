@@ -17,7 +17,7 @@ export function convert24To12(time24: string): string {
 }
 
 // // Example usage:
-const time24 = "13:30";
-const time12 = convert24To12(time24);
+// const time24 = "13:30";
+// const time12 = convert24To12(time24);
 
-console.log(time12); // "1:30 PM"
+// console.log(time12); // "1:30 PM"

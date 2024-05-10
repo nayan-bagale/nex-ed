@@ -12,13 +12,17 @@ import { Separator } from '@/components/ui/separator'
 import Link from 'next/link'
 import React, { Suspense } from 'react'
 import { Button } from '@/components/ui/button'
-import { getCachedMeeting } from '@/action/meetingAction'
+import { get_schedule_meeting } from '@/action/meetingAction'
 import { MeetingMenu } from "@/components/Meeting/MeetingsMenu"
 import { Skeleton } from "@/components/ui/skeleton"
+import { authOptions } from "@/components/utils/options"
+import { getServerSession } from "next-auth"
 
 const meetingCard = async () => {
+    const session = await getServerSession(authOptions);
+
     const fetchmeetings = async () => {
-        const res = await getCachedMeeting();
+        const res = await get_schedule_meeting();
         if (res && res?.ok) {
             const pro_data = res?.data?.map((meeting) => {
                 return {
@@ -63,13 +67,13 @@ const meetingCard = async () => {
 
                                         <CardDescription>Sub: {meeting.subject_name}</CardDescription>
                                     </div>
-                                    <RoleCheckerClient>
+                                    {session?.user.id === meeting.teacher_id && (<RoleCheckerClient>
                                         <div className=" self-start -mt-1 ">
                                             <Suspense fallback={<Skeleton className=" w-2 h-4" />}>
                                                 <MeetingMenu id={meeting.id} />
                                             </Suspense>
                                         </div>
-                                    </RoleCheckerClient>
+                                    </RoleCheckerClient>)}
                                 </div>
                             </CardHeader>
                             <Separator className=" -mt-2 mb-2" />

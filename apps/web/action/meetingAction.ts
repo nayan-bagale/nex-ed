@@ -101,15 +101,15 @@ export async function add_schedule_meeting(data: any) {
   }
 }
 
-export const getCachedMeeting = unstable_cache(
-  get_schedule_meeting,
-  ["get_schedule_meeting"],
-  {
-    tags: ["get_schedule_meeting"],
-  }
-);
+// export const getCachedMeeting = unstable_cache(
+//   get_schedule_meeting,
+//   ["get_schedule_meeting"],
+//   {
+//     tags: ["get_schedule_meeting"],
+//   }
+// );
 
-async function get_schedule_meeting() {
+export async function get_schedule_meeting() {
   const session = await getServerSession(authOptions);
   if (!session) {
     return {
