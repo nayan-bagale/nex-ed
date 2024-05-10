@@ -1,3 +1,4 @@
+import RadarChartDash from "@/components/Dashboard/Teacher/RadarChart"
 import { CalendarDateRangePicker } from "@/components/DatePickerRange"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@radix-ui/react-scroll-area"
@@ -14,8 +15,8 @@ const page = async () => {
           Hi, Welcome back 👋
         </h2>
         <div className="hidden md:flex items-center space-x-2">
-          <CalendarDateRangePicker />
-          <Button>Download</Button>
+          {/* <CalendarDateRangePicker />
+          <Button>Download</Button> */}
         </div>
       </div>
       <div className="flex space-x-4">
@@ -39,6 +40,9 @@ const page = async () => {
             <p className="text-lg font-semibold">3</p>
           </div>
         </div>
+      </div>
+      <div className=" h-full w-full">
+        <RadarChartDash />
       </div>
     </div>
 
