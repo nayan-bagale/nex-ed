@@ -2,10 +2,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { withAuth } from "next-auth/middleware";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./components/utils/options";
-import { signOut } from "next-auth/react";
-
+import { getToken } from "next-auth/jwt";
 
 export default withAuth({
   // Matches the pages config in `[...nextauth]`
@@ -14,20 +11,36 @@ export default withAuth({
   },
   callbacks: {
     authorized: ({ token }) => {
-      if(token?.role === "student" || token?.role === "teacher" || token?.role === "admin"){
+      if (
+        token?.role === "student" ||
+        token?.role === "teacher" ||
+        token?.role === "admin"
+      ) {
         return true;
       }
       // signOut();
       return false;
     },
-  }
+  },
 });
 
-// export function middleware(request: NextRequest) {
-//   if (request.nextUrl.pathname.startsWith("/liveclass")) {
-//     return NextResponse.rewrite(new URL("/maintenace", request.url));
-//   }
-// }
+export async function middleware(request: NextRequest) {
+      const token = await getToken({req: request})
+      if(request.nextUrl.pathname.startsWith('/students') && token?.role === 'student'){
+        return NextResponse.redirect((new URL('/dashboard', request.url)))
+      }
+      return NextResponse.next()
+    
+}
 
-
-export const config = { matcher: ["/dashboard","/liveclass/:path*"] };
+export const config = {
+  matcher: [
+    "/dashboard",
+    "/liveclass/:path*",
+    "/attendance",
+    "/class/:path*",
+    "/meeting",
+    "/students",
+    "/settings",
+  ],
+};

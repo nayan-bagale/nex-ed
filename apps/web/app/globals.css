@@ -184,11 +184,11 @@
 }
 
 .react-calendar-heatmap .color-filled {
-  fill: #adfa1d;
+  fill: hsl(var(--primary));
 }
 
 .react-calendar-heatmap .color-empty {
-  fill: #ebedf0;
+  fill: hsl(var(--secondary));
 }
 
 .react-calendar-heatmap rect:hover {
@@ -201,9 +201,15 @@
   rx: 2;
 }
 
+.recharts-tooltip-item:first-child {
+ color: hsl(var(--primary))!important;
+ /* color: #dddddd */
+}
+
+
 .recharts-default-tooltip {
   background-color: var(--card-foreground)!important;
-  color: var(--card-foreground);
+  color: var(--card-foreground)!important;
   border: 1px solid var(--border)!important;
   border-radius: var(--radius);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

@@ -29,6 +29,18 @@ const data = [
         Absent: 20,
         amt: 30,
     },
+    {
+        name: 'Apr',
+        Present: 29,
+        Absent: 20,
+        amt: 30,
+    },
+    {
+        name: 'Apr',
+        Present: 29,
+        Absent: 20,
+        amt: 30,
+    },
 ];
 
 const RadarChartDash = () => {
@@ -49,10 +61,10 @@ const RadarChartDash = () => {
                     tickLine={false}
                     axisLine={false}
                     tickFormatter={(value) => `${value}`} />
-                <Tooltip isAnimationActive={true} cursor={{ rx: 2, ry: 2, fill: '#ffffff20' }} wrapperStyle={{ backgroundColor: 'rgb(24 24 27)' }} />
-                <Legend />
-                <Bar dataKey="Absent" fill="#adfa1d" radius={[4, 4, 0, 0]} activeBar={<Rectangle fill="#adfa1d" stroke="#adfa1d" />} />
-                <Bar dataKey="Present" fill="#ffffff" radius={[4, 4, 0, 0]} activeBar={<Rectangle fill="#ffffff" stroke="#ffffff" />} />
+                <Tooltip isAnimationActive={true} cursor={{ rx: 2, ry: 2, fill: 'hsl(var(--secondary))' }} wrapperStyle={{ backgroundColor: 'hsl(var(--secondary))' }} />
+                {/* <Legend /> */}
+                <Bar dataKey="Absent" className=' fill-primary' radius={[4, 4, 0, 0]} activeBar={<Rectangle className=' fill-primary' stroke="fill-primary" />} />
+                <Bar dataKey="Present" fill="#dddddd" radius={[4, 4, 0, 0]} activeBar={<Rectangle fill="#dddddd"  stroke="#dddddd" />} />
             </BarChart>
         </ResponsiveContainer>
     )

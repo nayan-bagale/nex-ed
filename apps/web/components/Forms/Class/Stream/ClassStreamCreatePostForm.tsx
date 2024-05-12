@@ -198,7 +198,7 @@ export default function ClassStreamCreatePostForm({ sub_id }: { sub_id: string }
                         )}
                     />
 
-                    <Button disabled={loading} className="ml-auto w-full" type="submit">
+                    <Button disabled={loading} size={'sm'} className="ml-auto w-full" type="submit">
                         Create Post
                     </Button>
                 </form>

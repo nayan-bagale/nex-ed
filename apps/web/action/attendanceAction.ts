@@ -78,7 +78,7 @@ export async function getAttedanceDate(){
       .select()
       .from(attendance)
       .where(eq(attendance.teacher_id, session?.user.id))
-      .limit(30);
+      // .limit(30);
 
       const obj:{[key: string]: string[]} = {}
  

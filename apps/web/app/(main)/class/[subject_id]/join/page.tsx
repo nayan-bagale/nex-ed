@@ -8,10 +8,9 @@ import { redirect } from "next/navigation";
 const page = async ({ params }: { params: { subject_id: string } }) => {
 
     if (params.subject_id.length !== 10) return redirect('/not-found');
-
     const data = await get_subject_Action(params.subject_id);
-
-    if (!data.ok || !data.data) {
+    
+    if (!data.ok || data?.data?.length === 0 || data?.data === undefined) {
         return redirect('/not-found');
     }
 

@@ -27,9 +27,9 @@ const CalenderGraph = () => {
                     onClick={(value) => setValue(value)}
                     titleForValue={(value: any) => `Count: ${value?.count} submissions on ${value?.date}`}
                 />
-                <p className="text-sm text-muted-foreground">
+                {/* <p className="text-sm text-muted-foreground">
                     {value ? `${value.count} lectures taken on ${value.date} ` : 'Hover over a square'}
-                </p>
+                </p> */}
             </div>
 
             <div className=' flex-none'>
@@ -37,9 +37,12 @@ const CalenderGraph = () => {
             </div>
 
             <div className='flex flex-col w-full gap-2'>
+                <p className="text-sm text-muted-foreground">
+                    {value ? `${value.count} lectures taken on ${value.date} ` : 'No lecture taken'}
+                </p>
                 <div className='flex  justify-between'>
                     <h2 className=' text-sm md:text-base'>Blockchain:</h2>
-                    <p className=' text-xs text-muted-foreground md:text-sm'>10 lectures taken</p>
+                    <p className=' text-xs text-muted-foreground md:text-sm'>{value?.count ?? 0} lectures taken</p>
                 </div>
                 <div className='flex  justify-between'>
                     <h2 className=' text-sm md:text-base'>Machine Learning:</h2>

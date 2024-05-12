@@ -125,7 +125,7 @@ export default function AddSubjectForm() {
                         )}
                     />
 
-                    <Button disabled={loading} className="ml-auto w-full" type="submit">
+                    <Button disabled={loading} size={'sm'} className="ml-auto w-full" type="submit">
                         Add Subject
                     </Button>
                 </form>
