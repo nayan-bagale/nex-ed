@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import {Plus} from "lucide-react";
 import { UserClient } from "@/components/tables/Students-Tables/Client";
 import { getStudents } from "@/action/studentsAction";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/components/utils/options";
+import { redirect } from "next/navigation";
 
 async function Students() {
 
@@ -12,6 +15,12 @@ async function Students() {
     { title: "Dashboard", link: "/dashboard" },
     { title: "Students", link: "/students" },
   ];
+
+  const session = await getServerSession(authOptions);
+  if(session?.user.role === "student") {
+    redirect("/dashboard");
+  }
+
 
   const students = await getStudents();
   console.log(students)

@@ -60,7 +60,7 @@ export default function UserAuthForm() {
         const res: { message: string; ok: boolean } = await data.json();
         if (res?.ok) {
           setError(false);
-          router.push("/sign-in");
+          router.back();
           return "Account created";
         } else {
           setError(true);

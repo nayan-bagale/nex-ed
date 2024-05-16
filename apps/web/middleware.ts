@@ -11,6 +11,7 @@ export default withAuth({
   },
   callbacks: {
     authorized: ({ token }) => {
+      // console.log(token)
       if (
         token?.role === "student" ||
         token?.role === "teacher" ||
@@ -23,15 +24,6 @@ export default withAuth({
     },
   },
 });
-
-export async function middleware(request: NextRequest) {
-      const token = await getToken({req: request})
-      if(request.nextUrl.pathname.startsWith('/students') && token?.role === 'student'){
-        return NextResponse.redirect((new URL('/dashboard', request.url)))
-      }
-      return NextResponse.next()
-    
-}
 
 export const config = {
   matcher: [
