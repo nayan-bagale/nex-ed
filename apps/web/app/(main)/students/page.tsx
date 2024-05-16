@@ -23,7 +23,7 @@ async function Students() {
 
 
   const students = await getStudents();
-  console.log(students)
+  // console.log(students)
 
   return (
     <div className="flex-1 space-y-3  p-4 pt-6">

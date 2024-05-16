@@ -194,7 +194,7 @@ const RoomProvider: React.FC<{ children: React.ReactNode }> = ({
         setScreenSharingId("");
         setRoomId("");
         setUsername({});
-        router.push("/");
+        router.back();
     };
 
 

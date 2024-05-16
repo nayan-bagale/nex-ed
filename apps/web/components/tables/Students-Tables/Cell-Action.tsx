@@ -24,6 +24,7 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+    // console.log(data)
     return (
         <>
             <Drawer>
@@ -42,10 +43,10 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
                         </DrawerHeader>
                         <div className="p-4 pb-0">              
                                 {/* <BarGraph/> */}
-                                <SimpleBarChart/>
+                                <SimpleBarChart id={data.student_id} />
                         </div>
                         <DrawerFooter>
-                            <Button>Submit</Button>
+                            {/* <Button>Submit</Button> */}
                             <DrawerClose asChild>
                                 <Button variant="outline">Cancel</Button>
                             </DrawerClose>

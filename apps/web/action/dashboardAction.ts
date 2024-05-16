@@ -84,11 +84,6 @@ export async function getOverview() {
       message: "An error occurred while fetching data",
     };
   }
-
-  return {
-    ok: true,
-    message: "Attendance added successfully",
-  };
 }
 
 export async function getLectures() {

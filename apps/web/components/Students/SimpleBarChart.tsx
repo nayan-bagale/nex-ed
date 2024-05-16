@@ -1,4 +1,5 @@
-import React from 'react';
+import { getStudentData } from '@/action/studentsAction';
+import React, { FC, useMemo } from 'react';
 import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const data = [
@@ -28,14 +29,30 @@ const data = [
     },
 ];
 
-export function SimpleBarChart() {
+export const SimpleBarChart:FC<{id:string}> = ({id}) => {
+    const [studentData, setStudentData] = React.useState<{
+        name: string;
+        Present: number;
+        Absent: number;
+    }[]>([]);
+
+    useMemo(() => {
+        const fetchdata = async () => {
+           const res = await getStudentData(id);
+           console.log(res)
+           if(!res?.ok || !res?.data) return;
+           setStudentData(res?.data);
+        }
+        fetchdata();
+        // console.log(id)
+    }, [id])
 
     return (
         <ResponsiveContainer width="100%" height={350}>
             <BarChart
                 width={500}
                 height={300}
-                data={data}
+                data={studentData}
                 margin={{
                     top: 5,
                     right: 30,

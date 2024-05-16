@@ -27,6 +27,8 @@ const overview = async () => {
 
     // console.log(processedData)
 
+    processedData.reverse()
+
 
   return (
       <Card className="">

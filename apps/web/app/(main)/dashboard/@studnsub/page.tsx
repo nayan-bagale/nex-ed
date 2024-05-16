@@ -41,9 +41,9 @@ const studnsub = async () => {
               </CardHeader>
               <CardContent>
                   <div className="text-2xl font-bold">{subjects.data ?? 0}</div>
-                  <p className="text-xs text-muted-foreground">
+                  {/* <p className="text-xs text-muted-foreground">
                       +180.1% from last month
-                  </p>
+                  </p> */}
               </CardContent>
           </Card>
     </>
