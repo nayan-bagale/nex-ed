@@ -1,5 +1,6 @@
 'use client'
 
+import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { FC, useState } from 'react';
 import CalendarHeatmap, { ReactCalendarHeatmapValue } from 'react-calendar-heatmap';
@@ -14,13 +15,14 @@ interface CalenderGraphProps {
         [key: string]: {
             subject_id: string;
             // total_strudents: number;
-            percentage: number;
             subject_name: string;
+            status: string;
         }[];
     } 
 }
 
-const CalenderGraphTeacher:FC<CalenderGraphProps> = ({dates, data}) => {
+const CalenderGraphStudent:FC<CalenderGraphProps> = ({dates, data}) => {
+    
     const [value, setValue] = useState<ReactCalendarHeatmapValue<string>>();
 
     return (
@@ -34,9 +36,6 @@ const CalenderGraphTeacher:FC<CalenderGraphProps> = ({dates, data}) => {
                     onClick={(value) => setValue(value)}
                     titleForValue={(value: any) => `Count: ${value?.count} submissions on ${value?.date}`}
                 />
-                {/* <p className="text-sm text-muted-foreground">
-                    {value ? `${value.count} lectures taken on ${value.date} ` : 'Hover over a square'}
-                </p> */}
             </div>
 
             <div className=' flex-none'>
@@ -45,29 +44,23 @@ const CalenderGraphTeacher:FC<CalenderGraphProps> = ({dates, data}) => {
 
             <div className='flex flex-col w-full gap-2'>
                 <p className="text-sm text-muted-foreground">
-                    {value ? `${data[value?.date].length} lectures taken on ${value.date} ` : 'No lecture taken'}
+                    {value ? `${data[value?.date].length} lectures addended on ${value.date} ` : 'No lecture attended'}
                 </p>
                 {
                     value && data[value.date].map((e) => {
                         return (
-                            <div className='flex  justify-between'>
+                            <div className='flex justify-between'>
                                 <h2 className=' text-sm md:text-base'>{e.subject_name}:</h2>
-                                <p className=' text-xs text-muted-foreground md:text-sm'>{e.percentage}%</p>
+                                <p className=' text-xs text-muted-foreground md:text-sm'>
+                                    {e.status === 'Present' ? <Badge>Present</Badge> : <Badge variant={'destructive'}>Absent</Badge>}
+                                    </p>
                             </div>
                         )
                     })
                 }
-                {/* <div className='flex  justify-between'>
-                    <h2 className=' text-sm md:text-base'>Blockchain:</h2>
-                    <p className=' text-xs text-muted-foreground md:text-sm'>{value?.count ?? 0} lectures taken</p>
-                </div> */}
-                {/* <div className='flex  justify-between'>
-                    <h2 className=' text-sm md:text-base'>Machine Learning:</h2>
-                    <p className=' text-xs text-muted-foreground md:text-sm'>10 lectures taken</p>
-                </div> */}
             </div>
         </div>
     )
 }
 
-export default CalenderGraphTeacher
+export default CalenderGraphStudent

@@ -1,4 +1,5 @@
 
+import { getStudents, getSubjects } from "@/action/dashboardAction";
 import {
     Card,
     CardContent,
@@ -8,9 +9,12 @@ import {
 } from "@/components/ui/card";
 import { Book, Users2 } from "lucide-react";
 
-const studnsub = () => {
+const studnsub = async () => {
 
-    
+    const [subjects, students] = await Promise.all([getSubjects(), getStudents()]);
+    if (!subjects.ok || !students.ok) {
+        return <div>{subjects.message ?? students.message}</div>;
+    }
 
   return (
     <>
@@ -22,7 +26,7 @@ const studnsub = () => {
                   <Users2 className="h-4 w-4" />
               </CardHeader>
               <CardContent>
-                  <div className="text-2xl font-bold">45</div>
+                  <div className="text-2xl font-bold">{students.data ?? 0}</div>
                   <p className="text-xs text-muted-foreground">
                       +20.1% from last month
                   </p>
@@ -36,7 +40,7 @@ const studnsub = () => {
                   <Book className="h-4 w-4" />
               </CardHeader>
               <CardContent>
-                  <div className="text-2xl font-bold">8</div>
+                  <div className="text-2xl font-bold">{subjects.data ?? 0}</div>
                   <p className="text-xs text-muted-foreground">
                       +180.1% from last month
                   </p>

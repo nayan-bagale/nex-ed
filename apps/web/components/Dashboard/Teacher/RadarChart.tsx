@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { FC } from 'react'
 import { ResponsiveContainer, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Legend, Radar, RadarChart, PieChart, Pie, Cell, Tooltip } from 'recharts'
 import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid} from 'recharts';
 
@@ -43,7 +43,16 @@ const data = [
     },
 ];
 
-const RadarChartDash = () => {
+interface RadarChartDashProps {
+    data: {
+        name: string;
+        Present: number;
+        Absent: number;
+        amt: number;
+    }[]
+}
+
+const RadarChartDash:FC<RadarChartDashProps> = ({data}) => {
 
     return (
         <ResponsiveContainer width="100%" height={350}>

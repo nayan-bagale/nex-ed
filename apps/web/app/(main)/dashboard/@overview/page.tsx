@@ -1,3 +1,4 @@
+import { getOverview } from "@/action/dashboardAction";
 import RadarChartDash from "@/components/Dashboard/Teacher/RadarChart";
 import {
     Card,
@@ -7,7 +8,26 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 
-const overview = () => {
+const overview = async () => {
+    const data = await getOverview();
+    if(!data.ok || !data.data) {
+        return <div>{data.message}</div>
+    }
+
+    const processedData:any = [];
+
+    for(const month in data.data) {
+        processedData.push({
+            name: month,
+            Present: data.data[month].present,
+            Absent: data.data[month].absent,
+            amt: data.data[month].total,
+        })
+    }
+
+    // console.log(processedData)
+
+
   return (
       <Card className="">
           <CardHeader>
@@ -26,7 +46,7 @@ const overview = () => {
               </CardDescription>
           </CardHeader>
           <CardContent className="pl-2">
-              <RadarChartDash />
+              <RadarChartDash data={processedData} />
           </CardContent>
       </Card>
   )

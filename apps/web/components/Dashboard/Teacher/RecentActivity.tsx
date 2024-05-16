@@ -33,7 +33,7 @@ const RecentActivity = () => {
                     </div>
                 </div>
             </div>
-            <div>
+            {/* <div>
                 <div className=' relative mb-4 flex flex-col gap-2'>
                     <Badge className=' w-fit '>
                         Apr 22, 2024
@@ -144,7 +144,7 @@ const RecentActivity = () => {
                     </span>
                     <Loader2 className="ml-2 h-4 w-4 animate-spin" />
                 </Button>
-            </div>
+            </div> */}
 
         </div>
     )

@@ -19,3 +19,5 @@ export const USERS: UserI[] = [
     email: "yadnesh@gmail.com",
   },
 ];
+
+export const MONTHS:string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

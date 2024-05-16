@@ -13,7 +13,7 @@ const recentActivity = () => {
           <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
               <CardDescription>
-                  You made 265 sales this month.
+                  {/* You made 265 sales this month. */}
               </CardDescription>
           </CardHeader>
           <CardContent>
