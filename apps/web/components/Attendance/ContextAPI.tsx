@@ -63,7 +63,7 @@ const AttendanceProvider: React.FC<{children: React.ReactNode}> = ({ children })
             students,
             mode: 'Offline',
             total_students: total,
-            percentage
+            percentage: Math.floor(percentage)
         }
 
         toast.promise(handleInsert(data), {
