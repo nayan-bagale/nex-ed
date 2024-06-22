@@ -18,6 +18,7 @@ const page = async () => {
 
     const students = await getStudents();
     const data = await getAttedanceDate();
+    console.log(data)
     // console.log(dates)
 
     return (

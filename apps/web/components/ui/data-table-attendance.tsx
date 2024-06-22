@@ -67,6 +67,8 @@ export function DataTable<TData, TValue>({
         getFilteredRowModel: getFilteredRowModel(),
     });
 
+    console.log(dates)
+
     const subjects = data.filter((a: any, i) => data.findIndex((s: any) => a.subject_id === s.subject_id) === i).map((s: any) => ({ subject_id: s.subject_id, subject_name: s.subject_name }));
 
     /* this can be used to get the selectedrows 
@@ -75,7 +77,7 @@ export function DataTable<TData, TValue>({
         if (e !== 'all') {
             table.getColumn("subject_name")?.setFilterValue(e.split(":")[0]);
             setSubject(subjects.find((s) => s.subject_name === e.split(":")[0]));
-            setMatcher(dates[e.split(":")[1]].map((d: string) => new Date(d)) as Matcher);
+            setMatcher(dates[e.split(":")[1]] ? dates[e.split(":")[1]].map((d: string) => new Date(d)) as Matcher : []);
             return;
         }
         setSubject({});

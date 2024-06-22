@@ -120,7 +120,7 @@ function ProfileForm() {
     const img = session?.user?.image?.replace(/-thumb\.(jpeg|png|jpg)$/, '.$1');
 
     return (
-        <div className=" m-2 p-4 ">
+        <div className=" m-2 p-4 max-w-screen-sm items-center flex ">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col">
                     <FormField

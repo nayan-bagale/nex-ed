@@ -26,7 +26,7 @@ export const StreamCard = async ({ sub_id }: { sub_id: string }) => {
     }
   
     return (
-        <div className=" flex flex-col gap-4">{
+        <div className=" flex flex-col max-w-screen-sm gap-4">{
             streams.filter((streams) => streams.subject_id === sub_id).map((stream) => {
                 return (
                     <Card key={stream.id} className=" w-full">
@@ -53,7 +53,7 @@ export const StreamCard = async ({ sub_id }: { sub_id: string }) => {
                             <Separator />
                         </CardHeader>
                         <CardContent>
-                            <p className="mb-3">{stream.text}</p>
+                            <p className="mb-3 text-sm">{stream.text}</p>
                             {stream.files.length !== 0 && (
                                 <>
                                     <div className="flex flex-wrap gap-2">
@@ -92,8 +92,8 @@ const StreamFiles = ({ files }: { files: { size: number, name: string, url: stri
                     )
                 } else if (ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'gif') {
                     return (<div key={file.name} className=' flex flex-col gap-1'>
-                        <Link href={file.url} className="">
-                            <Image src={file.url} alt={file.name} width={300} height={300} />
+                        <Link href={file.url} className=" flex items-center flex-col">
+                            <Image src={file.url} alt={file.name} className="" width={500} height={500} />
                             {file.name}
                         </Link>
                     </div>

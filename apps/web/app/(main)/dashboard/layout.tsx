@@ -54,10 +54,10 @@ export default async function Layout({
                     </div>
 
                 </div>
-                <div className="grid gap-4 grid-cols-1 ">
+                {/* <div className="grid gap-4 grid-cols-1 "> */}
                     {/* Recent Activity Card */}
-                    {recentActivity}
-                </div>
+                    {/* {recentActivity} */}
+                {/* </div> */}
             </div>
             {/* {children} */}
         </ScrollArea>

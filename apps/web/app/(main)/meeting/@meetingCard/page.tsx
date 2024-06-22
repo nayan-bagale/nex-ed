@@ -57,7 +57,7 @@ const meetingCard = async () => {
             <div className=" flex flex-wrap gap-6 justify-center md:justify-start">
                 {
                     meetings?.map((meeting) => (
-                        <Card key={meeting.id} className=" w-[18rem]">
+                        <Card key={meeting.id} className=" min-w-[18rem]">
                             <CardHeader>
                                 <div className=" flex justify-between gap-4">
                                     <div className=" space-y-2">

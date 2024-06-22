@@ -6,6 +6,7 @@ import Lamp from "@/components/Home/Lamp";
 import Sparkles from "@/components/Home/Sparkles";
 import { BackgroundBeams } from "@/components/ui/background-beam";
 import { GlowingStarsBackgroundCardPreview } from "@/components/Home/GlowingCard";
+import { LucideLayoutDashboard } from "lucide-react";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -13,7 +14,7 @@ export default async function Home() {
   return (
     <main className=" h-full">
       <div className="fixed top-0 left-0 right-0 supports-backdrop-blur:bg-background/60 border-b bg-background/95 backdrop-blur z-20">
-        <nav className="h-14 flex items-center justify-between px-4">
+        <nav className="h-16 flex items-center justify-between px-4">
           <div className="block">
             <Link href="/">
               <h1>Nex-Ed</h1>
@@ -22,8 +23,8 @@ export default async function Home() {
           <div className="flex h-[60%] items-center gap-4">
             {session ? (
               <Link href="/dashboard">
-                <Button variant="outline">
-                  <h2>Dashboard</h2>
+                <Button variant="outline" size={'icon'}>
+                  <h2><LucideLayoutDashboard/></h2>
                 </Button>
               </Link>
             ) : (
